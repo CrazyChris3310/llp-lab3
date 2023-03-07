@@ -76,10 +76,10 @@ int temp = 0;
 
 %%
 
-query: for_stmt  { root.node = $1;  }
-      | insert_stmt { root.node = $1; }
-      | create_stmt { root.node = $1; }
-      | drop_stmt { root.node = $1; }
+query: for_stmt  { root.node = $1; }
+      | insert_stmt { root.node = $1; root.queryType = INSERT_QUERY; }
+      | create_stmt { root.node = $1; root.queryType = CREATE_QUERY; }
+      | drop_stmt { root.node = $1; root.queryType = DROP_QUERY; }
 
 for_stmt: FOR ID IN ID actions { $$ = new ForNode($2, $4, $5); }
 
@@ -90,9 +90,9 @@ action: for_stmt { $$ = $1; }
       | filter_stmt { $$ = $1; }
       | terminal_stmt  { $$ = $1; }
 
-terminal_stmt: return_stmt { $$ = $1; }
-              | update_stmt { $$ = $1; }
-              | remove_stmt { $$ = $1; }
+terminal_stmt: return_stmt { $$ = $1; root.queryType = SELECT_QUERY; }
+              | update_stmt { $$ = $1; root.queryType = UPDATE_QUERY; }
+              | remove_stmt { $$ = $1; root.queryType = DELETE_QUERY; }
 
 filter_stmt: FILTER conditions { $$ = new FilterNode($2); }
 

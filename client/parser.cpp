@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "parser.y"
+#line 1 "/home/danil/llp/lab3/client/parser.y"
 
 #include <iostream>
 #include <list>
@@ -84,7 +84,7 @@ void yyerror(NodeWrapper& node, const char *s){
 int temp = 0;
 
 
-#line 88 "parser.c"
+#line 88 "/home/danil/llp/lab3/client/parser.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -1427,225 +1427,225 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* query: for_stmt  */
-#line 79 "parser.y"
-                 { root.node = (yyvsp[0].node);  }
-#line 1433 "parser.c"
+#line 79 "/home/danil/llp/lab3/client/parser.y"
+                 { root.node = (yyvsp[0].node); }
+#line 1433 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 3: /* query: insert_stmt  */
-#line 80 "parser.y"
-                    { root.node = (yyvsp[0].node); }
-#line 1439 "parser.c"
+#line 80 "/home/danil/llp/lab3/client/parser.y"
+                    { root.node = (yyvsp[0].node); root.queryType = INSERT_QUERY; }
+#line 1439 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 4: /* query: create_stmt  */
-#line 81 "parser.y"
-                    { root.node = (yyvsp[0].node); }
-#line 1445 "parser.c"
+#line 81 "/home/danil/llp/lab3/client/parser.y"
+                    { root.node = (yyvsp[0].node); root.queryType = CREATE_QUERY; }
+#line 1445 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 5: /* query: drop_stmt  */
-#line 82 "parser.y"
-                  { root.node = (yyvsp[0].node); }
-#line 1451 "parser.c"
+#line 82 "/home/danil/llp/lab3/client/parser.y"
+                  { root.node = (yyvsp[0].node); root.queryType = DROP_QUERY; }
+#line 1451 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 6: /* for_stmt: FOR ID IN ID actions  */
-#line 84 "parser.y"
+#line 84 "/home/danil/llp/lab3/client/parser.y"
                                { (yyval.node) = new ForNode((yyvsp[-3].str), (yyvsp[-1].str), (yyvsp[0].action)); }
-#line 1457 "parser.c"
+#line 1457 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 7: /* actions: actions action  */
-#line 86 "parser.y"
+#line 86 "/home/danil/llp/lab3/client/parser.y"
                         { (yyval.action) = (yyvsp[-1].action); (yyvsp[-1].action)->addAction((yyvsp[0].node)); }
-#line 1463 "parser.c"
+#line 1463 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 8: /* actions: action  */
-#line 87 "parser.y"
+#line 87 "/home/danil/llp/lab3/client/parser.y"
                  { (yyval.action) = new ActionNode(); (yyval.action)->addAction((yyvsp[0].node)); }
-#line 1469 "parser.c"
+#line 1469 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 9: /* action: for_stmt  */
-#line 89 "parser.y"
+#line 89 "/home/danil/llp/lab3/client/parser.y"
                  { (yyval.node) = (yyvsp[0].node); }
-#line 1475 "parser.c"
+#line 1475 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 10: /* action: filter_stmt  */
-#line 90 "parser.y"
+#line 90 "/home/danil/llp/lab3/client/parser.y"
                     { (yyval.node) = (yyvsp[0].node); }
-#line 1481 "parser.c"
+#line 1481 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 11: /* action: terminal_stmt  */
-#line 91 "parser.y"
+#line 91 "/home/danil/llp/lab3/client/parser.y"
                        { (yyval.node) = (yyvsp[0].terminal); }
-#line 1487 "parser.c"
+#line 1487 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 12: /* terminal_stmt: return_stmt  */
-#line 93 "parser.y"
-                           { (yyval.terminal) = (yyvsp[0].terminal); }
-#line 1493 "parser.c"
+#line 93 "/home/danil/llp/lab3/client/parser.y"
+                           { (yyval.terminal) = (yyvsp[0].terminal); root.queryType = SELECT_QUERY; }
+#line 1493 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 13: /* terminal_stmt: update_stmt  */
-#line 94 "parser.y"
-                            { (yyval.terminal) = (yyvsp[0].terminal); }
-#line 1499 "parser.c"
+#line 94 "/home/danil/llp/lab3/client/parser.y"
+                            { (yyval.terminal) = (yyvsp[0].terminal); root.queryType = UPDATE_QUERY; }
+#line 1499 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 14: /* terminal_stmt: remove_stmt  */
-#line 95 "parser.y"
-                            { (yyval.terminal) = (yyvsp[0].terminal); }
-#line 1505 "parser.c"
+#line 95 "/home/danil/llp/lab3/client/parser.y"
+                            { (yyval.terminal) = (yyvsp[0].terminal); root.queryType = DELETE_QUERY; }
+#line 1505 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 15: /* filter_stmt: FILTER conditions  */
-#line 97 "parser.y"
+#line 97 "/home/danil/llp/lab3/client/parser.y"
                                { (yyval.node) = new FilterNode((yyvsp[0].predicate)); }
-#line 1511 "parser.c"
+#line 1511 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 16: /* conditions: condition  */
-#line 100 "parser.y"
+#line 100 "/home/danil/llp/lab3/client/parser.y"
                                            { (yyval.predicate) = (yyvsp[0].predicate); }
-#line 1517 "parser.c"
+#line 1517 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 17: /* conditions: conditions LOGIC_OP conditions  */
-#line 101 "parser.y"
+#line 101 "/home/danil/llp/lab3/client/parser.y"
                                            { (yyval.predicate) = new ConditionUnion((yyvsp[-1].logicOp), (yyvsp[-2].predicate), (yyvsp[0].predicate)); }
-#line 1523 "parser.c"
+#line 1523 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 18: /* condition: constant COMP_OP constant  */
-#line 103 "parser.y"
+#line 103 "/home/danil/llp/lab3/client/parser.y"
                                      {
                                         (yyval.predicate) = new Condition((yyvsp[-2].constant), (yyvsp[0].constant), (yyvsp[-1].compOp));
                                         }
-#line 1531 "parser.c"
+#line 1531 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 20: /* constant: value  */
-#line 107 "parser.y"
+#line 107 "/home/danil/llp/lab3/client/parser.y"
                       { (yyval.constant) = (yyvsp[0].constant); }
-#line 1537 "parser.c"
+#line 1537 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 21: /* return_stmt: RETURN return_val  */
-#line 110 "parser.y"
+#line 110 "/home/danil/llp/lab3/client/parser.y"
                                { (yyval.terminal) = new ReturnAction((yyvsp[0].node)); }
-#line 1543 "parser.c"
+#line 1543 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 22: /* return_val: constant  */
-#line 112 "parser.y"
+#line 112 "/home/danil/llp/lab3/client/parser.y"
                       { (yyval.node) = (yyvsp[0].constant); }
-#line 1549 "parser.c"
+#line 1549 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 23: /* return_val: map  */
-#line 113 "parser.y"
+#line 113 "/home/danil/llp/lab3/client/parser.y"
                 { (yyval.node) = (yyvsp[0].node); }
-#line 1555 "parser.c"
+#line 1555 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 24: /* update_stmt: UPDATE ID WITH map IN ID  */
-#line 115 "parser.y"
+#line 115 "/home/danil/llp/lab3/client/parser.y"
                                       { (yyval.terminal) = new UpdateAction((yyvsp[-4].str), (MapNode*)(yyvsp[-2].node), (yyvsp[0].str)); }
-#line 1561 "parser.c"
+#line 1561 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 25: /* remove_stmt: REMOVE ID IN ID  */
-#line 117 "parser.y"
+#line 117 "/home/danil/llp/lab3/client/parser.y"
                              { (yyval.terminal) = new RemoveAction((yyvsp[-2].str), (yyvsp[0].str)); }
-#line 1567 "parser.c"
+#line 1567 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 26: /* map: LBRACE map_items RBRACE  */
-#line 119 "parser.y"
+#line 119 "/home/danil/llp/lab3/client/parser.y"
                              { (yyval.node) = (yyvsp[-1].node); }
-#line 1573 "parser.c"
+#line 1573 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 27: /* map: LBRACE RBRACE  */
-#line 120 "parser.y"
+#line 120 "/home/danil/llp/lab3/client/parser.y"
                     { (yyval.node) = new MapNode(); }
-#line 1579 "parser.c"
+#line 1579 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 28: /* map_items: map_item  */
-#line 122 "parser.y"
+#line 122 "/home/danil/llp/lab3/client/parser.y"
                              { MapNode* node = new MapNode(); node->addEntry((MapEntry*)(yyvsp[0].node)); (yyval.node) = node; }
-#line 1585 "parser.c"
+#line 1585 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 29: /* map_items: map_item COMMA map_items  */
-#line 123 "parser.y"
+#line 123 "/home/danil/llp/lab3/client/parser.y"
                                      { ((MapNode*)(yyvsp[0].node))->addEntry((MapEntry*)(yyvsp[-2].node)); (yyval.node) = (yyvsp[0].node); }
-#line 1591 "parser.c"
+#line 1591 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 30: /* map_item: STRING_TOKEN COLON constant  */
-#line 125 "parser.y"
+#line 125 "/home/danil/llp/lab3/client/parser.y"
                                       { (yyval.node) = new MapEntry((yyvsp[-2].str), (yyvsp[0].constant)); }
-#line 1597 "parser.c"
+#line 1597 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 31: /* id: ID  */
-#line 127 "parser.y"
+#line 127 "/home/danil/llp/lab3/client/parser.y"
        { (yyval.constant) = new StringConstant((yyvsp[0].str), true); }
-#line 1603 "parser.c"
+#line 1603 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 32: /* value: INT_TOKEN  */
-#line 129 "parser.y"
+#line 129 "/home/danil/llp/lab3/client/parser.y"
                  { (yyval.constant) = new IntConstant((yyvsp[0].intVal));}
-#line 1609 "parser.c"
+#line 1609 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 33: /* value: FLOAT_TOKEN  */
-#line 130 "parser.y"
+#line 130 "/home/danil/llp/lab3/client/parser.y"
                     { (yyval.constant) = new FloatConstant((yyvsp[0].floatVal));}
-#line 1615 "parser.c"
+#line 1615 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 34: /* value: STRING_TOKEN  */
-#line 131 "parser.y"
+#line 131 "/home/danil/llp/lab3/client/parser.y"
                      { (yyval.constant) = new StringConstant((yyvsp[0].str));}
-#line 1621 "parser.c"
+#line 1621 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 35: /* value: BOOL_TOKEN  */
-#line 132 "parser.y"
+#line 132 "/home/danil/llp/lab3/client/parser.y"
                    { (yyval.constant) = new BoolConstant((yyvsp[0].boolVal));}
-#line 1627 "parser.c"
+#line 1627 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 36: /* insert_stmt: INSERT map INTO ID  */
-#line 134 "parser.y"
+#line 134 "/home/danil/llp/lab3/client/parser.y"
                                 { (yyval.node) = new InsertNode((MapNode*)(yyvsp[-2].node), (yyvsp[0].str)); }
-#line 1633 "parser.c"
+#line 1633 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 37: /* create_stmt: CREATE TABLE ID map  */
-#line 136 "parser.y"
+#line 136 "/home/danil/llp/lab3/client/parser.y"
                                  { (yyval.node) = new CreateTableNode((yyvsp[-1].str), (MapNode*)(yyvsp[0].node)); }
-#line 1639 "parser.c"
+#line 1639 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 38: /* drop_stmt: DROP TABLE ID  */
-#line 138 "parser.y"
+#line 138 "/home/danil/llp/lab3/client/parser.y"
                          { (yyval.node) = new DropTableNode((yyvsp[0].str)); }
-#line 1645 "parser.c"
+#line 1645 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
 
-#line 1649 "parser.c"
+#line 1649 "/home/danil/llp/lab3/client/parser.cpp"
 
       default: break;
     }
@@ -1869,5 +1869,5 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 140 "parser.y"
+#line 140 "/home/danil/llp/lab3/client/parser.y"
 

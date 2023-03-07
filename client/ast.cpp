@@ -45,6 +45,25 @@ const char* getStringNodeType(NodeType type) {
     }
 }
 
+const char* getStringQueryType(QueryType type) {
+    switch(type) {
+        case CREATE_QUERY:
+            return "CREATE_QUERY";
+        case UPDATE_QUERY:
+            return "UPDATE_QUERY";
+        case SELECT_QUERY:
+            return "SELECT_QUERY";
+        case DELETE_QUERY:
+            return "DELETE_QUERY";
+        case INSERT_QUERY:
+            return "INSERT_QUERY";
+        case DROP_QUERY:
+            return "DROP_QUERY";
+        default:
+            return "unkonw query type";
+    }
+}
+
 // ------------------------------------------ ForNode ------------------------------------------
 
 ForNode::ForNode(const char* variable, const char* tableName, Node* action) {

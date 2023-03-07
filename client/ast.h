@@ -8,41 +8,41 @@ enum NodeType { FOR_NODE, ACTION_NODE, FILTER_NODE, RETURN_NODE, UPDATE_NODE, RE
                 MAP_NODE, MAP_ENTRY_NODE, CONDITION_NODE, CONDITION_UNION_NODE, CONSTANT_NODE,
                 CREATE_TABLE_NODE, DROP_TABLE_NODE };
 
-class Node {
-    protected:
-        NodeType nodeType;
-    public:
-        virtual void print(int depth) = 0;
-        virtual ~Node() {};
-        NodeType getNodeType() {
-            return this->nodeType;
-        }
+enum QueryType { CREATE_QUERY, UPDATE_QUERY, SELECT_QUERY, DELETE_QUERY, INSERT_QUERY, DROP_QUERY };
+
+struct Node {
+public:
+     NodeType nodeType;
+
+    virtual void print(int depth) = 0;
+    virtual ~Node() {};
+    NodeType getNodeType() {
+        return this->nodeType;
+    }
 };
 
+const char* getStringQueryType(QueryType type);
 
 struct NodeWrapper {
     Node* node;
+    QueryType queryType;
 };
 
 void printKeyVal(const char* key, const char* val, int depth);
 
-class ForNode : public Node {
-   private:
+struct ForNode : public Node {
     const char* variable;
     const char* tableName;
     Node* action;
 
-   public:
     ForNode(const char* variable, const char* tableName, Node* action);
     void print(int depth) override;
     ~ForNode();
 };
 
-class ActionNode : public Node {
-   private:
+struct ActionNode : public Node {
     std::list<Node*> actions;
 
-   public:
     ActionNode() { this->nodeType = ACTION_NODE; }
     void addAction(Node* action);
     void print(int depth) override;
@@ -51,11 +51,9 @@ class ActionNode : public Node {
 
 enum DataType { INT, FLOAT, STRING, BOOL, REF };
 
-class Constant : public Node {
-private:
+struct Constant : public Node {
     DataType type;
 
-public:
     Constant(DataType type) {
         this->type = type;
         this->nodeType = CONSTANT_NODE;
@@ -65,10 +63,9 @@ public:
     void print(int depth) override ;
 };
 
-class FloatConstant : public Constant {
-private:
+struct FloatConstant : public Constant {
     float value;
-public:
+    
     FloatConstant(float value): Constant(FLOAT) {
         this->value = value;
     }
@@ -77,10 +74,9 @@ public:
     }
 };
 
-class IntConstant : public Constant {
-private:
+struct IntConstant : public Constant {
     int value;
-public:
+
     IntConstant(int value): Constant(INT) {
         this->value = value;
     }
@@ -89,10 +85,9 @@ public:
     }
 };
 
-class BoolConstant : public Constant {
-private:
+struct BoolConstant : public Constant {
     bool value;
-public:
+
     BoolConstant(bool value): Constant(BOOL) {
         this->value = value;
     }
@@ -101,10 +96,9 @@ public:
     }
 };
 
-class StringConstant : public Constant {
-private:
+struct StringConstant : public Constant {
     const char* value;
-public:
+
     StringConstant(const char* value, bool isRef = false): Constant(isRef ? REF : STRING) {
         this->value = value;
     }
@@ -119,127 +113,113 @@ public:
 
 enum LogicalOp { AND, OR };
 
-class Predicate : public Node {
-    public:
-        virtual ~Predicate() {}
+struct Predicate : public Node {
+    virtual ~Predicate() {}
 };
 
 enum ConstantOperation { EQ, NEQ, GT, LT, GTE, LTE, LIKE };
 
-class Condition : public Predicate {
-    private:
-        Constant* lval;
-        Constant* rval;
-        ConstantOperation op;
+struct Condition : public Predicate {
+    Constant* lval;
+    Constant* rval;
+    ConstantOperation op;
 
-        const char* operation_str[7] = { "==", "!=", ">", "<", ">=", "<=", "like" };
-    public:   
-        Condition(Constant* lval, Constant* rval, ConstantOperation op);
-        void print(int depth) override;
-        ~Condition();
+    const char* operation_str[7] = { "==", "!=", ">", "<", ">=", "<=", "like" };
+    Condition(Constant* lval, Constant* rval, ConstantOperation op);
+    void print(int depth) override;
+    ~Condition();
 };
 
-class ConditionUnion : public Predicate {
-    private:
-        LogicalOp op;
-        Predicate* lval;
-        Predicate* rval;
+struct ConditionUnion : public Predicate {
+    LogicalOp op;
+    Predicate* lval;
+    Predicate* rval;
 
-        const char* getStrOperator();
-    public:
-        ConditionUnion(LogicalOp op, Predicate* lval, Predicate* rval);
-        void print(int depth) override;
-        ~ConditionUnion();
+    const char* getStrOperator();
+
+    ConditionUnion(LogicalOp op, Predicate* lval, Predicate* rval);
+    void print(int depth) override;
+    ~ConditionUnion();
 };
 
-class FilterNode : public Node {
-   private:
-      Predicate* predicate;
-   public:
+struct FilterNode : public Node {
+    Predicate* predicate;
 
     FilterNode(Predicate* predicate);
     void print(int depth) override;
     ~FilterNode();
 };
 
-class TerminalAction : public Node {
+struct TerminalAction : public Node {
 
 };
 
-class ReturnAction : public TerminalAction {
-    private:
+struct ReturnAction : public TerminalAction {
         Node* retVal;
-    public:
+
         ReturnAction(Node* retVal);
         void print(int depth) override;
         ~ReturnAction();
 };
 
-class MapEntry : public Node {
-    private:
+struct MapEntry : public Node {
         const char* key;
         Constant* value;
-    public:
+
         MapEntry(const char* key, Constant* value);
         void print(int depth) override;
         ~MapEntry();
 };
 
-class MapNode : public Node {
-    private:
+struct MapNode : public Node {
         std::list<MapEntry*> entries;
-    public:
+        
         MapNode() { this->nodeType = MAP_NODE; }
         void addEntry(MapEntry* entry);
         void print(int depth) override;
         ~MapNode();
 };
 
-class UpdateAction : public TerminalAction {
-    private:
+struct UpdateAction : public TerminalAction {
         const char* variable;
         MapNode* value;
         const char* table;
-    public:
+
         UpdateAction(const char* variable, MapNode* value, const char* table);
         void print(int depth) override;
         ~UpdateAction();
 };
 
-class RemoveAction : public TerminalAction {
-    private:
+struct RemoveAction : public TerminalAction {
         const char* variable;
         const char* table;
-    public:
+
         RemoveAction(const char* variable, const char* table);
         void print(int depth) override;
         ~RemoveAction();
 };
 
-class InsertNode : public Node {
-    private:
+struct InsertNode : public Node {
         MapNode* map;
         const char* table;
-    public:
+
         InsertNode(MapNode* map, const char* table);
         void print(int depth) override;
         ~InsertNode();
 };
 
-class CreateTableNode : public Node {
-    private:
+struct CreateTableNode : public Node {
         const char* table;
         MapNode* fields;
-    public:
+
         CreateTableNode(const char* table, MapNode* fields);
         void print(int depth) override;
         ~CreateTableNode();
 };
 
-class DropTableNode : public Node {
-    private:
+struct DropTableNode : public Node {
         const char* table;
-    public:
+
         DropTableNode(const char* table);
         void print(int depth) override;
         ~DropTableNode();

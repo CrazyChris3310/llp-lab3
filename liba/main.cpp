@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
-#include "ast.h"
-#include "parser.h"
-#include "lexer.h"
+#include "../client/ast.h"
+#include "../client/parser.h"
+#include "../client/lexer.h"
+#include "evaluate.h"
+#include <sstream>
 
 int parseInput(std::string& query, NodeWrapper& nodeWrapper) {
     yy_scan_string(query.c_str());
@@ -11,7 +13,20 @@ int parseInput(std::string& query, NodeWrapper& nodeWrapper) {
     return code;
 }
 
-int main() {
+void print(NodeWrapper& wrapper) {
+    std::ostringstream oss;
+    request_t req = toXmlRequest(wrapper);
+
+    xml_schema::namespace_infomap map;
+    map[""].name = "";
+    map[""].schema = "req_schema.xsd";
+
+    request(oss, req, map);
+
+    std::cout << oss.str() << std::endl;
+}
+
+int main(int argc, char* argv[]) {
 
     std::string buf;
     std::string line;
@@ -25,8 +40,9 @@ int main() {
             if (code) {
                 std::cout << "ret_code: " << code << std::endl;
             } else {
-                nodeWrapper.node->print(0);
-                delete nodeWrapper.node;
+                // nodeWrapper.node->print(0);
+                // delete nodeWrapper.node;
+                print(nodeWrapper);
             }
             buf.clear();
             std::cout << "> ";

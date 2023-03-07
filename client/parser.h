@@ -35,11 +35,11 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_PARSER_H_INCLUDED
-# define YY_YY_PARSER_H_INCLUDED
+#ifndef YY_YY_HOME_DANIL_LLP_LAB3_CLIENT_PARSER_H_INCLUDED
+# define YY_YY_HOME_DANIL_LLP_LAB3_CLIENT_PARSER_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -87,7 +87,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 22 "parser.y"
+#line 22 "/home/danil/llp/lab3/client/parser.y"
 
   const char* str;
   float floatVal;
@@ -103,7 +103,7 @@ union YYSTYPE
   ActionNode* action;
   Constant* constant;
 
-#line 107 "parser.h"
+#line 107 "/home/danil/llp/lab3/client/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -118,4 +118,4 @@ extern YYSTYPE yylval;
 int yyparse (NodeWrapper& root);
 
 
-#endif /* !YY_YY_PARSER_H_INCLUDED  */
+#endif /* !YY_YY_HOME_DANIL_LLP_LAB3_CLIENT_PARSER_H_INCLUDED  */
