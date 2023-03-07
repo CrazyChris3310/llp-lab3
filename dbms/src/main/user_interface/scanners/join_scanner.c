@@ -1,25 +1,25 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include "user_interface/predicates.h"
-#include "user_interface/read_scan.h"
-#include "user_interface/write_scan.h"
-#include "util/comparators.h"
-#include "user_interface/scanners/scanner_declarations.h"
-#include "util/linked_list.h"
+#include "../predicates.h"
+#include "../read_scan.h"
+#include "../write_scan.h"
+#include "../../util/comparators.h"
+#include "scanner_declarations.h"
+#include "../../util/linked_list.h"
 
-bool __joinScannerHasField(void* ptr, char* field);
-int64_t __getIntegerFromJoinScanner(void* ptr, char* field);
-float __getFloatFromJoinScanner(void* ptr, char* field);
-bool __getBoolFromJoinScanner(void* ptr, char* field);
-struct String __getStringFromJoinScanner(void* ptr, char* field);
-struct Constant __getFieldFromJoinScanner(void* ptr, char* field);
+bool __joinScannerHasField(void* ptr, const char* field);
+int64_t __getIntegerFromJoinScanner(void* ptr, const char* field);
+float __getFloatFromJoinScanner(void* ptr, const char* field);
+bool __getBoolFromJoinScanner(void* ptr, const char* field);
+struct String __getStringFromJoinScanner(void* ptr, const char* field);
+struct Constant __getFieldFromJoinScanner(void* ptr, const char* field);
 
-void __setIntegerToJoinScanner(void* ptr, char* field, int64_t value);
-void __setFloatToJoinScanner(void* ptr, char* field, float value);
-void __setBoolToJoinScanner(void* ptr, char* field, bool value);
-void __setStringToJoinScanner(void* ptr, char* field, struct String value);
-void __setVarcharToJoinScanner(void* ptr, char* field, char* value);
+void __setIntegerToJoinScanner(void* ptr, const char* field, int64_t value);
+void __setFloatToJoinScanner(void* ptr, const char* field, float value);
+void __setBoolToJoinScanner(void* ptr, const char* field, bool value);
+void __setStringToJoinScanner(void* ptr, const char* field, struct String value);
+void __setVarcharToJoinScanner(void* ptr, const char* field, const char* value);
 
 static bool __joinScanNextFunction(void* ptr);
 
@@ -71,12 +71,12 @@ void __resetJoinScanner(void* ptr) {
     scanner->rightScanner->reset(scanner->rightScanner);
 }
 
-bool __joinScannerHasField(void* ptr, char* field) {
+bool __joinScannerHasField(void* ptr, const char* field) {
     struct JoinScanner* scanner = (struct JoinScanner*)ptr;
     return scanner->leftScanner->hasField(scanner->leftScanner, field) || scanner->rightScanner->hasField(scanner->rightScanner, field);
 }
 
-int64_t __getIntegerFromJoinScanner(void* ptr, char* field) {
+int64_t __getIntegerFromJoinScanner(void* ptr, const char* field) {
     struct JoinScanner* scanner = (struct JoinScanner*)ptr;
     if (scanner->leftScanner->hasField(scanner->leftScanner, field)) {
         return getInt(scanner->leftScanner, field);
@@ -85,7 +85,7 @@ int64_t __getIntegerFromJoinScanner(void* ptr, char* field) {
     }
 }
 
-float __getFloatFromJoinScanner(void* ptr, char* field) {
+float __getFloatFromJoinScanner(void* ptr, const char* field) {
     struct JoinScanner* scanner = (struct JoinScanner*)ptr;
     if (scanner->leftScanner->hasField(scanner->leftScanner, field)) {
         return getFloat(scanner->leftScanner, field);
@@ -94,7 +94,7 @@ float __getFloatFromJoinScanner(void* ptr, char* field) {
     }
 }
 
-bool __getBoolFromJoinScanner(void* ptr, char* field) {
+bool __getBoolFromJoinScanner(void* ptr, const char* field) {
     struct JoinScanner* scanner = (struct JoinScanner*)ptr;
     if (scanner->leftScanner->hasField(scanner->leftScanner, field)) {
         return getBool(scanner->leftScanner, field);
@@ -103,7 +103,7 @@ bool __getBoolFromJoinScanner(void* ptr, char* field) {
     }
 }
 
-struct String __getStringFromJoinScanner(void* ptr, char* field) {
+struct String __getStringFromJoinScanner(void* ptr, const char* field) {
     struct JoinScanner* scanner = (struct JoinScanner*)ptr;
     if (scanner->leftScanner->hasField(scanner->leftScanner, field)) {
         return getString(scanner->leftScanner, field);
@@ -112,7 +112,7 @@ struct String __getStringFromJoinScanner(void* ptr, char* field) {
     }
 }
 
-struct Constant __getFieldFromJoinScanner(void* ptr, char* field) {
+struct Constant __getFieldFromJoinScanner(void* ptr, const char* field) {
     struct JoinScanner* scanner = (struct JoinScanner*)ptr;
     if (scanner->leftScanner->hasField(scanner->leftScanner, field)) {
         return getField(scanner->leftScanner, field);
@@ -121,15 +121,15 @@ struct Constant __getFieldFromJoinScanner(void* ptr, char* field) {
     }
 }
 
-void __setIntegerToJoinScanner(void* ptr, char* field, int64_t value) {}
+void __setIntegerToJoinScanner(void* ptr, const char* field, int64_t value) {}
 
-void __setFloatToJoinScanner(void* ptr, char* field, float value) {}
+void __setFloatToJoinScanner(void* ptr, const char* field, float value) {}
 
-void __setBoolToJoinScanner(void* ptr, char* field, bool value) {}
+void __setBoolToJoinScanner(void* ptr, const char* field, bool value) {}
 
-void __setStringToJoinScanner(void* ptr, char* field, struct String value) {}
+void __setStringToJoinScanner(void* ptr, const char* field, struct String value) {}
 
-void __setVarcharToJoinScanner(void* ptr, char* field, char* value) {}
+void __setVarcharToJoinScanner(void* ptr, const char* field, const char* value) {}
 
 static bool __joinScanNextFunction(void* ptr) {
     struct JoinScanner* scanner = (struct JoinScanner*)ptr;

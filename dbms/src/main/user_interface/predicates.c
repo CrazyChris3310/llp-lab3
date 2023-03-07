@@ -1,16 +1,20 @@
 #include "user_interface/predicates.h"
 #include <stdlib.h>
 
-struct Condition* createCondition(char* fieldName, struct Constant constant, enum CompareOperator operator) {
+struct Condition* createCondition(const char* fieldName, struct Constant constant, enum CompareOperator oper) {
     struct Condition* condition = malloc(sizeof(struct Condition));
     condition->fieldName = fieldName;
     condition->constant = constant;
-    condition->operator = operator;
+    condition->oper = oper;
     return condition;
 }
 
-void addCondition(struct Predicate* predicate, char* fieldName, struct Constant constant, enum CompareOperator operator) {
-    struct Condition* condition = createCondition(fieldName, constant, operator);
+void addCondition(struct Predicate* predicate, char* fieldName, struct Constant constant, enum CompareOperator oper) {
+    struct Condition* condition = createCondition(fieldName, constant, oper);
+    addNode(predicate->conditions, condition);
+}
+
+void addConditionDirectly(struct Predicate* predicate, struct Condition* condition) {
     addNode(predicate->conditions, condition);
 }
 
@@ -40,7 +44,7 @@ struct Constant boolConstant(bool value) {
     return (struct Constant){ .type = BOOL, .value.boolVal = value };
 }
 
-struct Constant stringConstant(char* value) {
+struct Constant stringConstant(const char* value) {
     return (struct Constant){ .type = STRING, .value.stringVal = value };
 }
 

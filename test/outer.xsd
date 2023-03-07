@@ -1,0 +1,11 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://example.com/my-schema">
+    <xs:import namespace="http://example.com/my-schema" schemaLocation="innerclass.xsd"/>
+    <xs:element name="OuterClass">
+        <xs:element name="inner" type="xs:string" />
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="inner" type="InnerClass"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

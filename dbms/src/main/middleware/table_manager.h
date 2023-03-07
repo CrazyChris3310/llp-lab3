@@ -1,8 +1,8 @@
 #ifndef TABLE_MANAGER_H
 #define TABLE_MANAGER_H
 
-#include "middleware/schema.h"
-#include "page_cacheing/cache_manager.h"
+#include "schema.h"
+#include "../page_cacheing/cache_manager.h"
 
 #define TABLE_OF_TABLES_NAME "table_of_tables"
 #define TABLE_OF_TABLES_TABLE_NAME_COLUMN "name"
@@ -27,8 +27,8 @@ struct TableManager* createTableManager(struct CacheManager* cacheManager);
 void destroyTableManager(struct TableManager* tm);
 
 void createDatabaseTable(struct TableManager* tm, struct Schema* schema);
-struct Schema* findTableSchema(struct TableManager* tm, char* tableName);
-void dropDatabaseTable(struct TableManager* tm, char* tableName);
+struct Schema* findTableSchema(struct TableManager* tm, const char* tableName);
+void dropDatabaseTable(struct TableManager* tm, const char* tableName);
 void appendPagesToFreeList(struct CacheManager* cacheManager, int64_t blockId);
 
 #endif

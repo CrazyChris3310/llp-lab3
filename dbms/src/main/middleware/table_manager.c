@@ -1,13 +1,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "page_cacheing/cache_manager.h"
-#include "user_interface/read_scan.h"
-#include "user_interface/write_scan.h"
-#include "util/my_string.h"
-#include "middleware/schema.h"
-#include "middleware/table_manager.h"
-#include "util/linked_list.h"
+#include "../page_cacheing/cache_manager.h"
+#include "../user_interface/read_scan.h"
+#include "../user_interface/write_scan.h"
+#include "../util/my_string.h"
+#include "schema.h"
+#include "table_manager.h"
+#include "../util/linked_list.h"
 
 #define MAX_COL_NAME 60
 
@@ -88,7 +88,7 @@ void createDatabaseTable(struct TableManager* tm, struct Schema* schema) {
     writeFileHeader(tm->cacheManager->fileManager);
 }
 
-struct Schema* findTableSchema(struct TableManager* tm, char* tableName) {
+struct Schema* findTableSchema(struct TableManager* tm, const char* tableName) {
     struct TableScanner* tableScanner = createTableScanner(tm->cacheManager, tm->tableOfTables, false, tm->cacheManager->fileManager->header.tableOfTables.value);
     struct String tblName = (struct String){ .value = tableName, .lenght = strlen(tableName) };
     int64_t firstPageOffset;
@@ -130,7 +130,7 @@ struct Schema* findTableSchema(struct TableManager* tm, char* tableName) {
     return schema;
 }
 
-void dropDatabaseTable(struct TableManager* tm, char* tableName) {
+void dropDatabaseTable(struct TableManager* tm, const char* tableName) {
     struct PossibleValue po = tm->cacheManager->fileManager->header.tableOfTables;
     struct TableScanner* tableScanner = createTableScanner(tm->cacheManager, tm->tableOfTables, !po.exists, po.value);
     int64_t tableId = -1;

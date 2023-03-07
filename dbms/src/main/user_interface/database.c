@@ -19,7 +19,7 @@ struct Database {
 };
 
 // handle case with block_size when database already exists 
-struct Database* openDatabase(char* filename) {
+struct Database* openDatabase(const char* filename) {
     struct Database* db = malloc(sizeof(struct Database));
     db->fileManager = createFileManager(filename, DEFAULT_BLOCK_SIZE);
     db->cacheManager = createCacheManager(db->fileManager, DEFAULT_POOL_SIZE);
@@ -39,11 +39,11 @@ void createTable(struct Database* database, struct Schema* schema) {
     createDatabaseTable(database->tableManager, schema);
 }
 
-void dropTable(struct Database* database, char* name) {
+void dropTable(struct Database* database, const char* name) {
     dropDatabaseTable(database->tableManager, name);
 }
 
-static void setTableFirstBlock(struct Database* database, char* tableName, size_t firstBlock) {
+static void setTableFirstBlock(struct Database* database, const char* tableName, size_t firstBlock) {
     struct TableScanner* tableScanner = createTableScanner(database->cacheManager, database->tableManager->tableOfTables, false, database->fileManager->header.tableOfTables.value);
         struct String tblName = (struct String){ .value = tableName, .lenght = strlen(tableName) };
 
@@ -149,6 +149,6 @@ void dropDatabase(struct Database* database) {
     clearCachedPages(database->cacheManager);
 }
 
-struct Schema* findTable(struct Database* database, char* tableName) {
+struct Schema* findTable(struct Database* database, const char* tableName) {
     return findTableSchema(database->tableManager, tableName);
 }

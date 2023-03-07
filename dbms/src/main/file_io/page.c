@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "util/my_string.h"
+#include "../util/my_string.h"
 #include "page.h"
 
 struct Page* allocatePage(size_t page_size) {

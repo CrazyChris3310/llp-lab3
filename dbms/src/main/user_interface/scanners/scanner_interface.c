@@ -12,44 +12,44 @@
 #include "user_interface/write_scan.h"
 #include "user_interface/predicates.h"
 
-int64_t getInt(struct ScanInterface* scanner, char* field) {
+int64_t getInt(struct ScanInterface* scanner, const char* field) {
     return scanner->getInt(scanner, field);
 }
-float getFloat(struct ScanInterface* scanner, char* field) {
+float getFloat(struct ScanInterface* scanner, const char* field) {
     return scanner->getFloat(scanner, field);
 }
-bool getBool(struct ScanInterface* scanner, char* field) {
+bool getBool(struct ScanInterface* scanner, const char* field) {
     return scanner->getBool(scanner, field);
 }
-struct String getString(struct ScanInterface* scanner, char* field) {
+struct String getString(struct ScanInterface* scanner, const char* field) {
     return scanner->getString(scanner, field);
 }
 
-void setInt(struct ScanInterface* scanner, char* field, int64_t value) {
+void setInt(struct ScanInterface* scanner, const char* field, int64_t value) {
     scanner->setInt(scanner, field, value);
 }
 
-void setFloat(struct ScanInterface* scanner, char* field, float value) {
+void setFloat(struct ScanInterface* scanner, const char* field, float value) {
     scanner->setFloat(scanner, field, value);
 }
 
-struct Constant getField(struct ScanInterface* scanner, char* field) {
+struct Constant getField(struct ScanInterface* scanner, const char* field) {
     return scanner->getField(scanner, field);
 }
 
-void setBool(struct ScanInterface* scanner, char* field, bool value) {
+void setBool(struct ScanInterface* scanner, const char* field, bool value) {
     scanner->setBool(scanner, field, value);
 }
 
-void setString(struct ScanInterface* scanner, char* field, struct String value) {
+void setString(struct ScanInterface* scanner, const char* field, struct String value) {
     scanner->setString(scanner, field, value);
 }
 
-void setVarchar(struct ScanInterface* scanner, char* field, char* value) {
+void setVarchar(struct ScanInterface* scanner, const char* field, const char* value) {
     scanner->setVarchar(scanner, field, value);
 }
 
-void setField(struct ScanInterface* scanner, char* field, struct Constant value) {
+void setField(struct ScanInterface* scanner, const char* field, struct Constant value) {
     if (value.type == STRING) {
         scanner->setVarchar(scanner, field, value.value.stringVal);
     } else if (value.type == INT) {
@@ -81,6 +81,6 @@ void reset(struct ScanInterface* scanner) {
     scanner->reset(scanner);
 }
 
-bool hasField(struct ScanInterface* scanner, char* field) {
+bool hasField(struct ScanInterface* scanner, const char* field) {
     return scanner->hasField(scanner, field);
 }

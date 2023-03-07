@@ -1,43 +1,45 @@
 #ifndef QUERY_H
 #define QUERY_H
 
-#include "util/linked_list.h"
-#include "user_interface/predicates.h"
+#include "../util/linked_list.h"
+#include "predicates.h"
 
 struct SelectQuery {
-    char* from;
+    const char* from;
     struct LinkedList* joins;
     struct Predicate* predicate;  
 };
 
 struct InsertQuery {
-    char* into;
+    const char* into;
     struct LinkedList* values;
 };
 
 struct DeleteQuery {
-    char* from;
+    const char* from;
     struct Predicate* predicate;
 };
 
 struct UpdateQuery {
-    char* table;
+    const char* table;
     struct Condition* condition;
     struct Predicate* predicate;
 };
 
-struct SelectQuery* createSelectQuery(char* from, struct Predicate* predicate);
-struct InsertQuery* createInsertQuery(char* into);
-struct DeleteQuery* createDeleteQuery(char* from, struct Predicate* predicate);
-struct UpdateQuery* createUpdateQuery(char* table, char* field, struct Constant value, struct Predicate* predicate);
+enum QueryType { CREATE_QUERY, UPDATE_QUERY, SELECT_QUERY, DELETE_QUERY, INSERT_QUERY, DROP_QUERY };
+
+struct SelectQuery* createSelectQuery(const char* from, struct Predicate* predicate);
+struct InsertQuery* createInsertQuery(const char* into);
+struct DeleteQuery* createDeleteQuery(const char* from, struct Predicate* predicate);
+struct UpdateQuery* createUpdateQuery(const char* table, const char* field, struct Constant value, struct Predicate* predicate);
 
 void destroySelectQuery(struct SelectQuery* query);
 void destroyInsertQuery(struct InsertQuery* query);
 void destroyDeleteQuery(struct DeleteQuery* query);
 void destroyUpdateQuery(struct UpdateQuery* query);
 
-void addInsertionField(struct InsertQuery* query, char* field, struct Constant value);
+void addInsertionField(struct InsertQuery* query, const char* field, struct Constant value);
 void clearInsertQuery(struct InsertQuery* query);
-void joinTable(struct SelectQuery* query, char* table);
+void joinTable(struct SelectQuery* query, const char* table);
 
 #endif

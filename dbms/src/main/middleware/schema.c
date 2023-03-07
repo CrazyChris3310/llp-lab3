@@ -3,15 +3,15 @@
 #include "schema.h"
 #include <stdlib.h>
 #include <stdbool.h>
-#include "file_io/page.h"
+#include "../file_io/page.h"
 
 static void freeField(void* ptr) {
     struct Field* field = (struct Field*)ptr;
-    free(field->name.value);
+    free((char*)field->name.value);
     free(field);
 }
 
-struct Schema* createSchema(char* name) {
+struct Schema* createSchema(const char* name) {
     struct Schema* schema = malloc(sizeof(struct Schema));
     schema->fields = createClearableLinkedList(freeField);
     schema->slotSize = sizeof(bool);
@@ -26,7 +26,7 @@ void destroySchema(struct Schema* schema) {
     free(schema);
 }
 
-void addField(struct Schema* schema, char* name, enum DataType type, size_t len) {
+void addField(struct Schema* schema, const char* name, enum DataType type, size_t len) {
     struct Field* field = malloc(sizeof(struct Field));
     size_t length = strlen(name);
     char* realName = malloc(length + 1);
@@ -50,19 +50,19 @@ void clearSchema(struct Schema* schema) {
     clearList(schema->fields);
 }
 
-void addIntField(struct Schema* schema, char* name) {
+void addIntField(struct Schema* schema, const char* name) {
     addField(schema, name, INT, sizeof(int64_t));
 }
 
-void addFloatField(struct Schema* schema, char* name) {
+void addFloatField(struct Schema* schema, const char* name) {
     addField(schema, name, FLOAT, sizeof(float));
 }
 
-void addStringField(struct Schema* schema, char* name, size_t len) {
+void addStringField(struct Schema* schema, const char* name, size_t len) {
     addField(schema, name, STRING, len + 1); 
 }
 
-void addBooleanField(struct Schema* schema, char* name) {
+void addBooleanField(struct Schema* schema, const char* name) {
     addField(schema, name, BOOL, sizeof(bool));
 }
 
@@ -70,7 +70,7 @@ struct LinkedList* getFieldList(struct Schema* schema) {
     return schema->fields;
 }
 
-struct Field* schemaGetField(struct Schema* schema, char* field) {
+struct Field* schemaGetField(struct Schema* schema, const char* field) {
     struct Field* ret = NULL;
     struct ListIterator* iterator = createListIterator(schema->fields);
     while (iteratorHasNext(iterator)) {

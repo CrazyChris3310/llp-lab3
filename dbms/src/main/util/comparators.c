@@ -1,11 +1,9 @@
-#include <stdbool.h>
-#include <inttypes.h>
 #include <math.h>
 #include <string.h>
-#include "util/comparators.h"
+#include "comparators.h"
 
-bool compareInts(int64_t a, int64_t b,  enum CompareOperator operator) {
-    switch (operator) {
+bool compareInts(int64_t a, int64_t b,  enum CompareOperator oper) {
+    switch (oper) {
         case EQUAL:
             return a == b;
         case NOT_EQUAL:
@@ -24,8 +22,8 @@ bool compareInts(int64_t a, int64_t b,  enum CompareOperator operator) {
 
 const float accuracy = 1e-5;
 
-bool compareFloats(float a, float b,  enum CompareOperator operator) {
-    switch (operator) {
+bool compareFloats(float a, float b,  enum CompareOperator oper) {
+    switch (oper) {
         case EQUAL:
             return fabsf(a - b) < accuracy;
         case GREATER:
@@ -41,8 +39,8 @@ bool compareFloats(float a, float b,  enum CompareOperator operator) {
     }
 }
 
-bool compareBools(bool a, bool b,  enum CompareOperator operator) {
-    switch (operator) {
+bool compareBools(bool a, bool b,  enum CompareOperator oper) {
+    switch (oper) {
         case EQUAL:
             return a == b;
         case NOT_EQUAL:
@@ -52,9 +50,9 @@ bool compareBools(bool a, bool b,  enum CompareOperator operator) {
     }
 }
 
-bool compareVarchars(char* a, char* b,  enum CompareOperator operator) {
+bool compareVarchars(const char* a, const char* b,  enum CompareOperator oper) {
     int res = strcmp(a, b);
-    switch (operator) {
+    switch (oper) {
         case EQUAL:
             return res == 0;
         case NOT_EQUAL:

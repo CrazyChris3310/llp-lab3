@@ -7,7 +7,7 @@
 
 struct String {
     size_t lenght;
-    char* value;
+    const char* value;
 };
 
 int compareStrings(struct String a, struct String b);

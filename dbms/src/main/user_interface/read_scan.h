@@ -3,18 +3,18 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
-#include "util/my_string.h"
-#include "user_interface/predicates.h"
+#include "../util/my_string.h"
+#include "predicates.h"
 
 struct ScanInterface;
 
 bool next(struct ScanInterface* scanner);
 
-int64_t getInt(struct ScanInterface* scanner, char* field);
-float getFloat(struct ScanInterface* scanner, char* field);
-bool getBool(struct ScanInterface* scanner, char* field);
-struct String getString(struct ScanInterface* scanner, char* field);
-struct Constant getField(struct ScanInterface* scanner, char* field);
+int64_t getInt(struct ScanInterface* scanner, const char* field);
+float getFloat(struct ScanInterface* scanner, const char* field);
+bool getBool(struct ScanInterface* scanner, const char* field);
+struct String getString(struct ScanInterface* scanner, const char* field);
+struct Constant getField(struct ScanInterface* scanner, const char* field);
 
 void reset(struct ScanInterface* scanner);
 void destroyScanner(struct ScanInterface* scanner);

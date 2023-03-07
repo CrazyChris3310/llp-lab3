@@ -3,8 +3,8 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
-#include "middleware/schema.h"
-#include "page_cacheing/cache_manager.h"
+#include "../../middleware/schema.h"
+#include "../../page_cacheing/cache_manager.h"
 
 struct ScanInterface;
 struct TableScanner;

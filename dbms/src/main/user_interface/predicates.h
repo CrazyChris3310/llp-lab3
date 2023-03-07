@@ -3,16 +3,10 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
-#include "middleware/data_type.h"
-#include "user_interface/scanners/scanners.h"
-#include "util/comparators.h"
-#include "util/linked_list.h"
-
-#define constant(x) _Generic((x), \
-    int:  intConstant, \
-    float:   floatConstant, \
-    char*: stringConstant, \
-    bool: boolConstant)(x)
+#include "../middleware/data_type.h"
+#include "scanners/scanners.h"
+#include "../util/comparators.h"
+#include "../util/linked_list.h"
 
 struct Constant {
     enum DataType type;
@@ -20,14 +14,14 @@ struct Constant {
         int64_t intVal;
         float floatVal;
         bool boolVal;
-        char* stringVal;
+        const char* stringVal;
     } value;
 };
 
 struct Condition {
-    char* fieldName;
+    const char* fieldName;
     struct Constant constant;
-    enum CompareOperator operator;
+    enum CompareOperator oper;
 };
 
 struct Predicate {
@@ -37,12 +31,13 @@ struct Predicate {
 struct Predicate* createPredicate();
 void destroyPredicate(struct Predicate* predicate);
 
-struct Condition* createCondition(char* fieldName, struct Constant constant, enum CompareOperator operator);
-void addCondition(struct Predicate* predicate, char* fieldName, struct Constant constant, enum CompareOperator operator);
+struct Condition* createCondition(const char* fieldName, struct Constant constant, enum CompareOperator oper);
+void addCondition(struct Predicate* predicate, char* fieldName, struct Constant constant, enum CompareOperator oper);
+void addConditionDirectly(struct Predicate* predicate, struct Condition* condition);
 
 struct Constant intConstant(int64_t value);
 struct Constant floatConstant(float value);
 struct Constant boolConstant(bool value);
-struct Constant stringConstant(char* value);
+struct Constant stringConstant(const char* value);
 
 #endif

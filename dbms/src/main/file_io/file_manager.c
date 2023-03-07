@@ -22,7 +22,7 @@ void writeFileHeader(struct FileManager* fm) {
     fwrite(&fm->header, sizeof(struct FileHeader), 1, fm->file);
 }
 
-struct FileManager* createFileManager(char* filename, size_t blockSize) {
+struct FileManager* createFileManager(const char* filename, size_t blockSize) {
     struct FileManager* manager = malloc(sizeof(struct FileManager));
     manager->filename = filename;
     manager->blockSize = blockSize;

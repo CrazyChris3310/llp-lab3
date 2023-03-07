@@ -1,9 +1,8 @@
-
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "util/my_string.h"
-#include "page_cacheing/cache_manager.h"
+#include "../util/my_string.h"
+#include "../page_cacheing/cache_manager.h"
 #include "schema.h"
 
 #define USED 1

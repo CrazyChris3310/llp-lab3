@@ -1,11 +1,11 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "util/my_string.h"
-#include "page_cacheing/cache_manager.h"
-#include "file_io/file_manager.h"
+#include "../util/my_string.h"
+#include "../page_cacheing/cache_manager.h"
+#include "../file_io/file_manager.h"
 #include "schema.h"
-#include "user_interface/database.h"
+#include "../user_interface/database.h"
 
 void appendPagesToFreeList(struct CacheManager* cacheManager, int64_t blockId) {
     struct FileHeader* header = &cacheManager->fileManager->header;

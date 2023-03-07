@@ -2,8 +2,8 @@
 #define SCANNERS_DECLARATIONS_H
 
 #include <inttypes.h>
-#include "user_interface/predicates.h"
-#include "user_interface/write_scan.h"
+#include "../predicates.h"
+#include "../write_scan.h"
 
 struct ScanInterface {
     void(*reset)(void* ptr);
@@ -12,18 +12,18 @@ struct ScanInterface {
     void(*insertNextRecord)(void* ptr);
     void(*deleteRecord)(void* ptr);
 
-    bool(*hasField)(void* ptr, char* field);
-    int64_t(*getInt)(void* ptr, char* field);
-    struct String(*getString)(void* ptr, char* filed);
-    float(*getFloat)(void* ptr, char* field);
-    bool(*getBool)(void* ptr, char* field);
-    struct Constant(*getField)(void* ptr, char* field);
+    bool(*hasField)(void* ptr, const char* field);
+    int64_t(*getInt)(void* ptr, const char* field);
+    struct String(*getString)(void* ptr, const char* filed);
+    float(*getFloat)(void* ptr, const char* field);
+    bool(*getBool)(void* ptr, const char* field);
+    struct Constant(*getField)(void* ptr, const char* field);
 
-    void(*setInt)(void* ptr, char* field, int64_t value);
-    void(*setString)(void* ptr, char* field, struct String value);
-    void(*setBool)(void* ptr, char* field, bool value);
-    void(*setFloat)(void* ptr, char* field, float value);
-    void(*setVarchar)(void* ptr, char* field, char* value);
+    void(*setInt)(void* ptr, const char* field, int64_t value);
+    void(*setString)(void* ptr, const char* field, struct String value);
+    void(*setBool)(void* ptr, const char* field, bool value);
+    void(*setFloat)(void* ptr, const char* field, float value);
+    void(*setVarchar)(void* ptr, const char* field, const char* value);
 
     void(*destroy)(void* ptr);
 };

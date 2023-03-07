@@ -14,7 +14,7 @@ struct FileHeader {
 
 struct FileManager {
     FILE* file;
-    char* filename;
+    const char* filename;
     size_t blockSize;
     bool isNew;
     struct FileHeader header;
@@ -22,7 +22,7 @@ struct FileManager {
 
 void writeFileHeader(struct FileManager* fm);
 
-struct FileManager* createFileManager(char* filename, size_t blockSize);
+struct FileManager* createFileManager(const char* filename, size_t blockSize);
 
 void destoryFileManager(struct FileManager* manager);
 

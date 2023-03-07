@@ -1,7 +1,7 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include "user_interface/query.h"
+#include "query.h"
 
 struct Database;
 struct SelectQuery;
