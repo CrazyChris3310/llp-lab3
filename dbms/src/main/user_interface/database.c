@@ -138,7 +138,12 @@ void performUpdateQuery(struct Database* database, struct UpdateQuery* query) {
     scan = (struct ScanInterface*)createSelectScanner(scan, *query->predicate);
 
     while (next(scan)) {
-        setField(scan, query->condition->fieldName, query->condition->constant);
+        struct ListIterator* iterator = createListIterator(query->new_values);
+        while (iteratorHasNext(iterator)) {
+            struct Condition* condition = (struct Condition*)iteratorNext(iterator);
+            setField(scan, condition->fieldName, condition->constant);
+        }
+        freeListIterator(iterator);
     }
 
     destroyScanner(scan);

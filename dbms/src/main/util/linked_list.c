@@ -163,3 +163,5 @@ void iteratorRemove(struct ListIterator* iterator) {
     free(iterator->current);
     iterator->current = NULL;
 }
+
+//TODO: make reset

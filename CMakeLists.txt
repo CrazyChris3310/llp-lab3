@@ -22,7 +22,7 @@ file(GLOB_RECURSE C_FILES_SERVER CONFIGURE_DEPENDS server/*.cpp)
 file(GLOB_RECURSE H_FILES_SERVER CONFIGURE_DEPENDS server/*.h)
 
 add_executable(${SERVER_NAME} ${C_FILES_SERVER} ${H_FILES_SERVER} ${C_FILES_COMMON} ${H_FILES_COMMON})
-target_include_directories(${CLIENT_NAME} PUBLIC server common)
+target_include_directories(${SERVER_NAME} PUBLIC server dbms common)
 add_subdirectory(dbms)
 target_link_libraries(${SERVER_NAME} xerces-c dbms)
 

@@ -66,16 +66,21 @@ void destroyDeleteQuery(struct DeleteQuery* query) {
     free(query);
 }
 
-struct UpdateQuery* createUpdateQuery(const char* table, const char* field, struct Constant value, struct Predicate* predicate) {
+struct UpdateQuery* createUpdateQuery(const char* table, struct Predicate* predicate) {
     struct UpdateQuery* query = malloc(sizeof(struct UpdateQuery));
+    query->new_values = createLinkedList();
     query->table = table;
-    query->condition = createCondition(field, value, EQUAL);
     query->predicate = predicate;
     return query;
 }
 
+void addUpdateField(struct UpdateQuery* query, const char* field, struct Constant value) {
+    struct Condition* condition = createCondition(field, value, EQUAL);
+    addNode(query->new_values, condition);
+}
+
 void destroyUpdateQuery(struct UpdateQuery* query) {
     destroyPredicate(query->predicate);
-    free(query->condition);
+    freeLinkedList(query->new_values);
     free(query);
 }

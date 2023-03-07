@@ -22,8 +22,8 @@ struct DeleteQuery {
 
 struct UpdateQuery {
     const char* table;
-    struct Condition* condition;
     struct Predicate* predicate;
+    struct LinkedList* new_values;
 };
 
 enum QueryType { CREATE_QUERY, UPDATE_QUERY, SELECT_QUERY, DELETE_QUERY, INSERT_QUERY, DROP_QUERY };
@@ -31,7 +31,7 @@ enum QueryType { CREATE_QUERY, UPDATE_QUERY, SELECT_QUERY, DELETE_QUERY, INSERT_
 struct SelectQuery* createSelectQuery(const char* from, struct Predicate* predicate);
 struct InsertQuery* createInsertQuery(const char* into);
 struct DeleteQuery* createDeleteQuery(const char* from, struct Predicate* predicate);
-struct UpdateQuery* createUpdateQuery(const char* table, const char* field, struct Constant value, struct Predicate* predicate);
+struct UpdateQuery* createUpdateQuery(const char* table, struct Predicate* predicate);
 
 void destroySelectQuery(struct SelectQuery* query);
 void destroyInsertQuery(struct InsertQuery* query);
@@ -39,6 +39,7 @@ void destroyDeleteQuery(struct DeleteQuery* query);
 void destroyUpdateQuery(struct UpdateQuery* query);
 
 void addInsertionField(struct InsertQuery* query, const char* field, struct Constant value);
+void addUpdateField(struct UpdateQuery* query, const char* field, struct Constant value);
 void clearInsertQuery(struct InsertQuery* query);
 void joinTable(struct SelectQuery* query, const char* table);
 
