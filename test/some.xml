@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<outer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="inner.xsd">
-    <str>Hello</str>
-    <inner>
-        <field1>I'm inside</field1>
-        <field2>34</field2>
-    </inner>
-</outer>

@@ -5,6 +5,10 @@
 #include "../client/lexer.h"
 #include "evaluate.h"
 #include <sstream>
+#include <netinet/ip.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
 int parseInput(std::string& query, NodeWrapper& nodeWrapper) {
     yy_scan_string(query.c_str());
@@ -13,7 +17,7 @@ int parseInput(std::string& query, NodeWrapper& nodeWrapper) {
     return code;
 }
 
-void print(NodeWrapper& wrapper) {
+std::string toXmlString(NodeWrapper& wrapper) {
     std::ostringstream oss;
     request_t req = toXmlRequest(wrapper);
 
@@ -23,10 +27,27 @@ void print(NodeWrapper& wrapper) {
 
     request(oss, req, map);
 
-    std::cout << oss.str() << std::endl;
+    return oss.str();
 }
 
+
+void sendData(int sock, std::string buf) {
+    int bytes_sent = send(sock, buf.c_str(), buf.length(), 0);
+    if (bytes_sent != buf.length()) {
+        std::cout << "WARNING! Not everything was sent to server\n";
+    }
+}
+
+
 int main(int argc, char* argv[]) {
+
+    // int sock = socket(AF_INET, SOCK_STREAM, 0);
+    // struct sockaddr_in local;
+    // inet_aton("127.0.0.1", &local.sin_addr);
+	// local.sin_port = htons(1234);
+	// local.sin_family = AF_INET;
+
+    // connect(sock, (struct sockaddr*)&local, sizeof(local));
 
     std::string buf;
     std::string line;
@@ -40,9 +61,8 @@ int main(int argc, char* argv[]) {
             if (code) {
                 std::cout << "ret_code: " << code << std::endl;
             } else {
-                // nodeWrapper.node->print(0);
-                // delete nodeWrapper.node;
-                print(nodeWrapper);
+                // sendData(sock, toXmlString(nodeWrapper));
+                std::cout << toXmlString(nodeWrapper) << std::endl;
             }
             buf.clear();
             std::cout << "> ";

@@ -44,6 +44,7 @@ void resolvePredicate(Predicate* pred, std::vector<condition_t>& conditions) {
 
 void evaluateSelect(ForNode* node,std::vector<const char*>& joins, 
                                std::vector<condition_t>& conditions, ret_val_t* retVal) {
+    joins.push_back(node->tableName);
     for (Node* action : ((ActionNode*)(node->action))->actions) {
         if (action->nodeType == FILTER_NODE) {
             Predicate* pred = ((FilterNode*)action)->predicate;
@@ -55,12 +56,12 @@ void evaluateSelect(ForNode* node,std::vector<const char*>& joins,
         if (action->nodeType == RETURN_NODE) {
             ret_val_t toReturn;
             ReturnAction* act = ((ReturnAction*)action);
-            if (act->nodeType == CONSTANT_NODE) {
-                Constant* constant = (Constant*)act;
+            if (act->retVal->nodeType == CONSTANT_NODE) {
+                Constant* constant = (Constant*)act->retVal;
                 constant_t cnst(constant->getStrType(), constant->getStrVal());
                 toReturn.constant(cnst);
-            } else if (act->nodeType == MAP_NODE) {
-                map_t mapa = makeMap((MapNode*)act);
+            } else if (act->retVal->nodeType == MAP_NODE) {
+                map_t mapa = makeMap((MapNode*)act->retVal);
                 toReturn.map(mapa);
             }
             *retVal = toReturn;
