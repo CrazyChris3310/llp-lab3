@@ -21,5 +21,6 @@ void reset(struct ScanInterface* scanner);
 void destroyScanner(struct ScanInterface* scanner);
 
 size_t getColumnsCount(struct ScanInterface* scanner);
+const char* getColumnNameById(struct ScanInterface* scanner, size_t id);
 
 #endif

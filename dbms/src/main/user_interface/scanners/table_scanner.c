@@ -35,6 +35,7 @@ void __destroyTableScanner(void* ptr);
 static void __resetTableScanner(void* ptr);
 
 size_t __getColumnsCountFromTableScanner(void* ptr);
+const char* __getColumnNameByIdFromTableScanner(void* ptr, size_t id);
 
 /*
     search for the first page of given table in file and set current scanner before first record of this table
@@ -77,6 +78,7 @@ struct TableScanner* createTableScanner(struct CacheManager* cm, struct Schema* 
     scanner->scanInterface.reset = __resetTableScanner;
 
     scanner->scanInterface.getColumnsCount = __getColumnsCountFromTableScanner;
+    scanner->scanInterface.getColumnNameById = __getColumnNameByIdFromTableScanner;
 
     return scanner;
 }
@@ -281,4 +283,12 @@ static void __deleteRecordFromTableScanner(void* ptr) {
 size_t __getColumnsCountFromTableScanner(void* ptr) {
     struct TableScanner* scanner = (struct TableScanner*)ptr;
     return getListSize(scanner->schema->fields);
+}
+
+const char* __getColumnNameByIdFromTableScanner(void* ptr, size_t id) {
+    struct TableScanner* scanner = (struct TableScanner*)ptr;
+    if (id >= __getColumnsCountFromTableScanner(scanner)) {
+        return NULL;
+    }
+    return schemaGetFieldById(scanner->schema, id)->name.value;
 }

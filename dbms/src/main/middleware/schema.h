@@ -3,6 +3,7 @@
 
 #include "../util/my_string.h"
 #include "data_type.h"
+#include "../file_io/page.h"
 #include <stdbool.h>
 #include "../util/linked_list.h"
 

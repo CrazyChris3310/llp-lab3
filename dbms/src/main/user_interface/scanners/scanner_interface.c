@@ -92,3 +92,7 @@ bool hasField(struct ScanInterface* scanner, const char* field) {
 size_t getColumnsCount(struct ScanInterface* scanner) {
     return scanner->getColumnsCount(scanner);
 }
+
+const char* getColumnNameById(struct ScanInterface* scanner, size_t id) {
+    return scanner->getColumnNameById(scanner, id);
+}

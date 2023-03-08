@@ -27,6 +27,7 @@ struct ScanInterface {
     void(*setVarchar)(void* ptr, const char* field, const char* value);
 
     size_t(*getColumnsCount)(void* ptr);
+    const char*(*getColumnNameById)(void* ptr, size_t id);
 
     void(*destroy)(void* ptr);
 };

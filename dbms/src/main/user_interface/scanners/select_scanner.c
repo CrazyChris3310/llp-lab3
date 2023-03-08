@@ -29,6 +29,7 @@ void __destroySelectScanner(void* ptr);
 static void __resetSelectScanner(void* ptr);
 
 size_t __getColumnsCountFromSelectScanner(void* ptr);
+const char* __getColumnNameByIdFromSelectScanner(void* ptr, size_t id);
 
 struct SelectScanner* createSelectScanner(struct ScanInterface* scan, struct Predicate predicate) {
     struct SelectScanner* scanner = malloc(sizeof(struct SelectScanner));
@@ -56,6 +57,7 @@ struct SelectScanner* createSelectScanner(struct ScanInterface* scan, struct Pre
     scanner->scanInterface.deleteRecord = __deleteRecordFromSelectScanner;
 
     scanner->scanInterface.getColumnsCount = __getColumnsCountFromSelectScanner;
+    scanner->scanInterface.getColumnNameById = __getColumnNameByIdFromSelectScanner;
 
     return scanner;
 }
@@ -179,4 +181,12 @@ static void __deleteRecordFromSelectScanner(void* ptr) {
 size_t __getColumnsCountFromSelectScanner(void* ptr) {
     struct SelectScanner* scanner = (struct SelectScanner*)ptr;
     return getColumnsCount(scanner->tableScanner);
+}
+
+const char* __getColumnNameByIdFromSelectScanner(void* ptr, size_t id) {
+    struct SelectScanner* scanner = (struct SelectScanner*)ptr;
+    if (id >= __getColumnsCountFromSelectScanner(scanner)) {
+        return NULL;
+    }
+    return getColumnNameById(scanner->tableScanner, id);
 }
