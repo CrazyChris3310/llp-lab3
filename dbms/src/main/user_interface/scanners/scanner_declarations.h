@@ -18,12 +18,15 @@ struct ScanInterface {
     float(*getFloat)(void* ptr, const char* field);
     bool(*getBool)(void* ptr, const char* field);
     struct Constant(*getField)(void* ptr, const char* field);
+    struct Constant(*getFieldById)(void* ptr, size_t id);
 
     void(*setInt)(void* ptr, const char* field, int64_t value);
     void(*setString)(void* ptr, const char* field, struct String value);
     void(*setBool)(void* ptr, const char* field, bool value);
     void(*setFloat)(void* ptr, const char* field, float value);
     void(*setVarchar)(void* ptr, const char* field, const char* value);
+
+    size_t(*getColumnsCount)(void* ptr);
 
     void(*destroy)(void* ptr);
 };

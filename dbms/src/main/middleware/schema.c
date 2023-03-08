@@ -84,6 +84,10 @@ struct Field* schemaGetField(struct Schema* schema, const char* field) {
     return ret;
 }
 
+struct Field* schemaGetFieldById(struct Schema* schema, size_t id) {
+    return (struct Field*)getNode(schema->fields, id);
+}
+
 struct PossibleValue getFieldOffset(struct Schema* schema, struct String field) {
     struct Field* fieldPtr = schemaGetField(schema, field.value);
     if (fieldPtr == NULL) {

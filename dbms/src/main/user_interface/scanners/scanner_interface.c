@@ -37,6 +37,10 @@ struct Constant getField(struct ScanInterface* scanner, const char* field) {
     return scanner->getField(scanner, field);
 }
 
+struct Constant getFieldById(struct ScanInterface* scanner, size_t id) {
+    return scanner->getFieldById(scanner, id);
+}
+
 void setBool(struct ScanInterface* scanner, const char* field, bool value) {
     scanner->setBool(scanner, field, value);
 }
@@ -83,4 +87,8 @@ void reset(struct ScanInterface* scanner) {
 
 bool hasField(struct ScanInterface* scanner, const char* field) {
     return scanner->hasField(scanner, field);
+}
+
+size_t getColumnsCount(struct ScanInterface* scanner) {
+    return scanner->getColumnsCount(scanner);
 }

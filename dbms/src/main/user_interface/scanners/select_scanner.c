@@ -13,6 +13,7 @@ float __getFloatFromSelectScanner(void* ptr, const char* field);
 bool __getBoolFromSelectScanner(void* ptr, const char* field);
 struct String __getStringFromSelectScanner(void* ptr, const char* field);
 struct Constant __getFieldFromSelectScanner(void* ptr, const char* field);
+struct Constant __getFieldFromSelectScannerById(void* ptr, size_t id);
 
 void __setIntegerToSelectScanner(void* ptr, const char* field, int64_t value);
 void __setFloatToSelectScanner(void* ptr, const char* field, float value);
@@ -27,6 +28,7 @@ static void __deleteRecordFromSelectScanner(void* ptr);
 void __destroySelectScanner(void* ptr);
 static void __resetSelectScanner(void* ptr);
 
+size_t __getColumnsCountFromSelectScanner(void* ptr);
 
 struct SelectScanner* createSelectScanner(struct ScanInterface* scan, struct Predicate predicate) {
     struct SelectScanner* scanner = malloc(sizeof(struct SelectScanner));
@@ -41,6 +43,7 @@ struct SelectScanner* createSelectScanner(struct ScanInterface* scan, struct Pre
     scanner->scanInterface.getInt = __getIntegerFromSelectScanner;
     scanner->scanInterface.getString = __getStringFromSelectScanner;
     scanner->scanInterface.getField = __getFieldFromSelectScanner;
+    scanner->scanInterface.getFieldById = __getFieldFromSelectScannerById;
 
     scanner->scanInterface.setBool = __setBoolToSelectScanner;
     scanner->scanInterface.setInt = __setIntegerToSelectScanner;
@@ -51,6 +54,8 @@ struct SelectScanner* createSelectScanner(struct ScanInterface* scan, struct Pre
     scanner->scanInterface.destroy = __destroySelectScanner;
     scanner->scanInterface.reset = __resetSelectScanner;
     scanner->scanInterface.deleteRecord = __deleteRecordFromSelectScanner;
+
+    scanner->scanInterface.getColumnsCount = __getColumnsCountFromSelectScanner;
 
     return scanner;
 }
@@ -115,6 +120,11 @@ struct Constant __getFieldFromSelectScanner(void* ptr, const char* field) {
     return getField(scanner->tableScanner, field);
 }
 
+struct Constant __getFieldFromSelectScannerById(void* ptr, size_t id) {
+    struct SelectScanner* scanner = (struct SelectScanner*)ptr;
+    return getFieldById(scanner->tableScanner, id);
+}
+
 void __setIntegerToSelectScanner(void* ptr, const char* field, int64_t value) {
     struct SelectScanner* scanner = (struct SelectScanner*)ptr;
     setInt(scanner->tableScanner, field, value);
@@ -164,4 +174,9 @@ static void __resetSelectScanner(void* ptr) {
 static void __deleteRecordFromSelectScanner(void* ptr) {
     struct SelectScanner* scanner = (struct SelectScanner*)ptr;
     scanner->tableScanner->deleteRecord(scanner->tableScanner);
+}
+
+size_t __getColumnsCountFromSelectScanner(void* ptr) {
+    struct SelectScanner* scanner = (struct SelectScanner*)ptr;
+    return getColumnsCount(scanner->tableScanner);
 }

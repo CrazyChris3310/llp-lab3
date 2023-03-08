@@ -15,8 +15,11 @@ float getFloat(struct ScanInterface* scanner, const char* field);
 bool getBool(struct ScanInterface* scanner, const char* field);
 struct String getString(struct ScanInterface* scanner, const char* field);
 struct Constant getField(struct ScanInterface* scanner, const char* field);
+struct Constant getFieldById(struct ScanInterface* scanner, size_t id);
 
 void reset(struct ScanInterface* scanner);
 void destroyScanner(struct ScanInterface* scanner);
+
+size_t getColumnsCount(struct ScanInterface* scanner);
 
 #endif

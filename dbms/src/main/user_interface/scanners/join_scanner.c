@@ -14,6 +14,7 @@ float __getFloatFromJoinScanner(void* ptr, const char* field);
 bool __getBoolFromJoinScanner(void* ptr, const char* field);
 struct String __getStringFromJoinScanner(void* ptr, const char* field);
 struct Constant __getFieldFromJoinScanner(void* ptr, const char* field);
+struct Constant __getFieldFromJoinScannerById(void* ptr, size_t id);
 
 void __setIntegerToJoinScanner(void* ptr, const char* field, int64_t value);
 void __setFloatToJoinScanner(void* ptr, const char* field, float value);
@@ -27,6 +28,7 @@ void __joinInsertion(void* ptr);
 void __destroyJoinScanner(void* ptr);
 static void __resetJoinScanner(void* ptr);
 
+size_t __getColumnsCountFromJoinScanner(void* ptr);
 
 struct JoinScanner* createJoinScanner(struct ScanInterface* left, struct ScanInterface* right) {
     struct JoinScanner* scanner = malloc(sizeof(struct JoinScanner));
@@ -43,6 +45,7 @@ struct JoinScanner* createJoinScanner(struct ScanInterface* left, struct ScanInt
     scanner->scanInterface.getInt = __getIntegerFromJoinScanner;
     scanner->scanInterface.getString = __getStringFromJoinScanner;
     scanner->scanInterface.getField = __getFieldFromJoinScanner;
+    scanner->scanInterface.getFieldById = __getFieldFromJoinScannerById;
 
     scanner->scanInterface.setBool = __setBoolToJoinScanner;
     scanner->scanInterface.setInt = __setIntegerToJoinScanner;
@@ -53,6 +56,8 @@ struct JoinScanner* createJoinScanner(struct ScanInterface* left, struct ScanInt
     scanner->scanInterface.destroy = __destroyJoinScanner;
     scanner->scanInterface.reset = __resetJoinScanner;
     scanner->scanInterface.deleteRecord = __joinInsertion;
+
+    scanner->scanInterface.getColumnsCount = __getColumnsCountFromJoinScanner;
 
     return scanner;
 }
@@ -121,6 +126,16 @@ struct Constant __getFieldFromJoinScanner(void* ptr, const char* field) {
     }
 }
 
+struct Constant __getFieldFromJoinScannerById(void* ptr, size_t id) {
+    struct JoinScanner* scanner = (struct JoinScanner*)ptr;
+    size_t leftSize = getColumnsCount(scanner->leftScanner);
+    if (id < leftSize) {
+        return getFieldById(scanner->leftScanner, id);
+    } else {
+        return getFieldById(scanner->rightScanner, id - leftSize);
+    }
+}
+
 void __setIntegerToJoinScanner(void* ptr, const char* field, int64_t value) {}
 
 void __setFloatToJoinScanner(void* ptr, const char* field, float value) {}
@@ -143,3 +158,8 @@ static bool __joinScanNextFunction(void* ptr) {
 }
 
 void __joinInsertion(void* ptr) {}
+
+size_t __getColumnsCountFromJoinScanner(void* ptr) {
+    struct JoinScanner* scanner = (struct JoinScanner*)ptr;
+    return getColumnsCount(scanner->leftScanner) + getColumnsCount(scanner->rightScanner);
+}
