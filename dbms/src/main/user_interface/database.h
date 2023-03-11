@@ -7,7 +7,7 @@ struct Database;
 struct SelectQuery;
 struct Schema;
 
-struct Database* openDatabase(char* filename);
+struct Database* openDatabase(const char* filename);
 void closeDatabase(struct Database* db);
 
 void dropDatabase(struct Database* database);

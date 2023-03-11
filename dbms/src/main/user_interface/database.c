@@ -59,7 +59,9 @@ static void setTableFirstBlock(struct Database* database, const char* tableName,
 
 struct ScanInterface* performSelectQuery(struct Database* database, struct SelectQuery* query) {
     struct Schema* schema = findTableSchema(database->tableManager, query->from);
-    assert(schema != NULL);
+    if (schema == NULL) {
+        return NULL;
+    }
     bool isNew = schema->startBlock == -1;
 
     struct ScanInterface* scan = (struct ScanInterface*)createTableScanner(database->cacheManager, schema, isNew, schema->startBlock);

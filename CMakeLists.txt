@@ -26,7 +26,3 @@ target_include_directories(${SERVER_NAME} PUBLIC server dbms common)
 add_subdirectory(dbms)
 target_link_libraries(${SERVER_NAME} xerces-c dbms)
 
-add_custom_target(run_client
-  COMMAND ${CLIENT_NAME}
-  DEPENDS ${CLIENT_NAME}
-)

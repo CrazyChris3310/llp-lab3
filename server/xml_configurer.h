@@ -9,8 +9,9 @@ extern "C" {
 #include "exceptions.h"
 #include <regex>
 
-DeleteQuery* parseDeleteQuery(request_t req);
-InsertQuery* parseInsertQuery(request_t req);
-SelectQuery* parseSelectQuery(request_t req);
-Schema* parseCreateQuery(request_t req);
-const char* parseDropQuery(request_t req);
+DeleteQuery* parseDeleteQuery(request_t& req);
+InsertQuery* parseInsertQuery(request_t& req);
+SelectQuery* parseSelectQuery(request_t& req);
+UpdateQuery* parseUpdateQuery(request_t& req);
+Schema* parseCreateQuery(request_t& req);
+const char* parseDropQuery(request_t& req);

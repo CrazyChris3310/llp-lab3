@@ -275,22 +275,28 @@ table (const table_sequence& s)
   this->table_ = s;
 }
 
-const select_t::predicate_type& select_t::
+const select_t::predicate_optional& select_t::
 predicate () const
 {
-  return this->predicate_.get ();
+  return this->predicate_;
 }
 
-select_t::predicate_type& select_t::
+select_t::predicate_optional& select_t::
 predicate ()
 {
-  return this->predicate_.get ();
+  return this->predicate_;
 }
 
 void select_t::
 predicate (const predicate_type& x)
 {
   this->predicate_.set (x);
+}
+
+void select_t::
+predicate (const predicate_optional& x)
+{
+  this->predicate_ = x;
 }
 
 void select_t::
@@ -1330,21 +1336,19 @@ ret_val_t::
 //
 
 select_t::
-select_t (const predicate_type& predicate,
-          const ret_val_type& ret_val)
+select_t (const ret_val_type& ret_val)
 : ::xml_schema::type (),
   table_ (this),
-  predicate_ (predicate, this),
+  predicate_ (this),
   ret_val_ (ret_val, this)
 {
 }
 
 select_t::
-select_t (::std::unique_ptr< predicate_type > predicate,
-          ::std::unique_ptr< ret_val_type > ret_val)
+select_t (::std::unique_ptr< ret_val_type > ret_val)
 : ::xml_schema::type (),
   table_ (this),
-  predicate_ (std::move (predicate), this),
+  predicate_ (this),
   ret_val_ (std::move (ret_val), this)
 {
 }
@@ -1404,7 +1408,7 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       ::std::unique_ptr< predicate_type > r (
         predicate_traits::create (i, f, this));
 
-      if (!predicate_.present ())
+      if (!this->predicate_)
       {
         this->predicate_.set (::std::move (r));
         continue;
@@ -1426,13 +1430,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     }
 
     break;
-  }
-
-  if (!predicate_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "predicate",
-      "");
   }
 
   if (!ret_val_.present ())
@@ -2918,13 +2915,14 @@ operator<< (::xercesc::DOMElement& e, const select_t& i)
 
   // predicate
   //
+  if (i.predicate ())
   {
     ::xercesc::DOMElement& s (
       ::xsd::cxx::xml::dom::create_element (
         "predicate",
         e));
 
-    s << i.predicate ();
+    s << *i.predicate ();
   }
 
   // ret_val

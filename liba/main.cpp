@@ -35,19 +35,31 @@ void sendData(int sock, std::string buf) {
     int bytes_sent = send(sock, buf.c_str(), buf.length(), 0);
     if (bytes_sent != buf.length()) {
         std::cout << "WARNING! Not everything was sent to server\n";
+        std::cout << "Only " << bytes_sent << " bytes were delivered\n";
     }
 }
 
 
 int main(int argc, char* argv[]) {
 
-    // int sock = socket(AF_INET, SOCK_STREAM, 0);
-    // struct sockaddr_in local;
-    // inet_aton("127.0.0.1", &local.sin_addr);
-	// local.sin_port = htons(1234);
-	// local.sin_family = AF_INET;
+    if (argc != 4) {
+        printf("Usage: %s <host> <port> <database>\n", argv[0]);
+        return 1;
+    }
 
-    // connect(sock, (struct sockaddr*)&local, sizeof(local));
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in local;
+    inet_aton(argv[1], &local.sin_addr);
+	local.sin_port = htons(atoi(argv[2]));
+	local.sin_family = AF_INET;
+
+    int status = connect(sock, (struct sockaddr*)&local, sizeof(local));
+    if (status < 0) {
+        std::cout << "Error during connection\n";
+        return 1;
+    }
+
+    sendData(sock, argv[3]);
 
     std::string buf;
     std::string line;
@@ -61,8 +73,7 @@ int main(int argc, char* argv[]) {
             if (code) {
                 std::cout << "ret_code: " << code << std::endl;
             } else {
-                // sendData(sock, toXmlString(nodeWrapper));
-                std::cout << toXmlString(nodeWrapper) << std::endl;
+                sendData(sock, toXmlString(nodeWrapper));
             }
             buf.clear();
             std::cout << "> ";

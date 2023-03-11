@@ -124,7 +124,7 @@ struct Condition : public Predicate {
     Constant* rval;
     ConstantOperation op;
 
-    const char* operation_str[7] = { "==", "!=", ">", "<", ">=", "<=", "like" };
+    const char* operation_str[7] = { "EQ", "NEQ", "GT", "LT", "GTE", "LTE", "LIKE" };
     Condition(Constant* lval, Constant* rval, ConstantOperation op);
     void print(int depth) override;
     ~Condition();

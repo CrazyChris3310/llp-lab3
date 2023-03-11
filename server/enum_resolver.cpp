@@ -4,13 +4,13 @@
 
 // may not work, should use strcmp()
 DataType resolveDataType(std::string str) {
-    if (str == "INT") {
+    if (str == "int") {
         return INT;
-    } else if (str == "FLOAT") {
+    } else if (str == "float") {
         return FLOAT;
-    } else if (str == "BOOL") {
+    } else if (str == "bool") {
         return BOOL;
-    } else if (str == "STRING") {
+    } else if (str == "string") {
         return STRING;
     } 
 
@@ -19,13 +19,13 @@ DataType resolveDataType(std::string str) {
 
 std::string getStringValue(DataType type) {
     if (type == INT) {
-        return "INT";
+        return "int";
     } else if (type == FLOAT) {
-        return "FLOAT";
+        return "float";
     } else if (type == BOOL) {
-        return "BOOL";
+        return "bool";
     } else if (type == STRING) {
-        return "STRING";
+        return "string";
     } else {
         return "UNKNOWN";
     }

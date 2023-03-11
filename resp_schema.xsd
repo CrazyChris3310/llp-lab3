@@ -1,5 +1,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+    <xs:include schemaLocation="http://www.example.com/req_schema.xsd"/>
+
     <xs:complexType name="column_t">
         <xs:sequence>
             <xs:element name="name" type="xs:string"/>
@@ -10,20 +12,25 @@
     <xs:complexType name="header_t">
         <xs:sequence>
             <xs:element name="table" type="xs:string"/>
-            <xs:element name="column" type="column_t" maxOccurs="60"/>
+            <xs:element name="column" type="column_t" maxOccurs="50"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="row_t">
+        <xs:sequence>
+            <xs:element name="value" type="constant_t" maxOccurs="10"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="body_t">
         <xs:sequence>
-            <xs:element name="column" type="xs:string"/>
-            <xs:element name="value" type="xs:string"/>
+            <xs:element name="row" type="row_t" maxOccurs="50"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="response_t">
         <xs:sequence>
-            <xs:element name="status" type="xs:string"/>
+            <xs:element name="status" type="xs:int"/>
             <xs:element name="message" type="xs:string"/>
             <xs:choice>
                 <xs:element name="header" type="header_t"/>

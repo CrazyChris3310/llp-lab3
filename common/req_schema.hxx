@@ -602,16 +602,20 @@ class select_t: public ::xml_schema::type
   // predicate
   //
   typedef ::predicate_t predicate_type;
+  typedef ::xsd::cxx::tree::optional< predicate_type > predicate_optional;
   typedef ::xsd::cxx::tree::traits< predicate_type, char > predicate_traits;
 
-  const predicate_type&
+  const predicate_optional&
   predicate () const;
 
-  predicate_type&
+  predicate_optional&
   predicate ();
 
   void
   predicate (const predicate_type& x);
+
+  void
+  predicate (const predicate_optional& x);
 
   void
   predicate (::std::unique_ptr< predicate_type > p);
@@ -635,11 +639,9 @@ class select_t: public ::xml_schema::type
 
   // Constructors.
   //
-  select_t (const predicate_type&,
-            const ret_val_type&);
+  select_t (const ret_val_type&);
 
-  select_t (::std::unique_ptr< predicate_type >,
-            ::std::unique_ptr< ret_val_type >);
+  select_t (::std::unique_ptr< ret_val_type >);
 
   select_t (const ::xercesc::DOMElement& e,
             ::xml_schema::flags f = 0,
@@ -668,7 +670,7 @@ class select_t: public ::xml_schema::type
 
   protected:
   table_sequence table_;
-  ::xsd::cxx::tree::one< predicate_type > predicate_;
+  predicate_optional predicate_;
   ::xsd::cxx::tree::one< ret_val_type > ret_val_;
 };
 

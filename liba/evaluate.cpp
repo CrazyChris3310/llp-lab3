@@ -76,12 +76,15 @@ select_t evaluateSelect(ForNode* node) {
     ret_val_t retVal;
     evaluateSelect(node, joins, conditions, &retVal);
 
-    predicate_t pred;
-    for (condition_t cnd : conditions) {
-        pred.condition().push_back(cnd);
-    }
+    select_t slct(retVal);
 
-    select_t slct(pred, retVal);
+    if (!conditions.empty()) {
+        predicate_t pred;
+        for (condition_t cnd : conditions) {
+            pred.condition().push_back(cnd);
+        }
+        slct.predicate(pred);
+    }
 
     for (const char* tbl : joins) {
         slct.table().push_back(tbl);
