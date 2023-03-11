@@ -20,13 +20,27 @@ int parseInput(std::string& query, NodeWrapper& nodeWrapper) {
 std::string toXmlString(NodeWrapper& wrapper) {
     std::ostringstream oss;
     request_t req = toXmlRequest(wrapper);
+    message_t msg(false);
+    msg.request(req);
 
     xml_schema::namespace_infomap map;
     map[""].name = "";
     map[""].schema = "req_schema.xsd";
 
-    request(oss, req, map);
+    message(oss, msg, map);
+    return oss.str();
+}
 
+std::string generateConnectionRequest(std::string dbName) {
+    std::ostringstream oss;
+    message_t msg(true);
+    msg.database(dbName);
+
+    xml_schema::namespace_infomap map;
+    map[""].name = "";
+    map[""].schema = "req_schema.xsd";
+
+    message(oss, msg, map);
     return oss.str();
 }
 
@@ -59,7 +73,9 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    sendData(sock, argv[3]);
+    std::string connectionReq = generateConnectionRequest(std::string(argv[3]));
+
+    sendData(sock, connectionReq);
 
     std::string buf;
     std::string line;

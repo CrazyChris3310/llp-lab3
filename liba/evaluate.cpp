@@ -111,12 +111,17 @@ update_t evaluateUpdate(ForNode* node) {
         }
     }
 
-    predicate_t pred;
-    for (condition_t cnd : conditions) {
-        pred.condition().push_back(cnd);
+    update_t upd(node->tableName, mapa);
+
+    if (!conditions.empty()) {
+        predicate_t pred;
+        for (condition_t cnd : conditions) {
+            pred.condition().push_back(cnd);
+        }
+        upd.predicate(pred);
     }
 
-    return update_t(node->tableName, mapa, pred);
+    return upd;
 }
 
 delete_t evaluateDelete(ForNode* node) {
@@ -138,7 +143,17 @@ delete_t evaluateDelete(ForNode* node) {
         pred.condition().push_back(cnd);
     }
 
-    return delete_t(node->tableName, pred);
+    delete_t del(node->tableName);
+
+    if (!conditions.empty()) {
+        predicate_t pred;
+        for (condition_t cnd : conditions) {
+            pred.condition().push_back(cnd);
+        }
+        del.predicate(pred);
+    }
+
+    return del;
 }
 
 insert_t evaluateInsert(InsertNode* node) {

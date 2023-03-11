@@ -29,7 +29,10 @@ struct Database* openDatabase(const char* filename) {
 }
 
 void closeDatabase(struct Database* db) {
-    destroyTableManager(db->tableManager);
+    if (db == NULL) {
+        return;
+    }
+     destroyTableManager(db->tableManager);
     destroyCacheManager(db->cacheManager);
     destoryFileManager(db->fileManager);
     free(db);
@@ -137,7 +140,9 @@ void performUpdateQuery(struct Database* database, struct UpdateQuery* query) {
     assert(!isNew);
 
     struct ScanInterface* scan = (struct ScanInterface*)createTableScanner(database->cacheManager, schema, isNew, schema->startBlock);
-    scan = (struct ScanInterface*)createSelectScanner(scan, *query->predicate);
+    if (query->predicate != NULL) {
+        scan = (struct ScanInterface*)createSelectScanner(scan, *query->predicate);
+    }
 
     while (next(scan)) {
         struct ListIterator* iterator = createListIterator(query->new_values);

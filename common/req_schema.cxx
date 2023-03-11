@@ -431,22 +431,28 @@ from (::std::unique_ptr< from_type > x)
   this->from_.set (std::move (x));
 }
 
-const delete_t::predicate_type& delete_t::
+const delete_t::predicate_optional& delete_t::
 predicate () const
 {
-  return this->predicate_.get ();
+  return this->predicate_;
 }
 
-delete_t::predicate_type& delete_t::
+delete_t::predicate_optional& delete_t::
 predicate ()
 {
-  return this->predicate_.get ();
+  return this->predicate_;
 }
 
 void delete_t::
 predicate (const predicate_type& x)
 {
   this->predicate_.set (x);
+}
+
+void delete_t::
+predicate (const predicate_optional& x)
+{
+  this->predicate_ = x;
 }
 
 void delete_t::
@@ -507,22 +513,28 @@ fields (::std::unique_ptr< fields_type > x)
   this->fields_.set (std::move (x));
 }
 
-const update_t::predicate_type& update_t::
+const update_t::predicate_optional& update_t::
 predicate () const
 {
-  return this->predicate_.get ();
+  return this->predicate_;
 }
 
-update_t::predicate_type& update_t::
+update_t::predicate_optional& update_t::
 predicate ()
 {
-  return this->predicate_.get ();
+  return this->predicate_;
 }
 
 void update_t::
 predicate (const predicate_type& x)
 {
   this->predicate_.set (x);
+}
+
+void update_t::
+predicate (const predicate_optional& x)
+{
+  this->predicate_ = x;
 }
 
 void update_t::
@@ -817,6 +829,88 @@ void request_t::
 drop (::std::unique_ptr< drop_type > x)
 {
   this->drop_.set (std::move (x));
+}
+
+
+// message_t
+// 
+
+const message_t::connect_type& message_t::
+connect () const
+{
+  return this->connect_.get ();
+}
+
+message_t::connect_type& message_t::
+connect ()
+{
+  return this->connect_.get ();
+}
+
+void message_t::
+connect (const connect_type& x)
+{
+  this->connect_.set (x);
+}
+
+const message_t::database_optional& message_t::
+database () const
+{
+  return this->database_;
+}
+
+message_t::database_optional& message_t::
+database ()
+{
+  return this->database_;
+}
+
+void message_t::
+database (const database_type& x)
+{
+  this->database_.set (x);
+}
+
+void message_t::
+database (const database_optional& x)
+{
+  this->database_ = x;
+}
+
+void message_t::
+database (::std::unique_ptr< database_type > x)
+{
+  this->database_.set (std::move (x));
+}
+
+const message_t::request_optional& message_t::
+request () const
+{
+  return this->request_;
+}
+
+message_t::request_optional& message_t::
+request ()
+{
+  return this->request_;
+}
+
+void message_t::
+request (const request_type& x)
+{
+  this->request_.set (x);
+}
+
+void message_t::
+request (const request_optional& x)
+{
+  this->request_ = x;
+}
+
+void message_t::
+request (::std::unique_ptr< request_type > x)
+{
+  this->request_.set (std::move (x));
 }
 
 
@@ -1679,20 +1773,10 @@ insert_t::
 //
 
 delete_t::
-delete_t (const from_type& from,
-          const predicate_type& predicate)
+delete_t (const from_type& from)
 : ::xml_schema::type (),
   from_ (from, this),
-  predicate_ (predicate, this)
-{
-}
-
-delete_t::
-delete_t (const from_type& from,
-          ::std::unique_ptr< predicate_type > predicate)
-: ::xml_schema::type (),
-  from_ (from, this),
-  predicate_ (std::move (predicate), this)
+  predicate_ (this)
 {
 }
 
@@ -1752,7 +1836,7 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       ::std::unique_ptr< predicate_type > r (
         predicate_traits::create (i, f, this));
 
-      if (!predicate_.present ())
+      if (!this->predicate_)
       {
         this->predicate_.set (::std::move (r));
         continue;
@@ -1766,13 +1850,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "from",
-      "");
-  }
-
-  if (!predicate_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "predicate",
       "");
   }
 }
@@ -1807,23 +1884,21 @@ delete_t::
 
 update_t::
 update_t (const table_type& table,
-          const fields_type& fields,
-          const predicate_type& predicate)
+          const fields_type& fields)
 : ::xml_schema::type (),
   table_ (table, this),
   fields_ (fields, this),
-  predicate_ (predicate, this)
+  predicate_ (this)
 {
 }
 
 update_t::
 update_t (const table_type& table,
-          ::std::unique_ptr< fields_type > fields,
-          ::std::unique_ptr< predicate_type > predicate)
+          ::std::unique_ptr< fields_type > fields)
 : ::xml_schema::type (),
   table_ (table, this),
   fields_ (std::move (fields), this),
-  predicate_ (std::move (predicate), this)
+  predicate_ (this)
 {
 }
 
@@ -1899,7 +1974,7 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       ::std::unique_ptr< predicate_type > r (
         predicate_traits::create (i, f, this));
 
-      if (!predicate_.present ())
+      if (!this->predicate_)
       {
         this->predicate_.set (::std::move (r));
         continue;
@@ -1920,13 +1995,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "fields",
-      "");
-  }
-
-  if (!predicate_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "predicate",
       "");
   }
 }
@@ -2376,6 +2444,131 @@ request_t::
 {
 }
 
+// message_t
+//
+
+message_t::
+message_t (const connect_type& connect)
+: ::xml_schema::type (),
+  connect_ (connect, this),
+  database_ (this),
+  request_ (this)
+{
+}
+
+message_t::
+message_t (const message_t& x,
+           ::xml_schema::flags f,
+           ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  connect_ (x.connect_, f, this),
+  database_ (x.database_, f, this),
+  request_ (x.request_, f, this)
+{
+}
+
+message_t::
+message_t (const ::xercesc::DOMElement& e,
+           ::xml_schema::flags f,
+           ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  connect_ (this),
+  database_ (this),
+  request_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void message_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // connect
+    //
+    if (n.name () == "connect" && n.namespace_ ().empty ())
+    {
+      if (!connect_.present ())
+      {
+        this->connect_.set (connect_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // database
+    //
+    if (n.name () == "database" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< database_type > r (
+        database_traits::create (i, f, this));
+
+      if (!this->database_)
+      {
+        this->database_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // request
+    //
+    if (n.name () == "request" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< request_type > r (
+        request_traits::create (i, f, this));
+
+      if (!this->request_)
+      {
+        this->request_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!connect_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "connect",
+      "");
+  }
+}
+
+message_t* message_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class message_t (*this, f, c);
+}
+
+message_t& message_t::
+operator= (const message_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->connect_ = x.connect_;
+    this->database_ = x.database_;
+    this->request_ = x.request_;
+  }
+
+  return *this;
+}
+
+message_t::
+~message_t ()
+{
+}
+
 // entry
 //
 
@@ -2507,8 +2700,8 @@ entry::
 #include <xsd/cxx/xml/sax/std-input-source.hxx>
 #include <xsd/cxx/tree/error-handler.hxx>
 
-::std::unique_ptr< ::request_t >
-request (const ::std::string& u,
+::std::unique_ptr< ::message_t >
+message (const ::std::string& u,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
@@ -2524,13 +2717,13 @@ request (const ::std::string& u,
 
   h.throw_if_failed< ::xsd::cxx::tree::parsing< char > > ();
 
-  return ::std::unique_ptr< ::request_t > (
-    ::request (
+  return ::std::unique_ptr< ::message_t > (
+    ::message (
       std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::unique_ptr< ::request_t >
-request (const ::std::string& u,
+::std::unique_ptr< ::message_t >
+message (const ::std::string& u,
          ::xml_schema::error_handler& h,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
@@ -2546,13 +2739,13 @@ request (const ::std::string& u,
   if (!d.get ())
     throw ::xsd::cxx::tree::parsing< char > ();
 
-  return ::std::unique_ptr< ::request_t > (
-    ::request (
+  return ::std::unique_ptr< ::message_t > (
+    ::message (
       std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::unique_ptr< ::request_t >
-request (const ::std::string& u,
+::std::unique_ptr< ::message_t >
+message (const ::std::string& u,
          ::xercesc::DOMErrorHandler& h,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
@@ -2564,13 +2757,13 @@ request (const ::std::string& u,
   if (!d.get ())
     throw ::xsd::cxx::tree::parsing< char > ();
 
-  return ::std::unique_ptr< ::request_t > (
-    ::request (
+  return ::std::unique_ptr< ::message_t > (
+    ::message (
       std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
@@ -2579,11 +2772,11 @@ request (::std::istream& is,
     (f & ::xml_schema::flags::keep_dom) == 0);
 
   ::xsd::cxx::xml::sax::std_input_source isrc (is);
-  return ::request (isrc, f, p);
+  return ::message (isrc, f, p);
 }
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          ::xml_schema::error_handler& h,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
@@ -2593,21 +2786,21 @@ request (::std::istream& is,
     (f & ::xml_schema::flags::keep_dom) == 0);
 
   ::xsd::cxx::xml::sax::std_input_source isrc (is);
-  return ::request (isrc, h, f, p);
+  return ::message (isrc, h, f, p);
 }
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          ::xercesc::DOMErrorHandler& h,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
   ::xsd::cxx::xml::sax::std_input_source isrc (is);
-  return ::request (isrc, h, f, p);
+  return ::message (isrc, h, f, p);
 }
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          const ::std::string& sid,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
@@ -2617,11 +2810,11 @@ request (::std::istream& is,
     (f & ::xml_schema::flags::keep_dom) == 0);
 
   ::xsd::cxx::xml::sax::std_input_source isrc (is, sid);
-  return ::request (isrc, f, p);
+  return ::message (isrc, f, p);
 }
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          const ::std::string& sid,
          ::xml_schema::error_handler& h,
          ::xml_schema::flags f,
@@ -2632,22 +2825,22 @@ request (::std::istream& is,
     (f & ::xml_schema::flags::keep_dom) == 0);
 
   ::xsd::cxx::xml::sax::std_input_source isrc (is, sid);
-  return ::request (isrc, h, f, p);
+  return ::message (isrc, h, f, p);
 }
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          const ::std::string& sid,
          ::xercesc::DOMErrorHandler& h,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
   ::xsd::cxx::xml::sax::std_input_source isrc (is, sid);
-  return ::request (isrc, h, f, p);
+  return ::message (isrc, h, f, p);
 }
 
-::std::unique_ptr< ::request_t >
-request (::xercesc::InputSource& i,
+::std::unique_ptr< ::message_t >
+message (::xercesc::InputSource& i,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
@@ -2659,13 +2852,13 @@ request (::xercesc::InputSource& i,
 
   h.throw_if_failed< ::xsd::cxx::tree::parsing< char > > ();
 
-  return ::std::unique_ptr< ::request_t > (
-    ::request (
+  return ::std::unique_ptr< ::message_t > (
+    ::message (
       std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::unique_ptr< ::request_t >
-request (::xercesc::InputSource& i,
+::std::unique_ptr< ::message_t >
+message (::xercesc::InputSource& i,
          ::xml_schema::error_handler& h,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
@@ -2677,13 +2870,13 @@ request (::xercesc::InputSource& i,
   if (!d.get ())
     throw ::xsd::cxx::tree::parsing< char > ();
 
-  return ::std::unique_ptr< ::request_t > (
-    ::request (
+  return ::std::unique_ptr< ::message_t > (
+    ::message (
       std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::unique_ptr< ::request_t >
-request (::xercesc::InputSource& i,
+::std::unique_ptr< ::message_t >
+message (::xercesc::InputSource& i,
          ::xercesc::DOMErrorHandler& h,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
@@ -2695,13 +2888,13 @@ request (::xercesc::InputSource& i,
   if (!d.get ())
     throw ::xsd::cxx::tree::parsing< char > ();
 
-  return ::std::unique_ptr< ::request_t > (
-    ::request (
+  return ::std::unique_ptr< ::message_t > (
+    ::message (
       std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::unique_ptr< ::request_t >
-request (const ::xercesc::DOMDocument& doc,
+::std::unique_ptr< ::message_t >
+message (const ::xercesc::DOMDocument& doc,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
@@ -2710,8 +2903,8 @@ request (const ::xercesc::DOMDocument& doc,
     ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
       static_cast< ::xercesc::DOMDocument* > (doc.cloneNode (true)));
 
-    return ::std::unique_ptr< ::request_t > (
-      ::request (
+    return ::std::unique_ptr< ::message_t > (
+      ::message (
         std::move (d), f | ::xml_schema::flags::own_dom, p));
   }
 
@@ -2719,11 +2912,11 @@ request (const ::xercesc::DOMDocument& doc,
   const ::xsd::cxx::xml::qualified_name< char > n (
     ::xsd::cxx::xml::dom::name< char > (e));
 
-  if (n.name () == "request" &&
+  if (n.name () == "message" &&
       n.namespace_ () == "")
   {
-    ::std::unique_ptr< ::request_t > r (
-      ::xsd::cxx::tree::traits< ::request_t, char >::create (
+    ::std::unique_ptr< ::message_t > r (
+      ::xsd::cxx::tree::traits< ::message_t, char >::create (
         e, f, 0));
     return r;
   }
@@ -2731,12 +2924,12 @@ request (const ::xercesc::DOMDocument& doc,
   throw ::xsd::cxx::tree::unexpected_element < char > (
     n.name (),
     n.namespace_ (),
-    "request",
+    "message",
     "");
 }
 
-::std::unique_ptr< ::request_t >
-request (::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d,
+::std::unique_ptr< ::message_t >
+message (::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d,
          ::xml_schema::flags f,
          const ::xml_schema::properties&)
 {
@@ -2757,11 +2950,11 @@ request (::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d,
                      (c.get () ? &c : &d),
                      0);
 
-  if (n.name () == "request" &&
+  if (n.name () == "message" &&
       n.namespace_ () == "")
   {
-    ::std::unique_ptr< ::request_t > r (
-      ::xsd::cxx::tree::traits< ::request_t, char >::create (
+    ::std::unique_ptr< ::message_t > r (
+      ::xsd::cxx::tree::traits< ::message_t, char >::create (
         e, f, 0));
     return r;
   }
@@ -2769,7 +2962,7 @@ request (::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d,
   throw ::xsd::cxx::tree::unexpected_element < char > (
     n.name (),
     n.namespace_ (),
-    "request",
+    "message",
     "");
 }
 
@@ -3003,13 +3196,14 @@ operator<< (::xercesc::DOMElement& e, const delete_t& i)
 
   // predicate
   //
+  if (i.predicate ())
   {
     ::xercesc::DOMElement& s (
       ::xsd::cxx::xml::dom::create_element (
         "predicate",
         e));
 
-    s << i.predicate ();
+    s << *i.predicate ();
   }
 }
 
@@ -3042,13 +3236,14 @@ operator<< (::xercesc::DOMElement& e, const update_t& i)
 
   // predicate
   //
+  if (i.predicate ())
   {
     ::xercesc::DOMElement& s (
       ::xsd::cxx::xml::dom::create_element (
         "predicate",
         e));
 
-    s << i.predicate ();
+    s << *i.predicate ();
   }
 }
 
@@ -3187,8 +3382,49 @@ operator<< (::xercesc::DOMElement& e, const request_t& i)
 }
 
 void
-request (::std::ostream& o,
-         const ::request_t& s,
+operator<< (::xercesc::DOMElement& e, const message_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // connect
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "connect",
+        e));
+
+    s << i.connect ();
+  }
+
+  // database
+  //
+  if (i.database ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "database",
+        e));
+
+    s << *i.database ();
+  }
+
+  // request
+  //
+  if (i.request ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "request",
+        e));
+
+    s << *i.request ();
+  }
+}
+
+void
+message (::std::ostream& o,
+         const ::message_t& s,
          const ::xml_schema::namespace_infomap& m,
          const ::std::string& e,
          ::xml_schema::flags f)
@@ -3197,7 +3433,7 @@ request (::std::ostream& o,
     (f & ::xml_schema::flags::dont_initialize) == 0);
 
   ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
-    ::request (s, m, f));
+    ::message (s, m, f));
 
   ::xsd::cxx::tree::error_handler< char > h;
 
@@ -3209,8 +3445,8 @@ request (::std::ostream& o,
 }
 
 void
-request (::std::ostream& o,
-         const ::request_t& s,
+message (::std::ostream& o,
+         const ::message_t& s,
          ::xml_schema::error_handler& h,
          const ::xml_schema::namespace_infomap& m,
          const ::std::string& e,
@@ -3220,7 +3456,7 @@ request (::std::ostream& o,
     (f & ::xml_schema::flags::dont_initialize) == 0);
 
   ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
-    ::request (s, m, f));
+    ::message (s, m, f));
   ::xsd::cxx::xml::dom::ostream_format_target t (o);
   if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
   {
@@ -3229,15 +3465,15 @@ request (::std::ostream& o,
 }
 
 void
-request (::std::ostream& o,
-         const ::request_t& s,
+message (::std::ostream& o,
+         const ::message_t& s,
          ::xercesc::DOMErrorHandler& h,
          const ::xml_schema::namespace_infomap& m,
          const ::std::string& e,
          ::xml_schema::flags f)
 {
   ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
-    ::request (s, m, f));
+    ::message (s, m, f));
   ::xsd::cxx::xml::dom::ostream_format_target t (o);
   if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
   {
@@ -3246,14 +3482,14 @@ request (::std::ostream& o,
 }
 
 void
-request (::xercesc::XMLFormatTarget& t,
-         const ::request_t& s,
+message (::xercesc::XMLFormatTarget& t,
+         const ::message_t& s,
          const ::xml_schema::namespace_infomap& m,
          const ::std::string& e,
          ::xml_schema::flags f)
 {
   ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
-    ::request (s, m, f));
+    ::message (s, m, f));
 
   ::xsd::cxx::tree::error_handler< char > h;
 
@@ -3264,15 +3500,15 @@ request (::xercesc::XMLFormatTarget& t,
 }
 
 void
-request (::xercesc::XMLFormatTarget& t,
-         const ::request_t& s,
+message (::xercesc::XMLFormatTarget& t,
+         const ::message_t& s,
          ::xml_schema::error_handler& h,
          const ::xml_schema::namespace_infomap& m,
          const ::std::string& e,
          ::xml_schema::flags f)
 {
   ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
-    ::request (s, m, f));
+    ::message (s, m, f));
   if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
   {
     throw ::xsd::cxx::tree::serialization< char > ();
@@ -3280,15 +3516,15 @@ request (::xercesc::XMLFormatTarget& t,
 }
 
 void
-request (::xercesc::XMLFormatTarget& t,
-         const ::request_t& s,
+message (::xercesc::XMLFormatTarget& t,
+         const ::message_t& s,
          ::xercesc::DOMErrorHandler& h,
          const ::xml_schema::namespace_infomap& m,
          const ::std::string& e,
          ::xml_schema::flags f)
 {
   ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
-    ::request (s, m, f));
+    ::message (s, m, f));
   if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
   {
     throw ::xsd::cxx::tree::serialization< char > ();
@@ -3296,15 +3532,15 @@ request (::xercesc::XMLFormatTarget& t,
 }
 
 void
-request (::xercesc::DOMDocument& d,
-         const ::request_t& s,
+message (::xercesc::DOMDocument& d,
+         const ::message_t& s,
          ::xml_schema::flags)
 {
   ::xercesc::DOMElement& e (*d.getDocumentElement ());
   const ::xsd::cxx::xml::qualified_name< char > n (
     ::xsd::cxx::xml::dom::name< char > (e));
 
-  if (n.name () == "request" &&
+  if (n.name () == "message" &&
       n.namespace_ () == "")
   {
     e << s;
@@ -3314,23 +3550,23 @@ request (::xercesc::DOMDocument& d,
     throw ::xsd::cxx::tree::unexpected_element < char > (
       n.name (),
       n.namespace_ (),
-      "request",
+      "message",
       "");
   }
 }
 
 ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument >
-request (const ::request_t& s,
+message (const ::message_t& s,
          const ::xml_schema::namespace_infomap& m,
          ::xml_schema::flags f)
 {
   ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::xsd::cxx::xml::dom::serialize< char > (
-      "request",
+      "message",
       "",
       m, f));
 
-  ::request (*d, s, f);
+  ::message (*d, s, f);
   return d;
 }
 

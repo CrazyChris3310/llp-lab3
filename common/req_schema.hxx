@@ -264,6 +264,7 @@ class update_t;
 class create_t;
 class drop_t;
 class request_t;
+class message_t;
 class entry;
 
 #include <memory>    // ::std::unique_ptr
@@ -825,27 +826,27 @@ class delete_t: public ::xml_schema::type
   // predicate
   //
   typedef ::predicate_t predicate_type;
+  typedef ::xsd::cxx::tree::optional< predicate_type > predicate_optional;
   typedef ::xsd::cxx::tree::traits< predicate_type, char > predicate_traits;
 
-  const predicate_type&
+  const predicate_optional&
   predicate () const;
 
-  predicate_type&
+  predicate_optional&
   predicate ();
 
   void
   predicate (const predicate_type& x);
 
   void
+  predicate (const predicate_optional& x);
+
+  void
   predicate (::std::unique_ptr< predicate_type > p);
 
   // Constructors.
   //
-  delete_t (const from_type&,
-            const predicate_type&);
-
-  delete_t (const from_type&,
-            ::std::unique_ptr< predicate_type >);
+  delete_t (const from_type&);
 
   delete_t (const ::xercesc::DOMElement& e,
             ::xml_schema::flags f = 0,
@@ -874,7 +875,7 @@ class delete_t: public ::xml_schema::type
 
   protected:
   ::xsd::cxx::tree::one< from_type > from_;
-  ::xsd::cxx::tree::one< predicate_type > predicate_;
+  predicate_optional predicate_;
 };
 
 class update_t: public ::xml_schema::type
@@ -917,16 +918,20 @@ class update_t: public ::xml_schema::type
   // predicate
   //
   typedef ::predicate_t predicate_type;
+  typedef ::xsd::cxx::tree::optional< predicate_type > predicate_optional;
   typedef ::xsd::cxx::tree::traits< predicate_type, char > predicate_traits;
 
-  const predicate_type&
+  const predicate_optional&
   predicate () const;
 
-  predicate_type&
+  predicate_optional&
   predicate ();
 
   void
   predicate (const predicate_type& x);
+
+  void
+  predicate (const predicate_optional& x);
 
   void
   predicate (::std::unique_ptr< predicate_type > p);
@@ -934,12 +939,10 @@ class update_t: public ::xml_schema::type
   // Constructors.
   //
   update_t (const table_type&,
-            const fields_type&,
-            const predicate_type&);
+            const fields_type&);
 
   update_t (const table_type&,
-            ::std::unique_ptr< fields_type >,
-            ::std::unique_ptr< predicate_type >);
+            ::std::unique_ptr< fields_type >);
 
   update_t (const ::xercesc::DOMElement& e,
             ::xml_schema::flags f = 0,
@@ -969,7 +972,7 @@ class update_t: public ::xml_schema::type
   protected:
   ::xsd::cxx::tree::one< table_type > table_;
   ::xsd::cxx::tree::one< fields_type > fields_;
-  ::xsd::cxx::tree::one< predicate_type > predicate_;
+  predicate_optional predicate_;
 };
 
 class create_t: public ::xml_schema::type
@@ -1285,6 +1288,100 @@ class request_t: public ::xml_schema::type
   drop_optional drop_;
 };
 
+class message_t: public ::xml_schema::type
+{
+  public:
+  // connect
+  //
+  typedef ::xml_schema::boolean connect_type;
+  typedef ::xsd::cxx::tree::traits< connect_type, char > connect_traits;
+
+  const connect_type&
+  connect () const;
+
+  connect_type&
+  connect ();
+
+  void
+  connect (const connect_type& x);
+
+  // database
+  //
+  typedef ::xml_schema::string database_type;
+  typedef ::xsd::cxx::tree::optional< database_type > database_optional;
+  typedef ::xsd::cxx::tree::traits< database_type, char > database_traits;
+
+  const database_optional&
+  database () const;
+
+  database_optional&
+  database ();
+
+  void
+  database (const database_type& x);
+
+  void
+  database (const database_optional& x);
+
+  void
+  database (::std::unique_ptr< database_type > p);
+
+  // request
+  //
+  typedef ::request_t request_type;
+  typedef ::xsd::cxx::tree::optional< request_type > request_optional;
+  typedef ::xsd::cxx::tree::traits< request_type, char > request_traits;
+
+  const request_optional&
+  request () const;
+
+  request_optional&
+  request ();
+
+  void
+  request (const request_type& x);
+
+  void
+  request (const request_optional& x);
+
+  void
+  request (::std::unique_ptr< request_type > p);
+
+  // Constructors.
+  //
+  message_t (const connect_type&);
+
+  message_t (const ::xercesc::DOMElement& e,
+             ::xml_schema::flags f = 0,
+             ::xml_schema::container* c = 0);
+
+  message_t (const message_t& x,
+             ::xml_schema::flags f = 0,
+             ::xml_schema::container* c = 0);
+
+  virtual message_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  message_t&
+  operator= (const message_t& x);
+
+  virtual 
+  ~message_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< connect_type > connect_;
+  database_optional database_;
+  request_optional request_;
+};
+
 class entry: public ::xml_schema::type
 {
   public:
@@ -1369,19 +1466,19 @@ class entry: public ::xml_schema::type
 // Parse a URI or a local file.
 //
 
-::std::unique_ptr< ::request_t >
-request (const ::std::string& uri,
+::std::unique_ptr< ::message_t >
+message (const ::std::string& uri,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
-::std::unique_ptr< ::request_t >
-request (const ::std::string& uri,
+::std::unique_ptr< ::message_t >
+message (const ::std::string& uri,
          ::xml_schema::error_handler& eh,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
-::std::unique_ptr< ::request_t >
-request (const ::std::string& uri,
+::std::unique_ptr< ::message_t >
+message (const ::std::string& uri,
          ::xercesc::DOMErrorHandler& eh,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
@@ -1389,38 +1486,38 @@ request (const ::std::string& uri,
 // Parse std::istream.
 //
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          ::xml_schema::error_handler& eh,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          ::xercesc::DOMErrorHandler& eh,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          const ::std::string& id,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          const ::std::string& id,
          ::xml_schema::error_handler& eh,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
-::std::unique_ptr< ::request_t >
-request (::std::istream& is,
+::std::unique_ptr< ::message_t >
+message (::std::istream& is,
          const ::std::string& id,
          ::xercesc::DOMErrorHandler& eh,
          ::xml_schema::flags f = 0,
@@ -1429,19 +1526,19 @@ request (::std::istream& is,
 // Parse xercesc::InputSource.
 //
 
-::std::unique_ptr< ::request_t >
-request (::xercesc::InputSource& is,
+::std::unique_ptr< ::message_t >
+message (::xercesc::InputSource& is,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
-::std::unique_ptr< ::request_t >
-request (::xercesc::InputSource& is,
+::std::unique_ptr< ::message_t >
+message (::xercesc::InputSource& is,
          ::xml_schema::error_handler& eh,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
-::std::unique_ptr< ::request_t >
-request (::xercesc::InputSource& is,
+::std::unique_ptr< ::message_t >
+message (::xercesc::InputSource& is,
          ::xercesc::DOMErrorHandler& eh,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
@@ -1449,13 +1546,13 @@ request (::xercesc::InputSource& is,
 // Parse xercesc::DOMDocument.
 //
 
-::std::unique_ptr< ::request_t >
-request (const ::xercesc::DOMDocument& d,
+::std::unique_ptr< ::message_t >
+message (const ::xercesc::DOMDocument& d,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
-::std::unique_ptr< ::request_t >
-request (::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d,
+::std::unique_ptr< ::message_t >
+message (::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d,
          ::xml_schema::flags f = 0,
          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
@@ -1503,27 +1600,30 @@ operator<< (::xercesc::DOMElement&, const drop_t&);
 void
 operator<< (::xercesc::DOMElement&, const request_t&);
 
+void
+operator<< (::xercesc::DOMElement&, const message_t&);
+
 // Serialize to std::ostream.
 //
 
 void
-request (::std::ostream& os,
-         const ::request_t& x, 
+message (::std::ostream& os,
+         const ::message_t& x, 
          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
          const ::std::string& e = "UTF-8",
          ::xml_schema::flags f = 0);
 
 void
-request (::std::ostream& os,
-         const ::request_t& x, 
+message (::std::ostream& os,
+         const ::message_t& x, 
          ::xml_schema::error_handler& eh,
          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
          const ::std::string& e = "UTF-8",
          ::xml_schema::flags f = 0);
 
 void
-request (::std::ostream& os,
-         const ::request_t& x, 
+message (::std::ostream& os,
+         const ::message_t& x, 
          ::xercesc::DOMErrorHandler& eh,
          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
          const ::std::string& e = "UTF-8",
@@ -1533,23 +1633,23 @@ request (::std::ostream& os,
 //
 
 void
-request (::xercesc::XMLFormatTarget& ft,
-         const ::request_t& x, 
+message (::xercesc::XMLFormatTarget& ft,
+         const ::message_t& x, 
          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
          const ::std::string& e = "UTF-8",
          ::xml_schema::flags f = 0);
 
 void
-request (::xercesc::XMLFormatTarget& ft,
-         const ::request_t& x, 
+message (::xercesc::XMLFormatTarget& ft,
+         const ::message_t& x, 
          ::xml_schema::error_handler& eh,
          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
          const ::std::string& e = "UTF-8",
          ::xml_schema::flags f = 0);
 
 void
-request (::xercesc::XMLFormatTarget& ft,
-         const ::request_t& x, 
+message (::xercesc::XMLFormatTarget& ft,
+         const ::message_t& x, 
          ::xercesc::DOMErrorHandler& eh,
          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
          const ::std::string& e = "UTF-8",
@@ -1559,15 +1659,15 @@ request (::xercesc::XMLFormatTarget& ft,
 //
 
 void
-request (::xercesc::DOMDocument& d,
-         const ::request_t& x,
+message (::xercesc::DOMDocument& d,
+         const ::message_t& x,
          ::xml_schema::flags f = 0);
 
 // Serialize to a new xercesc::DOMDocument.
 //
 
 ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument >
-request (const ::request_t& x, 
+message (const ::message_t& x, 
          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
          ::xml_schema::flags f = 0);
 

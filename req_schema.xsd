@@ -61,7 +61,7 @@
     <xs:complexType name="delete_t">
         <xs:sequence>
             <xs:element name="from" type="xs:string"/>
-            <xs:element name="predicate" type="predicate_t"/>
+            <xs:element name="predicate" type="predicate_t" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -69,7 +69,7 @@
         <xs:sequence>
             <xs:element name="table" type="xs:string"/>
             <xs:element name="fields" type="map_t"/>
-            <xs:element name="predicate" type="predicate_t"/>
+            <xs:element name="predicate" type="predicate_t" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -100,7 +100,17 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:element name="request" type="request_t"/>
+    
+    <xs:complexType name="message_t">
+        <xs:sequence>
+            <xs:element name="connect" type="xs:boolean"/>
+            <xs:choice>
+                <xs:element name="database" type="xs:string"/>
+                <xs:element name="request" type="request_t"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
 
+    <xs:element name="message" type="message_t"/>
 
 </xs:schema>

@@ -4,6 +4,15 @@
 #include <cstdlib>
 #include "ast.h"
 #include "parser.h"
+
+const char* copyString(char* str, int strLen) {
+    int len = strLen - 2;
+    char* newStr = (char*)malloc(len + 1);
+    strncpy(newStr, str+1, len);
+    newStr[len] = 0;
+    return newStr;
+}
+
 %}
 
 %option yylineno noyywrap nounput 
@@ -39,7 +48,7 @@
 "||"              { yylval.logicOp = LogicalOp::OR;  return LOGIC_OP; }
 "true"            { yylval.boolVal = true; return BOOL_TOKEN; }
 "false"           { yylval.boolVal = false; return BOOL_TOKEN; }
-\"[^\"]*\"        { yylval.str = strdup(yytext); return STRING_TOKEN; }
+\"[^\"]*\"        { yylval.str = copyString(yytext, yyleng); return STRING_TOKEN; }
 [a-zA-Z][a-zA-Z0-9.]* { yylval.str = strdup(yytext); return ID; }
 -?[0-9]+            { yylval.intVal = atoi(yytext); return INT_TOKEN; }
 -?[0-9]+\.[0-9]+     { yylval.floatVal = atof(yytext); return FLOAT_TOKEN; }
