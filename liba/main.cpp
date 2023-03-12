@@ -4,11 +4,8 @@
 #include "../client/parser.h"
 #include "../client/lexer.h"
 #include "evaluate.h"
-#include <sstream>
-#include <netinet/ip.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
+#include "response_processor.h"
+#include "middleware.hpp"
 
 int parseInput(std::string& query, NodeWrapper& nodeWrapper) {
     yy_scan_string(query.c_str());
@@ -17,66 +14,36 @@ int parseInput(std::string& query, NodeWrapper& nodeWrapper) {
     return code;
 }
 
-std::string toXmlString(NodeWrapper& wrapper) {
-    std::ostringstream oss;
-    request_t req = toXmlRequest(wrapper);
-    message_t msg(false);
-    msg.request(req);
-
-    xml_schema::namespace_infomap map;
-    map[""].name = "";
-    map[""].schema = "req_schema.xsd";
-
-    message(oss, msg, map);
-    return oss.str();
-}
-
-std::string generateConnectionRequest(std::string dbName) {
-    std::ostringstream oss;
-    message_t msg(true);
-    msg.database(dbName);
-
-    xml_schema::namespace_infomap map;
-    map[""].name = "";
-    map[""].schema = "req_schema.xsd";
-
-    message(oss, msg, map);
-    return oss.str();
-}
-
-
-void sendData(int sock, std::string buf) {
-    int bytes_sent = send(sock, buf.c_str(), buf.length(), 0);
-    if (bytes_sent != buf.length()) {
-        std::cout << "WARNING! Not everything was sent to server\n";
-        std::cout << "Only " << bytes_sent << " bytes were delivered\n";
+void printResponse(ResultSet& rs) {
+    if (rs.hasValues()) {
+        if (rs.getColumnCount() > 0) {
+            for (int i = 0; i < rs.getColumnCount(); ++i) {
+                printf("%-20s", rs.getColumnName(i).c_str());
+            }
+            printf("\n");
+        }
+        while (rs.next()) {
+            for (int i = 0; i < rs.getColumnCount(); ++i) {
+                printf("%-20s", rs.getValueAt(i).c_str());
+            }
+            printf("\n");
+        }
+    } else {
+        printf("No values\n");
     }
 }
-
 
 int main(int argc, char* argv[]) {
 
-    if (argc != 4) {
-        printf("Usage: %s <host> <port> <database>\n", argv[0]);
-        return 1;
-    }
+    // if (argc != 4) {
+    //     printf("Usage: %s <host> <port> <database>\n", argv[0]);
+    //     return 1;
+    // }
 
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
-    struct sockaddr_in local;
-    inet_aton(argv[1], &local.sin_addr);
-	local.sin_port = htons(atoi(argv[2]));
-	local.sin_family = AF_INET;
+    // Connection connection = getConnection(argv[1], argv[2], argv[3]);
+    Connection connection = getConnection("127.0.0.1", "3434", "figurka");
 
-    int status = connect(sock, (struct sockaddr*)&local, sizeof(local));
-    if (status < 0) {
-        std::cout << "Error during connection\n";
-        return 1;
-    }
-
-    std::string connectionReq = generateConnectionRequest(std::string(argv[3]));
-
-    sendData(sock, connectionReq);
-
+    char responseBuffer[BUFFER_SIZE];
     std::string buf;
     std::string line;
     std::cout << "> ";
@@ -89,7 +56,11 @@ int main(int argc, char* argv[]) {
             if (code) {
                 std::cout << "ret_code: " << code << std::endl;
             } else {
-                sendData(sock, toXmlString(nodeWrapper));
+                request_t req = toXmlRequest(nodeWrapper);
+                ResultSet rs = connection.executeQuery(req);
+                if (nodeWrapper.queryType == SELECT_QUERY) {
+                    printResponse(rs);
+                }
             }
             buf.clear();
             std::cout << "> ";

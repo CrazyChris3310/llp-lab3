@@ -43,6 +43,24 @@
 // column_t
 // 
 
+const column_t::id_type& column_t::
+id () const
+{
+  return this->id_.get ();
+}
+
+column_t::id_type& column_t::
+id ()
+{
+  return this->id_.get ();
+}
+
+void column_t::
+id (const id_type& x)
+{
+  this->id_.set (x);
+}
+
 const column_t::name_type& column_t::
 name () const
 {
@@ -91,32 +109,44 @@ type (::std::unique_ptr< type_type > x)
   this->type_.set (std::move (x));
 }
 
+const column_t::len_type& column_t::
+len () const
+{
+  return this->len_.get ();
+}
+
+column_t::len_type& column_t::
+len ()
+{
+  return this->len_.get ();
+}
+
+void column_t::
+len (const len_type& x)
+{
+  this->len_.set (x);
+}
+
 
 // header_t
 // 
 
-const header_t::table_type& header_t::
-table () const
+const header_t::col_amount_type& header_t::
+col_amount () const
 {
-  return this->table_.get ();
+  return this->col_amount_.get ();
 }
 
-header_t::table_type& header_t::
-table ()
+header_t::col_amount_type& header_t::
+col_amount ()
 {
-  return this->table_.get ();
-}
-
-void header_t::
-table (const table_type& x)
-{
-  this->table_.set (x);
+  return this->col_amount_.get ();
 }
 
 void header_t::
-table (::std::unique_ptr< table_type > x)
+col_amount (const col_amount_type& x)
 {
-  this->table_.set (std::move (x));
+  this->col_amount_.set (x);
 }
 
 const header_t::column_sequence& header_t::
@@ -138,55 +168,93 @@ column (const column_sequence& s)
 }
 
 
-// body_t
+// data_column_t
 // 
 
-const body_t::column_type& body_t::
-column () const
-{
-  return this->column_.get ();
-}
-
-body_t::column_type& body_t::
-column ()
-{
-  return this->column_.get ();
-}
-
-void body_t::
-column (const column_type& x)
-{
-  this->column_.set (x);
-}
-
-void body_t::
-column (::std::unique_ptr< column_type > x)
-{
-  this->column_.set (std::move (x));
-}
-
-const body_t::value_type& body_t::
+const data_column_t::value_type& data_column_t::
 value () const
 {
   return this->value_.get ();
 }
 
-body_t::value_type& body_t::
+data_column_t::value_type& data_column_t::
 value ()
 {
   return this->value_.get ();
 }
 
-void body_t::
+void data_column_t::
 value (const value_type& x)
 {
   this->value_.set (x);
 }
 
-void body_t::
+void data_column_t::
 value (::std::unique_ptr< value_type > x)
 {
   this->value_.set (std::move (x));
+}
+
+const data_column_t::col_id_type& data_column_t::
+col_id () const
+{
+  return this->col_id_.get ();
+}
+
+data_column_t::col_id_type& data_column_t::
+col_id ()
+{
+  return this->col_id_.get ();
+}
+
+void data_column_t::
+col_id (const col_id_type& x)
+{
+  this->col_id_.set (x);
+}
+
+
+// row_t
+// 
+
+const row_t::row_sequence& row_t::
+row () const
+{
+  return this->row_;
+}
+
+row_t::row_sequence& row_t::
+row ()
+{
+  return this->row_;
+}
+
+void row_t::
+row (const row_sequence& s)
+{
+  this->row_ = s;
+}
+
+
+// body_t
+// 
+
+const body_t::row_sequence& body_t::
+row () const
+{
+  return this->row_;
+}
+
+body_t::row_sequence& body_t::
+row ()
+{
+  return this->row_;
+}
+
+void body_t::
+row (const row_sequence& s)
+{
+  this->row_ = s;
 }
 
 
@@ -211,12 +279,6 @@ status (const status_type& x)
   this->status_.set (x);
 }
 
-void response_t::
-status (::std::unique_ptr< status_type > x)
-{
-  this->status_.set (std::move (x));
-}
-
 const response_t::message_type& response_t::
 message () const
 {
@@ -239,6 +301,24 @@ void response_t::
 message (::std::unique_ptr< message_type > x)
 {
   this->message_.set (std::move (x));
+}
+
+const response_t::finished_type& response_t::
+finished () const
+{
+  return this->finished_.get ();
+}
+
+response_t::finished_type& response_t::
+finished ()
+{
+  return this->finished_.get ();
+}
+
+void response_t::
+finished (const finished_type& x)
+{
+  this->finished_.set (x);
 }
 
 const response_t::header_optional& response_t::
@@ -308,11 +388,15 @@ body (::std::unique_ptr< body_type > x)
 //
 
 column_t::
-column_t (const name_type& name,
-          const type_type& type)
+column_t (const id_type& id,
+          const name_type& name,
+          const type_type& type,
+          const len_type& len)
 : ::xml_schema::type (),
+  id_ (id, this),
   name_ (name, this),
-  type_ (type, this)
+  type_ (type, this),
+  len_ (len, this)
 {
 }
 
@@ -321,8 +405,10 @@ column_t (const column_t& x,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  id_ (x.id_, f, this),
   name_ (x.name_, f, this),
-  type_ (x.type_, f, this)
+  type_ (x.type_, f, this),
+  len_ (x.len_, f, this)
 {
 }
 
@@ -331,8 +417,10 @@ column_t (const ::xercesc::DOMElement& e,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  id_ (this),
   name_ (this),
-  type_ (this)
+  type_ (this),
+  len_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -350,6 +438,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xercesc::DOMElement& i (p.cur_element ());
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
+
+    // id
+    //
+    if (n.name () == "id" && n.namespace_ ().empty ())
+    {
+      if (!id_.present ())
+      {
+        this->id_.set (id_traits::create (i, f, this));
+        continue;
+      }
+    }
 
     // name
     //
@@ -379,7 +478,25 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // len
+    //
+    if (n.name () == "len" && n.namespace_ ().empty ())
+    {
+      if (!len_.present ())
+      {
+        this->len_.set (len_traits::create (i, f, this));
+        continue;
+      }
+    }
+
     break;
+  }
+
+  if (!id_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "id",
+      "");
   }
 
   if (!name_.present ())
@@ -393,6 +510,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "type",
+      "");
+  }
+
+  if (!len_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "len",
       "");
   }
 }
@@ -410,8 +534,10 @@ operator= (const column_t& x)
   if (this != &x)
   {
     static_cast< ::xml_schema::type& > (*this) = x;
+    this->id_ = x.id_;
     this->name_ = x.name_;
     this->type_ = x.type_;
+    this->len_ = x.len_;
   }
 
   return *this;
@@ -426,9 +552,9 @@ column_t::
 //
 
 header_t::
-header_t (const table_type& table)
+header_t (const col_amount_type& col_amount)
 : ::xml_schema::type (),
-  table_ (table, this),
+  col_amount_ (col_amount, this),
   column_ (this)
 {
 }
@@ -438,7 +564,7 @@ header_t (const header_t& x,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
-  table_ (x.table_, f, this),
+  col_amount_ (x.col_amount_, f, this),
   column_ (x.column_, f, this)
 {
 }
@@ -448,7 +574,7 @@ header_t (const ::xercesc::DOMElement& e,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  table_ (this),
+  col_amount_ (this),
   column_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
@@ -468,16 +594,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
 
-    // table
+    // col_amount
     //
-    if (n.name () == "table" && n.namespace_ ().empty ())
+    if (n.name () == "col_amount" && n.namespace_ ().empty ())
     {
-      ::std::unique_ptr< table_type > r (
-        table_traits::create (i, f, this));
-
-      if (!table_.present ())
+      if (!col_amount_.present ())
       {
-        this->table_.set (::std::move (r));
+        this->col_amount_.set (col_amount_traits::create (i, f, this));
         continue;
       }
     }
@@ -496,10 +619,10 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     break;
   }
 
-  if (!table_.present ())
+  if (!col_amount_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "table",
+      "col_amount",
       "");
   }
 }
@@ -517,7 +640,7 @@ operator= (const header_t& x)
   if (this != &x)
   {
     static_cast< ::xml_schema::type& > (*this) = x;
-    this->table_ = x.table_;
+    this->col_amount_ = x.col_amount_;
     this->column_ = x.column_;
   }
 
@@ -529,15 +652,210 @@ header_t::
 {
 }
 
+// data_column_t
+//
+
+data_column_t::
+data_column_t (const value_type& value,
+               const col_id_type& col_id)
+: ::xml_schema::type (),
+  value_ (value, this),
+  col_id_ (col_id, this)
+{
+}
+
+data_column_t::
+data_column_t (const data_column_t& x,
+               ::xml_schema::flags f,
+               ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  value_ (x.value_, f, this),
+  col_id_ (x.col_id_, f, this)
+{
+}
+
+data_column_t::
+data_column_t (const ::xercesc::DOMElement& e,
+               ::xml_schema::flags f,
+               ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  value_ (this),
+  col_id_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void data_column_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // value
+    //
+    if (n.name () == "value" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< value_type > r (
+        value_traits::create (i, f, this));
+
+      if (!value_.present ())
+      {
+        this->value_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // col_id
+    //
+    if (n.name () == "col_id" && n.namespace_ ().empty ())
+    {
+      if (!col_id_.present ())
+      {
+        this->col_id_.set (col_id_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!value_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "value",
+      "");
+  }
+
+  if (!col_id_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "col_id",
+      "");
+  }
+}
+
+data_column_t* data_column_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class data_column_t (*this, f, c);
+}
+
+data_column_t& data_column_t::
+operator= (const data_column_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->value_ = x.value_;
+    this->col_id_ = x.col_id_;
+  }
+
+  return *this;
+}
+
+data_column_t::
+~data_column_t ()
+{
+}
+
+// row_t
+//
+
+row_t::
+row_t ()
+: ::xml_schema::type (),
+  row_ (this)
+{
+}
+
+row_t::
+row_t (const row_t& x,
+       ::xml_schema::flags f,
+       ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  row_ (x.row_, f, this)
+{
+}
+
+row_t::
+row_t (const ::xercesc::DOMElement& e,
+       ::xml_schema::flags f,
+       ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  row_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void row_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // row
+    //
+    if (n.name () == "row" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< row_type > r (
+        row_traits::create (i, f, this));
+
+      this->row_.push_back (::std::move (r));
+      continue;
+    }
+
+    break;
+  }
+}
+
+row_t* row_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class row_t (*this, f, c);
+}
+
+row_t& row_t::
+operator= (const row_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->row_ = x.row_;
+  }
+
+  return *this;
+}
+
+row_t::
+~row_t ()
+{
+}
+
 // body_t
 //
 
 body_t::
-body_t (const column_type& column,
-        const value_type& value)
+body_t ()
 : ::xml_schema::type (),
-  column_ (column, this),
-  value_ (value, this)
+  row_ (this)
 {
 }
 
@@ -546,8 +864,7 @@ body_t (const body_t& x,
         ::xml_schema::flags f,
         ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
-  column_ (x.column_, f, this),
-  value_ (x.value_, f, this)
+  row_ (x.row_, f, this)
 {
 }
 
@@ -556,8 +873,7 @@ body_t (const ::xercesc::DOMElement& e,
         ::xml_schema::flags f,
         ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  column_ (this),
-  value_ (this)
+  row_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -576,49 +892,18 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
 
-    // column
+    // row
     //
-    if (n.name () == "column" && n.namespace_ ().empty ())
+    if (n.name () == "row" && n.namespace_ ().empty ())
     {
-      ::std::unique_ptr< column_type > r (
-        column_traits::create (i, f, this));
+      ::std::unique_ptr< row_type > r (
+        row_traits::create (i, f, this));
 
-      if (!column_.present ())
-      {
-        this->column_.set (::std::move (r));
-        continue;
-      }
-    }
-
-    // value
-    //
-    if (n.name () == "value" && n.namespace_ ().empty ())
-    {
-      ::std::unique_ptr< value_type > r (
-        value_traits::create (i, f, this));
-
-      if (!value_.present ())
-      {
-        this->value_.set (::std::move (r));
-        continue;
-      }
+      this->row_.push_back (::std::move (r));
+      continue;
     }
 
     break;
-  }
-
-  if (!column_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "column",
-      "");
-  }
-
-  if (!value_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "value",
-      "");
   }
 }
 
@@ -635,8 +920,7 @@ operator= (const body_t& x)
   if (this != &x)
   {
     static_cast< ::xml_schema::type& > (*this) = x;
-    this->column_ = x.column_;
-    this->value_ = x.value_;
+    this->row_ = x.row_;
   }
 
   return *this;
@@ -652,10 +936,12 @@ body_t::
 
 response_t::
 response_t (const status_type& status,
-            const message_type& message)
+            const message_type& message,
+            const finished_type& finished)
 : ::xml_schema::type (),
   status_ (status, this),
   message_ (message, this),
+  finished_ (finished, this),
   header_ (this),
   body_ (this)
 {
@@ -668,6 +954,7 @@ response_t (const response_t& x,
 : ::xml_schema::type (x, f, c),
   status_ (x.status_, f, this),
   message_ (x.message_, f, this),
+  finished_ (x.finished_, f, this),
   header_ (x.header_, f, this),
   body_ (x.body_, f, this)
 {
@@ -680,6 +967,7 @@ response_t (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   status_ (this),
   message_ (this),
+  finished_ (this),
   header_ (this),
   body_ (this)
 {
@@ -704,12 +992,9 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "status" && n.namespace_ ().empty ())
     {
-      ::std::unique_ptr< status_type > r (
-        status_traits::create (i, f, this));
-
       if (!status_.present ())
       {
-        this->status_.set (::std::move (r));
+        this->status_.set (status_traits::create (i, f, this));
         continue;
       }
     }
@@ -724,6 +1009,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!message_.present ())
       {
         this->message_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // finished
+    //
+    if (n.name () == "finished" && n.namespace_ ().empty ())
+    {
+      if (!finished_.present ())
+      {
+        this->finished_.set (finished_traits::create (i, f, this));
         continue;
       }
     }
@@ -772,6 +1068,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "message",
       "");
   }
+
+  if (!finished_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "finished",
+      "");
+  }
 }
 
 response_t* response_t::
@@ -789,6 +1092,7 @@ operator= (const response_t& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->status_ = x.status_;
     this->message_ = x.message_;
+    this->finished_ = x.finished_;
     this->header_ = x.header_;
     this->body_ = x.body_;
   }
@@ -805,6 +1109,272 @@ response_t::
 #include <xsd/cxx/xml/sax/std-input-source.hxx>
 #include <xsd/cxx/tree/error-handler.hxx>
 
+::std::unique_ptr< ::response_t >
+response (const ::std::string& u,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xsd::cxx::xml::auto_initializer i (
+    (f & ::xml_schema::flags::dont_initialize) == 0,
+    (f & ::xml_schema::flags::keep_dom) == 0);
+
+  ::xsd::cxx::tree::error_handler< char > h;
+
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::xsd::cxx::xml::dom::parse< char > (
+      u, h, p, f));
+
+  h.throw_if_failed< ::xsd::cxx::tree::parsing< char > > ();
+
+  return ::std::unique_ptr< ::response_t > (
+    ::response (
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
+}
+
+::std::unique_ptr< ::response_t >
+response (const ::std::string& u,
+          ::xml_schema::error_handler& h,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xsd::cxx::xml::auto_initializer i (
+    (f & ::xml_schema::flags::dont_initialize) == 0,
+    (f & ::xml_schema::flags::keep_dom) == 0);
+
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::xsd::cxx::xml::dom::parse< char > (
+      u, h, p, f));
+
+  if (!d.get ())
+    throw ::xsd::cxx::tree::parsing< char > ();
+
+  return ::std::unique_ptr< ::response_t > (
+    ::response (
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
+}
+
+::std::unique_ptr< ::response_t >
+response (const ::std::string& u,
+          ::xercesc::DOMErrorHandler& h,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::xsd::cxx::xml::dom::parse< char > (
+      u, h, p, f));
+
+  if (!d.get ())
+    throw ::xsd::cxx::tree::parsing< char > ();
+
+  return ::std::unique_ptr< ::response_t > (
+    ::response (
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
+}
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xsd::cxx::xml::auto_initializer i (
+    (f & ::xml_schema::flags::dont_initialize) == 0,
+    (f & ::xml_schema::flags::keep_dom) == 0);
+
+  ::xsd::cxx::xml::sax::std_input_source isrc (is);
+  return ::response (isrc, f, p);
+}
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          ::xml_schema::error_handler& h,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xsd::cxx::xml::auto_initializer i (
+    (f & ::xml_schema::flags::dont_initialize) == 0,
+    (f & ::xml_schema::flags::keep_dom) == 0);
+
+  ::xsd::cxx::xml::sax::std_input_source isrc (is);
+  return ::response (isrc, h, f, p);
+}
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          ::xercesc::DOMErrorHandler& h,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xsd::cxx::xml::sax::std_input_source isrc (is);
+  return ::response (isrc, h, f, p);
+}
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          const ::std::string& sid,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xsd::cxx::xml::auto_initializer i (
+    (f & ::xml_schema::flags::dont_initialize) == 0,
+    (f & ::xml_schema::flags::keep_dom) == 0);
+
+  ::xsd::cxx::xml::sax::std_input_source isrc (is, sid);
+  return ::response (isrc, f, p);
+}
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          const ::std::string& sid,
+          ::xml_schema::error_handler& h,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xsd::cxx::xml::auto_initializer i (
+    (f & ::xml_schema::flags::dont_initialize) == 0,
+    (f & ::xml_schema::flags::keep_dom) == 0);
+
+  ::xsd::cxx::xml::sax::std_input_source isrc (is, sid);
+  return ::response (isrc, h, f, p);
+}
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          const ::std::string& sid,
+          ::xercesc::DOMErrorHandler& h,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xsd::cxx::xml::sax::std_input_source isrc (is, sid);
+  return ::response (isrc, h, f, p);
+}
+
+::std::unique_ptr< ::response_t >
+response (::xercesc::InputSource& i,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xsd::cxx::tree::error_handler< char > h;
+
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::xsd::cxx::xml::dom::parse< char > (
+      i, h, p, f));
+
+  h.throw_if_failed< ::xsd::cxx::tree::parsing< char > > ();
+
+  return ::std::unique_ptr< ::response_t > (
+    ::response (
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
+}
+
+::std::unique_ptr< ::response_t >
+response (::xercesc::InputSource& i,
+          ::xml_schema::error_handler& h,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::xsd::cxx::xml::dom::parse< char > (
+      i, h, p, f));
+
+  if (!d.get ())
+    throw ::xsd::cxx::tree::parsing< char > ();
+
+  return ::std::unique_ptr< ::response_t > (
+    ::response (
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
+}
+
+::std::unique_ptr< ::response_t >
+response (::xercesc::InputSource& i,
+          ::xercesc::DOMErrorHandler& h,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::xsd::cxx::xml::dom::parse< char > (
+      i, h, p, f));
+
+  if (!d.get ())
+    throw ::xsd::cxx::tree::parsing< char > ();
+
+  return ::std::unique_ptr< ::response_t > (
+    ::response (
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
+}
+
+::std::unique_ptr< ::response_t >
+response (const ::xercesc::DOMDocument& doc,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties& p)
+{
+  if (f & ::xml_schema::flags::keep_dom)
+  {
+    ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+      static_cast< ::xercesc::DOMDocument* > (doc.cloneNode (true)));
+
+    return ::std::unique_ptr< ::response_t > (
+      ::response (
+        std::move (d), f | ::xml_schema::flags::own_dom, p));
+  }
+
+  const ::xercesc::DOMElement& e (*doc.getDocumentElement ());
+  const ::xsd::cxx::xml::qualified_name< char > n (
+    ::xsd::cxx::xml::dom::name< char > (e));
+
+  if (n.name () == "response" &&
+      n.namespace_ () == "")
+  {
+    ::std::unique_ptr< ::response_t > r (
+      ::xsd::cxx::tree::traits< ::response_t, char >::create (
+        e, f, 0));
+    return r;
+  }
+
+  throw ::xsd::cxx::tree::unexpected_element < char > (
+    n.name (),
+    n.namespace_ (),
+    "response",
+    "");
+}
+
+::std::unique_ptr< ::response_t >
+response (::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d,
+          ::xml_schema::flags f,
+          const ::xml_schema::properties&)
+{
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > c (
+    ((f & ::xml_schema::flags::keep_dom) &&
+     !(f & ::xml_schema::flags::own_dom))
+    ? static_cast< ::xercesc::DOMDocument* > (d->cloneNode (true))
+    : 0);
+
+  ::xercesc::DOMDocument& doc (c.get () ? *c : *d);
+  const ::xercesc::DOMElement& e (*doc.getDocumentElement ());
+
+  const ::xsd::cxx::xml::qualified_name< char > n (
+    ::xsd::cxx::xml::dom::name< char > (e));
+
+  if (f & ::xml_schema::flags::keep_dom)
+    doc.setUserData (::xml_schema::dom::tree_node_key,
+                     (c.get () ? &c : &d),
+                     0);
+
+  if (n.name () == "response" &&
+      n.namespace_ () == "")
+  {
+    ::std::unique_ptr< ::response_t > r (
+      ::xsd::cxx::tree::traits< ::response_t, char >::create (
+        e, f, 0));
+    return r;
+  }
+
+  throw ::xsd::cxx::tree::unexpected_element < char > (
+    n.name (),
+    n.namespace_ (),
+    "response",
+    "");
+}
+
 #include <ostream>
 #include <xsd/cxx/tree/error-handler.hxx>
 #include <xsd/cxx/xml/dom/serialization-source.hxx>
@@ -813,6 +1383,17 @@ void
 operator<< (::xercesc::DOMElement& e, const column_t& i)
 {
   e << static_cast< const ::xml_schema::type& > (i);
+
+  // id
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "id",
+        e));
+
+    s << i.id ();
+  }
 
   // name
   //
@@ -835,6 +1416,17 @@ operator<< (::xercesc::DOMElement& e, const column_t& i)
 
     s << i.type ();
   }
+
+  // len
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "len",
+        e));
+
+    s << i.len ();
+  }
 }
 
 void
@@ -842,15 +1434,15 @@ operator<< (::xercesc::DOMElement& e, const header_t& i)
 {
   e << static_cast< const ::xml_schema::type& > (i);
 
-  // table
+  // col_amount
   //
   {
     ::xercesc::DOMElement& s (
       ::xsd::cxx::xml::dom::create_element (
-        "table",
+        "col_amount",
         e));
 
-    s << i.table ();
+    s << i.col_amount ();
   }
 
   // column
@@ -869,20 +1461,9 @@ operator<< (::xercesc::DOMElement& e, const header_t& i)
 }
 
 void
-operator<< (::xercesc::DOMElement& e, const body_t& i)
+operator<< (::xercesc::DOMElement& e, const data_column_t& i)
 {
   e << static_cast< const ::xml_schema::type& > (i);
-
-  // column
-  //
-  {
-    ::xercesc::DOMElement& s (
-      ::xsd::cxx::xml::dom::create_element (
-        "column",
-        e));
-
-    s << i.column ();
-  }
 
   // value
   //
@@ -893,6 +1474,57 @@ operator<< (::xercesc::DOMElement& e, const body_t& i)
         e));
 
     s << i.value ();
+  }
+
+  // col_id
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "col_id",
+        e));
+
+    s << i.col_id ();
+  }
+}
+
+void
+operator<< (::xercesc::DOMElement& e, const row_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // row
+  //
+  for (row_t::row_const_iterator
+       b (i.row ().begin ()), n (i.row ().end ());
+       b != n; ++b)
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "row",
+        e));
+
+    s << *b;
+  }
+}
+
+void
+operator<< (::xercesc::DOMElement& e, const body_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // row
+  //
+  for (body_t::row_const_iterator
+       b (i.row ().begin ()), n (i.row ().end ());
+       b != n; ++b)
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "row",
+        e));
+
+    s << *b;
   }
 }
 
@@ -923,6 +1555,17 @@ operator<< (::xercesc::DOMElement& e, const response_t& i)
     s << i.message ();
   }
 
+  // finished
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "finished",
+        e));
+
+    s << i.finished ();
+  }
+
   // header
   //
   if (i.header ())
@@ -946,6 +1589,154 @@ operator<< (::xercesc::DOMElement& e, const response_t& i)
 
     s << *i.body ();
   }
+}
+
+void
+response (::std::ostream& o,
+          const ::response_t& s,
+          const ::xml_schema::namespace_infomap& m,
+          const ::std::string& e,
+          ::xml_schema::flags f)
+{
+  ::xsd::cxx::xml::auto_initializer i (
+    (f & ::xml_schema::flags::dont_initialize) == 0);
+
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::response (s, m, f));
+
+  ::xsd::cxx::tree::error_handler< char > h;
+
+  ::xsd::cxx::xml::dom::ostream_format_target t (o);
+  if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
+  {
+    h.throw_if_failed< ::xsd::cxx::tree::serialization< char > > ();
+  }
+}
+
+void
+response (::std::ostream& o,
+          const ::response_t& s,
+          ::xml_schema::error_handler& h,
+          const ::xml_schema::namespace_infomap& m,
+          const ::std::string& e,
+          ::xml_schema::flags f)
+{
+  ::xsd::cxx::xml::auto_initializer i (
+    (f & ::xml_schema::flags::dont_initialize) == 0);
+
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::response (s, m, f));
+  ::xsd::cxx::xml::dom::ostream_format_target t (o);
+  if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
+  {
+    throw ::xsd::cxx::tree::serialization< char > ();
+  }
+}
+
+void
+response (::std::ostream& o,
+          const ::response_t& s,
+          ::xercesc::DOMErrorHandler& h,
+          const ::xml_schema::namespace_infomap& m,
+          const ::std::string& e,
+          ::xml_schema::flags f)
+{
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::response (s, m, f));
+  ::xsd::cxx::xml::dom::ostream_format_target t (o);
+  if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
+  {
+    throw ::xsd::cxx::tree::serialization< char > ();
+  }
+}
+
+void
+response (::xercesc::XMLFormatTarget& t,
+          const ::response_t& s,
+          const ::xml_schema::namespace_infomap& m,
+          const ::std::string& e,
+          ::xml_schema::flags f)
+{
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::response (s, m, f));
+
+  ::xsd::cxx::tree::error_handler< char > h;
+
+  if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
+  {
+    h.throw_if_failed< ::xsd::cxx::tree::serialization< char > > ();
+  }
+}
+
+void
+response (::xercesc::XMLFormatTarget& t,
+          const ::response_t& s,
+          ::xml_schema::error_handler& h,
+          const ::xml_schema::namespace_infomap& m,
+          const ::std::string& e,
+          ::xml_schema::flags f)
+{
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::response (s, m, f));
+  if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
+  {
+    throw ::xsd::cxx::tree::serialization< char > ();
+  }
+}
+
+void
+response (::xercesc::XMLFormatTarget& t,
+          const ::response_t& s,
+          ::xercesc::DOMErrorHandler& h,
+          const ::xml_schema::namespace_infomap& m,
+          const ::std::string& e,
+          ::xml_schema::flags f)
+{
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::response (s, m, f));
+  if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
+  {
+    throw ::xsd::cxx::tree::serialization< char > ();
+  }
+}
+
+void
+response (::xercesc::DOMDocument& d,
+          const ::response_t& s,
+          ::xml_schema::flags)
+{
+  ::xercesc::DOMElement& e (*d.getDocumentElement ());
+  const ::xsd::cxx::xml::qualified_name< char > n (
+    ::xsd::cxx::xml::dom::name< char > (e));
+
+  if (n.name () == "response" &&
+      n.namespace_ () == "")
+  {
+    e << s;
+  }
+  else
+  {
+    throw ::xsd::cxx::tree::unexpected_element < char > (
+      n.name (),
+      n.namespace_ (),
+      "response",
+      "");
+  }
+}
+
+::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument >
+response (const ::response_t& s,
+          const ::xml_schema::namespace_infomap& m,
+          ::xml_schema::flags f)
+{
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
+    ::xsd::cxx::xml::dom::serialize< char > (
+      "response",
+      "",
+      m, f));
+
+  ::response (*d, s, f);
+  return d;
 }
 
 #include <xsd/cxx/post.hxx>

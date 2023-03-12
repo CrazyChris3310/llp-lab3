@@ -30,6 +30,7 @@ static void __resetJoinScanner(void* ptr);
 
 size_t __getColumnsCountFromJoinScanner(void* ptr);
 const char* __getColumnNameByIdFormJoinScanner(void* ptr, size_t id);
+struct Field* __getColumnInfoByIdFromJoinScanner(void* ptr, size_t id);
 
 struct JoinScanner* createJoinScanner(struct ScanInterface* left, struct ScanInterface* right) {
     struct JoinScanner* scanner = malloc(sizeof(struct JoinScanner));
@@ -60,6 +61,7 @@ struct JoinScanner* createJoinScanner(struct ScanInterface* left, struct ScanInt
 
     scanner->scanInterface.getColumnsCount = __getColumnsCountFromJoinScanner;
     scanner->scanInterface.getColumnNameById = __getColumnNameByIdFormJoinScanner;
+    scanner->scanInterface.getColumnInfoById = __getColumnInfoByIdFromJoinScanner;
 
     return scanner;
 }
@@ -176,5 +178,18 @@ const char* __getColumnNameByIdFormJoinScanner(void* ptr, size_t id) {
         return getColumnNameById(scanner->leftScanner, id);
     } else {
         return getColumnNameById(scanner->rightScanner, id - leftSize);
+    }
+}
+
+struct Field* __getColumnInfoByIdFromJoinScanner(void* ptr, size_t id) {
+    struct JoinScanner* scanner = (struct JoinScanner*)ptr;
+    if (id >= __getColumnsCountFromJoinScanner(scanner)) {
+        return NULL;
+    }
+    size_t leftSize = getColumnsCount(scanner->leftScanner);
+    if (id < leftSize) {
+        return getColumnInfoById(scanner->leftScanner, id);
+    } else {
+        return getColumnInfoById(scanner->rightScanner, id - leftSize);
     }
 }

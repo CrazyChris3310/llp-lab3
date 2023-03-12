@@ -1,30 +1,37 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-    <xs:include schemaLocation="http://www.example.com/req_schema.xsd"/>
-
     <xs:complexType name="column_t">
         <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="type" type="xs:string"/>
+            <xs:element name="len" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="header_t">
         <xs:sequence>
-            <xs:element name="table" type="xs:string"/>
+            <xs:element name="col_amount" type="xs:int"/>
             <xs:element name="column" type="column_t" maxOccurs="50"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="data_column_t">
+        <xs:sequence>
+            <xs:element name="value" type="xs:string"/>
+            <xs:element name="col_id" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="row_t">
         <xs:sequence>
-            <xs:element name="value" type="constant_t" maxOccurs="10"/>
+            <xs:element name="row" type="data_column_t" maxOccurs="50"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="body_t">
         <xs:sequence>
-            <xs:element name="row" type="row_t" maxOccurs="50"/>
+            <xs:element name="row" type="row_t" maxOccurs="10"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -32,11 +39,14 @@
         <xs:sequence>
             <xs:element name="status" type="xs:int"/>
             <xs:element name="message" type="xs:string"/>
-            <xs:choice>
+            <xs:element name="finished" type="xs:boolean"/>
+            <xs:choice minOccurs="0">
                 <xs:element name="header" type="header_t"/>
                 <xs:element name="body" type="body_t"/>
             </xs:choice>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:element name="response" type="response_t"/>
 
 </xs:schema>

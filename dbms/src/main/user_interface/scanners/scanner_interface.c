@@ -96,3 +96,7 @@ size_t getColumnsCount(struct ScanInterface* scanner) {
 const char* getColumnNameById(struct ScanInterface* scanner, size_t id) {
     return scanner->getColumnNameById(scanner, id);
 }
+
+struct Field* getColumnInfoById(struct ScanInterface* scanner, size_t id) {
+    return scanner->getColumnInfoById(scanner, id);
+}

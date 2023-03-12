@@ -5,6 +5,7 @@ extern "C" {
     #include "../dbms/src/main/user_interface/query.h"
     #include "../dbms/src/main/user_interface/predicates.h"
     #include "../dbms/src/main/middleware/schema.h"
+    #include "../dbms/src/main/user_interface/read_scan.h"
 }
 #include "exceptions.h"
 #include <regex>

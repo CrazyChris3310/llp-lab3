@@ -32,7 +32,7 @@ void closeDatabase(struct Database* db) {
     if (db == NULL) {
         return;
     }
-     destroyTableManager(db->tableManager);
+    destroyTableManager(db->tableManager);
     destroyCacheManager(db->cacheManager);
     destoryFileManager(db->fileManager);
     free(db);

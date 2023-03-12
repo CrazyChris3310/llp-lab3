@@ -254,6 +254,8 @@ namespace xml_schema
 //
 class column_t;
 class header_t;
+class data_column_t;
+class row_t;
 class body_t;
 class response_t;
 
@@ -274,6 +276,20 @@ class response_t;
 class column_t: public ::xml_schema::type
 {
   public:
+  // id
+  //
+  typedef ::xml_schema::int_ id_type;
+  typedef ::xsd::cxx::tree::traits< id_type, char > id_traits;
+
+  const id_type&
+  id () const;
+
+  id_type&
+  id ();
+
+  void
+  id (const id_type& x);
+
   // name
   //
   typedef ::xml_schema::string name_type;
@@ -308,10 +324,26 @@ class column_t: public ::xml_schema::type
   void
   type (::std::unique_ptr< type_type > p);
 
+  // len
+  //
+  typedef ::xml_schema::int_ len_type;
+  typedef ::xsd::cxx::tree::traits< len_type, char > len_traits;
+
+  const len_type&
+  len () const;
+
+  len_type&
+  len ();
+
+  void
+  len (const len_type& x);
+
   // Constructors.
   //
-  column_t (const name_type&,
-            const type_type&);
+  column_t (const id_type&,
+            const name_type&,
+            const type_type&,
+            const len_type&);
 
   column_t (const ::xercesc::DOMElement& e,
             ::xml_schema::flags f = 0,
@@ -339,29 +371,28 @@ class column_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
+  ::xsd::cxx::tree::one< id_type > id_;
   ::xsd::cxx::tree::one< name_type > name_;
   ::xsd::cxx::tree::one< type_type > type_;
+  ::xsd::cxx::tree::one< len_type > len_;
 };
 
 class header_t: public ::xml_schema::type
 {
   public:
-  // table
+  // col_amount
   //
-  typedef ::xml_schema::string table_type;
-  typedef ::xsd::cxx::tree::traits< table_type, char > table_traits;
+  typedef ::xml_schema::int_ col_amount_type;
+  typedef ::xsd::cxx::tree::traits< col_amount_type, char > col_amount_traits;
 
-  const table_type&
-  table () const;
+  const col_amount_type&
+  col_amount () const;
 
-  table_type&
-  table ();
-
-  void
-  table (const table_type& x);
+  col_amount_type&
+  col_amount ();
 
   void
-  table (::std::unique_ptr< table_type > p);
+  col_amount (const col_amount_type& x);
 
   // column
   //
@@ -382,7 +413,7 @@ class header_t: public ::xml_schema::type
 
   // Constructors.
   //
-  header_t (const table_type&);
+  header_t (const col_amount_type&);
 
   header_t (const ::xercesc::DOMElement& e,
             ::xml_schema::flags f = 0,
@@ -410,30 +441,13 @@ class header_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
-  ::xsd::cxx::tree::one< table_type > table_;
+  ::xsd::cxx::tree::one< col_amount_type > col_amount_;
   column_sequence column_;
 };
 
-class body_t: public ::xml_schema::type
+class data_column_t: public ::xml_schema::type
 {
   public:
-  // column
-  //
-  typedef ::xml_schema::string column_type;
-  typedef ::xsd::cxx::tree::traits< column_type, char > column_traits;
-
-  const column_type&
-  column () const;
-
-  column_type&
-  column ();
-
-  void
-  column (const column_type& x);
-
-  void
-  column (::std::unique_ptr< column_type > p);
-
   // value
   //
   typedef ::xml_schema::string value_type;
@@ -451,10 +465,131 @@ class body_t: public ::xml_schema::type
   void
   value (::std::unique_ptr< value_type > p);
 
+  // col_id
+  //
+  typedef ::xml_schema::int_ col_id_type;
+  typedef ::xsd::cxx::tree::traits< col_id_type, char > col_id_traits;
+
+  const col_id_type&
+  col_id () const;
+
+  col_id_type&
+  col_id ();
+
+  void
+  col_id (const col_id_type& x);
+
   // Constructors.
   //
-  body_t (const column_type&,
-          const value_type&);
+  data_column_t (const value_type&,
+                 const col_id_type&);
+
+  data_column_t (const ::xercesc::DOMElement& e,
+                 ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  data_column_t (const data_column_t& x,
+                 ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  virtual data_column_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  data_column_t&
+  operator= (const data_column_t& x);
+
+  virtual 
+  ~data_column_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< value_type > value_;
+  ::xsd::cxx::tree::one< col_id_type > col_id_;
+};
+
+class row_t: public ::xml_schema::type
+{
+  public:
+  // row
+  //
+  typedef ::data_column_t row_type;
+  typedef ::xsd::cxx::tree::sequence< row_type > row_sequence;
+  typedef row_sequence::iterator row_iterator;
+  typedef row_sequence::const_iterator row_const_iterator;
+  typedef ::xsd::cxx::tree::traits< row_type, char > row_traits;
+
+  const row_sequence&
+  row () const;
+
+  row_sequence&
+  row ();
+
+  void
+  row (const row_sequence& s);
+
+  // Constructors.
+  //
+  row_t ();
+
+  row_t (const ::xercesc::DOMElement& e,
+         ::xml_schema::flags f = 0,
+         ::xml_schema::container* c = 0);
+
+  row_t (const row_t& x,
+         ::xml_schema::flags f = 0,
+         ::xml_schema::container* c = 0);
+
+  virtual row_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  row_t&
+  operator= (const row_t& x);
+
+  virtual 
+  ~row_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  row_sequence row_;
+};
+
+class body_t: public ::xml_schema::type
+{
+  public:
+  // row
+  //
+  typedef ::row_t row_type;
+  typedef ::xsd::cxx::tree::sequence< row_type > row_sequence;
+  typedef row_sequence::iterator row_iterator;
+  typedef row_sequence::const_iterator row_const_iterator;
+  typedef ::xsd::cxx::tree::traits< row_type, char > row_traits;
+
+  const row_sequence&
+  row () const;
+
+  row_sequence&
+  row ();
+
+  void
+  row (const row_sequence& s);
+
+  // Constructors.
+  //
+  body_t ();
 
   body_t (const ::xercesc::DOMElement& e,
           ::xml_schema::flags f = 0,
@@ -482,8 +617,7 @@ class body_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
-  ::xsd::cxx::tree::one< column_type > column_;
-  ::xsd::cxx::tree::one< value_type > value_;
+  row_sequence row_;
 };
 
 class response_t: public ::xml_schema::type
@@ -491,7 +625,7 @@ class response_t: public ::xml_schema::type
   public:
   // status
   //
-  typedef ::xml_schema::string status_type;
+  typedef ::xml_schema::int_ status_type;
   typedef ::xsd::cxx::tree::traits< status_type, char > status_traits;
 
   const status_type&
@@ -502,9 +636,6 @@ class response_t: public ::xml_schema::type
 
   void
   status (const status_type& x);
-
-  void
-  status (::std::unique_ptr< status_type > p);
 
   // message
   //
@@ -522,6 +653,20 @@ class response_t: public ::xml_schema::type
 
   void
   message (::std::unique_ptr< message_type > p);
+
+  // finished
+  //
+  typedef ::xml_schema::boolean finished_type;
+  typedef ::xsd::cxx::tree::traits< finished_type, char > finished_traits;
+
+  const finished_type&
+  finished () const;
+
+  finished_type&
+  finished ();
+
+  void
+  finished (const finished_type& x);
 
   // header
   //
@@ -568,7 +713,8 @@ class response_t: public ::xml_schema::type
   // Constructors.
   //
   response_t (const status_type&,
-              const message_type&);
+              const message_type&,
+              const finished_type&);
 
   response_t (const ::xercesc::DOMElement& e,
               ::xml_schema::flags f = 0,
@@ -598,6 +744,7 @@ class response_t: public ::xml_schema::type
   protected:
   ::xsd::cxx::tree::one< status_type > status_;
   ::xsd::cxx::tree::one< message_type > message_;
+  ::xsd::cxx::tree::one< finished_type > finished_;
   header_optional header_;
   body_optional body_;
 };
@@ -607,6 +754,99 @@ class response_t: public ::xml_schema::type
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
+
+// Parse a URI or a local file.
+//
+
+::std::unique_ptr< ::response_t >
+response (const ::std::string& uri,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+::std::unique_ptr< ::response_t >
+response (const ::std::string& uri,
+          ::xml_schema::error_handler& eh,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+::std::unique_ptr< ::response_t >
+response (const ::std::string& uri,
+          ::xercesc::DOMErrorHandler& eh,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+// Parse std::istream.
+//
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          ::xml_schema::error_handler& eh,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          ::xercesc::DOMErrorHandler& eh,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          const ::std::string& id,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          const ::std::string& id,
+          ::xml_schema::error_handler& eh,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+::std::unique_ptr< ::response_t >
+response (::std::istream& is,
+          const ::std::string& id,
+          ::xercesc::DOMErrorHandler& eh,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+// Parse xercesc::InputSource.
+//
+
+::std::unique_ptr< ::response_t >
+response (::xercesc::InputSource& is,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+::std::unique_ptr< ::response_t >
+response (::xercesc::InputSource& is,
+          ::xml_schema::error_handler& eh,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+::std::unique_ptr< ::response_t >
+response (::xercesc::InputSource& is,
+          ::xercesc::DOMErrorHandler& eh,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+// Parse xercesc::DOMDocument.
+//
+
+::std::unique_ptr< ::response_t >
+response (const ::xercesc::DOMDocument& d,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
+
+::std::unique_ptr< ::response_t >
+response (::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d,
+          ::xml_schema::flags f = 0,
+          const ::xml_schema::properties& p = ::xml_schema::properties ());
 
 #include <iosfwd>
 
@@ -623,10 +863,84 @@ void
 operator<< (::xercesc::DOMElement&, const header_t&);
 
 void
+operator<< (::xercesc::DOMElement&, const data_column_t&);
+
+void
+operator<< (::xercesc::DOMElement&, const row_t&);
+
+void
 operator<< (::xercesc::DOMElement&, const body_t&);
 
 void
 operator<< (::xercesc::DOMElement&, const response_t&);
+
+// Serialize to std::ostream.
+//
+
+void
+response (::std::ostream& os,
+          const ::response_t& x, 
+          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
+          const ::std::string& e = "UTF-8",
+          ::xml_schema::flags f = 0);
+
+void
+response (::std::ostream& os,
+          const ::response_t& x, 
+          ::xml_schema::error_handler& eh,
+          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
+          const ::std::string& e = "UTF-8",
+          ::xml_schema::flags f = 0);
+
+void
+response (::std::ostream& os,
+          const ::response_t& x, 
+          ::xercesc::DOMErrorHandler& eh,
+          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
+          const ::std::string& e = "UTF-8",
+          ::xml_schema::flags f = 0);
+
+// Serialize to xercesc::XMLFormatTarget.
+//
+
+void
+response (::xercesc::XMLFormatTarget& ft,
+          const ::response_t& x, 
+          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
+          const ::std::string& e = "UTF-8",
+          ::xml_schema::flags f = 0);
+
+void
+response (::xercesc::XMLFormatTarget& ft,
+          const ::response_t& x, 
+          ::xml_schema::error_handler& eh,
+          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
+          const ::std::string& e = "UTF-8",
+          ::xml_schema::flags f = 0);
+
+void
+response (::xercesc::XMLFormatTarget& ft,
+          const ::response_t& x, 
+          ::xercesc::DOMErrorHandler& eh,
+          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
+          const ::std::string& e = "UTF-8",
+          ::xml_schema::flags f = 0);
+
+// Serialize to an existing xercesc::DOMDocument.
+//
+
+void
+response (::xercesc::DOMDocument& d,
+          const ::response_t& x,
+          ::xml_schema::flags f = 0);
+
+// Serialize to a new xercesc::DOMDocument.
+//
+
+::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument >
+response (const ::response_t& x, 
+          const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap (),
+          ::xml_schema::flags f = 0);
 
 #include <xsd/cxx/post.hxx>
 

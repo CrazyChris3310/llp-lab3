@@ -1,0 +1,11 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="rpc_call">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="next"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+</xs:schema>
