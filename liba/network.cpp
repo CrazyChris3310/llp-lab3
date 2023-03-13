@@ -75,7 +75,9 @@ std::unique_ptr<response_t> Network::receiveResponse() {
     std::istringstream iss(buf);
     try {
         return response(iss, 0, properties);
-    } catch(std::exception& e) {
-        throw InvalidSchemaException(e.what());
+    } catch(const xml_schema::exception& e) {
+        std::ostringstream oss;
+        oss << e;
+        throw InvalidSchemaException(oss.str());
     }
 }

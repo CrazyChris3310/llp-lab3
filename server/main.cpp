@@ -22,75 +22,109 @@ extern "C" {
 
 Database* database;
 
+
+void executeSelect(request_t& req, Network& net, std::string& message, int& code) {
+	SelectQuery* query = parseSelectQuery(req);
+	ScanInterface* scan = performSelectQuery(database, query);
+	if (scan == NULL) {
+		message = "Schema table doesn't exists";
+		code = 404;
+		printf("%s\n", message.c_str());
+		destroySelectQuery(query);
+		return;
+	}
+
+	try {
+		header_t header(0);
+		int maxCol = buildHeader(scan, &header);
+		response_t resp(200, "OK", false);
+		resp.header(header);
+		net.sendResponse(resp);
+
+		bool hasBody = false;
+		int status;
+		body_t body;
+		int count = 10;
+		while(next(scan)) {
+			if (count == 0) {
+				net.awaitRPCCall();
+				resp = response_t(200, "OK", false);
+				resp.body(body);
+				net.sendResponse(resp);
+				body = body_t();
+				count = 10;
+				hasBody = false;
+			}
+			addNextRecord(body, scan, maxCol);
+			hasBody = true;
+			count -= 1;
+		}
+		net.awaitRPCCall();
+		if (hasBody) {
+			resp = response_t(200, "OK", false);
+			resp.body(body);
+			net.sendResponse(resp);
+		} else {
+			return;
+		}
+
+		net.awaitRPCCall();
+	} catch (ClientDisconnectedException& e){
+		destroySelectQuery(query);
+		destroyScanner(scan);
+		throw e;
+	}
+
+	destroySelectQuery(query);
+	destroyScanner(scan);
+}
+
+void executeUpdate(request_t& req, Network& net, std::string& message, int& code) {
+	UpdateQuery* query = parseUpdateQuery(req);
+	performUpdateQuery(database, query);
+	destroyUpdateQuery(query);
+}
+
+void executeInsert(request_t& req, Network& net, std::string& message, int& code) {
+	InsertQuery* query = parseInsertQuery(req);
+	performInsertQuery(database, query);
+	destroyInsertQuery(query);
+}
+
+void executeDelete(request_t& req, Network& net, std::string& message, int& code) {
+	DeleteQuery* query = parseDeleteQuery(req);
+	performDeleteQuery(database, query);
+	destroyDeleteQuery(query);
+}
+
+void executeCreate(request_t& req, Network& net, std::string& message, int& code) {
+	Schema* schema = parseCreateQuery(req);
+	createTable(database, schema);
+	destroySchema(schema);
+}
+
+void executeDrop(request_t& req, Network& net, std::string& message, int& code) {
+	const char* name = parseDropQuery(req);
+	dropTable(database, name);
+}
+
 int processRequest(request_t req, Network& net) {
 	int code = 200;
 	std::string message = "OK";
 
-	header_t header(0);
 	QueryType type = resolveQueryType(req.type());
 	if (type == CREATE_QUERY) {
-		Schema* schema = parseCreateQuery(req);
-		createTable(database, schema);
-		destroySchema(schema);
+		executeCreate(req, net, message, code);
 	} else if (type == DROP_QUERY) {
-		const char* name = parseDropQuery(req);
-		dropTable(database, name);
+		executeDrop(req, net, message, code);
 	} else if (type == SELECT_QUERY) {
-		SelectQuery* query = parseSelectQuery(req);
-		ScanInterface* scan = performSelectQuery(database, query);
-		if (scan == NULL) {
-			message = "Schema table doesn't exists";
-			code = 404;
-			printf("%s\n", message.c_str());
-		}
-
-		try {
-			int maxCol = buildHeader(scan, &header);
-			response_t resp(200, "OK", false);
-			resp.header(header);
-			net.sendResponse(resp);
-
-			int status;
-			body_t body;
-			int count = 10;
-			while(next(scan)) {
-				if (count == 0) {
-					net.awaitRPCCall();
-					resp = response_t(200, "OK", false);
-					resp.body(body);
-					net.sendResponse(resp);
-					body = body_t();
-					count = 10;
-				}
-				addNextRecord(body, scan, maxCol);
-				count -= 1;
-			}
-			net.awaitRPCCall();
-			resp = response_t(200, "OK", false);
-			resp.body(body);
-			net.sendResponse(resp);
-
-			net.awaitRPCCall();
-		} catch (ClientDisconnectedException& e){
-			destroySelectQuery(query);
-			destroyScanner(scan);
-			throw e;
-		}
-
-		destroySelectQuery(query);
-		destroyScanner(scan);
+		executeSelect(req, net, message, code);
 	} else if (type == UPDATE_QUERY) {
-		UpdateQuery* query = parseUpdateQuery(req);
-		performUpdateQuery(database, query);
-		destroyUpdateQuery(query);
+		executeUpdate(req, net, message, code);
 	} else if (type == INSERT_QUERY) {
-		InsertQuery* query = parseInsertQuery(req);
-		performInsertQuery(database, query);
-		destroyInsertQuery(query);
+		executeInsert(req, net, message, code);
 	} else if (type == DELETE_QUERY) {
-		DeleteQuery* query = parseDeleteQuery(req);
-		performDeleteQuery(database, query);
-		destroyDeleteQuery(query);
+		executeDelete(req, net, message, code);
 	}
 	net.sendResponse(response_t(code, message, true));
 	return 0;
@@ -120,7 +154,6 @@ void shutdown(int signum) {
 	if (database != NULL) {
 		closeDatabase(database);
 	}
-	close(ss);
 	exit(0);
 }
 
@@ -163,7 +196,6 @@ int main(int argc, char* argv[]) {
 		}
 
 		closeDatabase(database);
-		close(ss);
 	} catch (SocketException& e) {
 		std::cout << e.what() << std::endl;
 	} catch (IOException& e) {
