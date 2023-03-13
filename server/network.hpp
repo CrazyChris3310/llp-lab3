@@ -77,7 +77,7 @@ public:
         }
     }
 
-    std::unique_ptr<message_t> receiveMessage() {
+    message_t receiveMessage() {
         int bytes_read = read(cs, buf, BUFFER_SIZE);
         
         if (bytes_read < 0) {
@@ -91,7 +91,7 @@ public:
         buf[bytes_read] = 0;
         std::istringstream iss(buf);
         try {
-            return message(iss, 0, properties);
+            return *message(iss, 0, properties);
         } catch (std::exception& e) {
             throw InvalidSchemaException(e.what());
         }

@@ -39,8 +39,7 @@ Predicate* parsePredicate(predicate_t& predicate) {
 }
 
 DeleteQuery* parseDeleteQuery(request_t& req) {
-    DeleteQuery* qeury;
-    delete_t del = req.delete_().get();
+    delete_t& del = req.delete_().get();
     const char* from = del.from().c_str();
     Predicate* predicate = NULL;
     if (del.predicate().present()) {
@@ -50,10 +49,10 @@ DeleteQuery* parseDeleteQuery(request_t& req) {
 }
 
 InsertQuery* parseInsertQuery(request_t& req) {
-    insert_t ins = req.insert().get();
+    insert_t& ins = req.insert().get();
     const char* into = ins.into().c_str();
     InsertQuery* query = createInsertQuery(into);
-    map_t values = ins.values();
+    map_t& values = ins.values();
     for (map_t::entry_type& entry : values.entry()) {
         Constant constant = parseConstant(entry.value());
         const char* key = entry.key().c_str();
@@ -63,7 +62,7 @@ InsertQuery* parseInsertQuery(request_t& req) {
 }
 
 SelectQuery* parseSelectQuery(request_t& req) {
-    select_t sel = req.select().get();
+    select_t& sel = req.select().get();
     Predicate* pred = NULL;
     if (sel.predicate().present()) {
         pred = parsePredicate(sel.predicate().get());
@@ -80,14 +79,14 @@ SelectQuery* parseSelectQuery(request_t& req) {
 }
 
 UpdateQuery* parseUpdateQuery(request_t& req) {
-    update_t upd = req.update().get();
+    update_t& upd = req.update().get();
     Predicate* pred = NULL;
     if (upd.predicate().present()) {
         pred = parsePredicate(upd.predicate().get());
     }
     UpdateQuery* query = createUpdateQuery(upd.table().c_str(), pred);
 
-    map_t values = upd.fields();
+    map_t& values = upd.fields();
 
     for (map_t::entry_type& entry : values.entry()) {
         Constant cnst = parseConstant(entry.value());
@@ -101,13 +100,12 @@ UpdateQuery* parseUpdateQuery(request_t& req) {
 
 //handle situation when type is not correct
 Schema* parseCreateQuery(request_t& req) {
-    create_t crt = req.create().get();
+    create_t& crt = req.create().get();
     Schema* schema = createSchema(crt.table().c_str());
     map_t mapa = crt.fields();
     for (map_t::entry_type& entry : mapa.entry()) {
         std::string& name = entry.key();
         std::string& type = entry.value().value();
-        int colLength;
         if (type == "int") {
             addIntField(schema, name.c_str());
         } else if (type == "float") {
@@ -129,6 +127,6 @@ Schema* parseCreateQuery(request_t& req) {
 }
 
 const char* parseDropQuery(request_t& req) {
-    drop_t drop = req.drop().get();
+    drop_t& drop = req.drop().get();
     return drop.table().c_str();
 }

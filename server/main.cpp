@@ -23,7 +23,7 @@ extern "C" {
 Database* database;
 
 
-void executeSelect(request_t& req, Network& net, std::string& message, int& code) {
+void executeSelect(request_t req, Network& net, std::string& message, int& code) {
 	SelectQuery* query = parseSelectQuery(req);
 	ScanInterface* scan = performSelectQuery(database, query);
 	if (scan == NULL) {
@@ -42,7 +42,6 @@ void executeSelect(request_t& req, Network& net, std::string& message, int& code
 		net.sendResponse(resp);
 
 		bool hasBody = false;
-		int status;
 		body_t body;
 		int count = 10;
 		while(next(scan)) {
@@ -136,16 +135,16 @@ void processConnect(std::string name, Network& net) {
 	net.sendResponse(response_t(200, "OK", true));
 }
 
-int processMessage(std::unique_ptr<message_t>& msg, Network& net) {
-	if (msg.get()->connect()) {
-		processConnect(msg.get()->database().get(), net);
+int processMessage(message_t& msg, Network& net) {
+	if (msg.connect()) {
+		processConnect(msg.database().get(), net);
 		return 0;
 	} else {
 		// handle error
 		if (database == NULL) {
 			return 1;
 		}
-		return processRequest(msg.get()->request().get(), net);
+		return processRequest(msg.request().get(), net);
 	}
 }
 
@@ -160,15 +159,12 @@ void shutdown(int signum) {
 void runClientLoop(Network& net) {
 	try {
 		while (true) {
-			std::unique_ptr<message_t> msg;
+			message_t msg(false);
 			try {
 				msg = net.receiveMessage();
 			} catch (InvalidSchemaException& e) {
 				std::cout << e.what() << std::endl;
 				continue;
-			}
-			if (msg == NULL) {
-				break;
 			}
 			processMessage(msg, net);
 		}
