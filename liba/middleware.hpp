@@ -4,6 +4,7 @@
 #include "../common/resp_schema.hxx"
 #include "../common/rpc_schema.hxx"
 #include "../client/ast.h"
+#include "exceptions.h"
 #include "network.h"
 #include <string>
 
@@ -30,6 +31,9 @@ private:
         current = net.receiveResponse();
 
         if (current.get()->finished()) {
+            if (current.get()->status() != 200) {
+                throw DatabaseException(current.get()->message());
+            }
             return 0;
         }
         if (current.get()->header().present()) {
@@ -56,13 +60,13 @@ public:
             return false;
         }
         if (current.get()->body().present()) {
+            pos += 1;
             if (pos >= bodySize) {
                 getNextBatch();
-                pos = -1;
+                pos = 0;
                 return !current.get()->finished();
             }
-            pos += 1;
-            return pos < bodySize;
+            return true;
         }
         return false;
     }

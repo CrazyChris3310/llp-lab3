@@ -16,7 +16,7 @@ public:
     char buf[BUFFER_SIZE];
 
     Network();
-    int establishConnection(const char* ip, const char* port);
+    void establishConnection(const char* ip, const char* port);
     void closeConnection();
     void sendMessage(message_t msg);
     void makeRPCCall(rpc_call rpc);

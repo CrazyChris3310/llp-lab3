@@ -21,31 +21,11 @@ extern "C" {
 
 
 Database* database;
-struct sockaddr_in local;
-int ss;
-
-void printConstant(Constant& constant) {
-	if (constant.type == INT) {
-		printf("%-20" PRId64, constant.value.intVal);
-	} else if (constant.type == FLOAT) {
-		printf("%-20.4f", constant.value.floatVal);
-	} else if (constant.type == BOOL) {
-		printf("%-20s", constant.value.boolVal ? "true" : "false");
-	} else {
-		printf("%-20s", constant.value.stringVal);
-	}
-}
-
-int sendResponse(std::string msg, int sc) {
-	int byte_written = write(sc, msg.c_str(), msg.length());
-	if (byte_written <= 0) {
-		perror("Error while sending data\n");
-		return 1;
-	}
-	return 0;
-}
 
 int processRequest(request_t req, Network& net) {
+	int code = 200;
+	std::string message = "OK";
+
 	header_t header(0);
 	QueryType type = resolveQueryType(req.type());
 	if (type == CREATE_QUERY) {
@@ -59,37 +39,46 @@ int processRequest(request_t req, Network& net) {
 		SelectQuery* query = parseSelectQuery(req);
 		ScanInterface* scan = performSelectQuery(database, query);
 		if (scan == NULL) {
-			printf("Schema table doesn't exists\n");
-			return 1;
+			message = "Schema table doesn't exists";
+			code = 404;
+			printf("%s\n", message.c_str());
 		}
 
-		int maxCol = buildHeader(scan, &header);
-		response_t resp(200, "OK", false);
-		resp.header(header);
-		net.sendResponse(resp);
+		try {
+			int maxCol = buildHeader(scan, &header);
+			response_t resp(200, "OK", false);
+			resp.header(header);
+			net.sendResponse(resp);
 
-		int status;
-		body_t body;
-		int count = 10;
-		while(next(scan)) {
-			if (count == 0) {
-				net.awaitRPCCall();
-				resp = response_t(200, "OK", false);
-				resp.body(body);
-				net.sendResponse(resp);
-				body = body_t();
-				count = 10;
+			int status;
+			body_t body;
+			int count = 10;
+			while(next(scan)) {
+				if (count == 0) {
+					net.awaitRPCCall();
+					resp = response_t(200, "OK", false);
+					resp.body(body);
+					net.sendResponse(resp);
+					body = body_t();
+					count = 10;
+				}
+				addNextRecord(body, scan, maxCol);
+				count -= 1;
 			}
-			addNextRecord(body, scan, maxCol);
-			count -= 1;
-		}
-		net.awaitRPCCall();
-		resp = response_t(200, "OK", false);
-		resp.body(body);
-		net.sendResponse(resp);
-		destroySelectQuery(query);
+			net.awaitRPCCall();
+			resp = response_t(200, "OK", false);
+			resp.body(body);
+			net.sendResponse(resp);
 
-		net.awaitRPCCall();
+			net.awaitRPCCall();
+		} catch (ClientDisconnectedException& e){
+			destroySelectQuery(query);
+			destroyScanner(scan);
+			throw e;
+		}
+
+		destroySelectQuery(query);
+		destroyScanner(scan);
 	} else if (type == UPDATE_QUERY) {
 		UpdateQuery* query = parseUpdateQuery(req);
 		performUpdateQuery(database, query);
@@ -103,7 +92,7 @@ int processRequest(request_t req, Network& net) {
 		performDeleteQuery(database, query);
 		destroyDeleteQuery(query);
 	}
-	net.sendResponse(getFinishResponse());
+	net.sendResponse(response_t(code, message, true));
 	return 0;
 }
 
@@ -135,6 +124,28 @@ void shutdown(int signum) {
 	exit(0);
 }
 
+void runClientLoop(Network& net) {
+	try {
+		while (true) {
+			std::unique_ptr<message_t> msg;
+			try {
+				msg = net.receiveMessage();
+			} catch (InvalidSchemaException& e) {
+				std::cout << e.what() << std::endl;
+				continue;
+			}
+			if (msg == NULL) {
+				break;
+			}
+			processMessage(msg, net);
+		}
+	} catch (ClientDisconnectedException& e) {
+		std::cout << e.what() << std::endl;
+	}
+	closeDatabase(database);
+	database = NULL;
+}
+
 int main(int argc, char* argv[]) {
 
 	if (argc != 2) {
@@ -143,25 +154,21 @@ int main(int argc, char* argv[]) {
 	}
 	signal(SIGINT, shutdown);
 
-	Network net(argv[1]);
-
-	while (true) {
-		net.acceptClient();
+	try {
+		Network net(argv[1]);
 
 		while (true) {
-			std::unique_ptr<message_t> msg = net.receiveMessage();
-			if (msg == NULL) {
-				break;
-			}
-			processMessage(msg, net);
+			net.acceptClient();
+			runClientLoop(net);
 		}
 
 		closeDatabase(database);
-		database = NULL;
+		close(ss);
+	} catch (SocketException& e) {
+		std::cout << e.what() << std::endl;
+	} catch (IOException& e) {
+		std::cout << e.what() << std::endl;
 	}
-
-	closeDatabase(database);
-	close(ss);
 
     return 0;
 }

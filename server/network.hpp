@@ -3,6 +3,7 @@
 #include "../common/resp_schema.hxx"
 #include "../common/req_schema.hxx"
 #include "../common/rpc_schema.hxx"
+#include "exceptions.h"
 #include <netinet/ip.h>
 #include <string>
 #include <sstream>
@@ -32,12 +33,13 @@ public:
 
         int opt = 1;
         ss = socket(AF_INET, SOCK_STREAM, 0);
-        if (ss == 0) {
-            perror("Socket creation failed\n");
+        if (ss < 0) {
+            throw SocketException("Unable to create socket");
         }
 
         if (setsockopt(ss, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
             perror("setsockopt failed\n");
+            throw SocketException("Setting socket options failed");
         }
 
         inet_aton("127.0.0.1", &local.sin_addr);
@@ -46,22 +48,20 @@ public:
 
         int port_taken = bind(ss, (struct sockaddr*)&local, sizeof(local));
         if (port_taken < 0) {
-            printf("Error binding to port: %s\n", port);
+            throw SocketException("Error binding to port: " + std::string(port));
         }
 
         if (listen(ss, MAX_CLIENTS) < 0) {
-            perror("listen failed");
+            throw SocketException("Listen failed");
         }
     }
 
-    int acceptClient() {
+    void acceptClient() {
         cs = accept(ss, NULL, NULL);
 		if (cs < 0) {
-			perror("Accept failed\n");
-			return 1;
+            throw IOException("Accept failed");
 		}
         printf("New client connected, socket fd is %d\n", cs);
-        return 0;
     }
 
     void closeConnection() {
@@ -72,36 +72,38 @@ public:
     void sendResponse(response_t msg) {
         std::ostringstream oss;
         response(oss, msg, map);
-        send(cs, oss.str().c_str(), oss.str().length(), 0);
+        if (write(cs, oss.str().c_str(), oss.str().length()) < 0) {
+            throw IOException("Unable to send data to client");
+        }
     }
 
     std::unique_ptr<message_t> receiveMessage() {
-        int bytes_read = recv(cs, buf, BUFFER_SIZE, 0);
+        int bytes_read = read(cs, buf, BUFFER_SIZE);
         
         if (bytes_read < 0) {
-            perror("Error while receiving data\n");
-            return NULL;
+            throw IOException("Error while receiving data");
         } else if (bytes_read == 0) {
-            printf("Client disconnected, socket fd is %d\n", cs);
             close(cs);
-            return NULL;
+            throw ClientDisconnectedException("Client " + std::to_string(cs) + " disconncted");
         }
 
         printf("Received %d bytes from client %d:\n%s\n", bytes_read, cs, buf);
         buf[bytes_read] = 0;
         std::istringstream iss(buf);
-        return message(iss, 0, properties);
+        try {
+            return message(iss, 0, properties);
+        } catch (std::exception& e) {
+            throw InvalidSchemaException(e.what());
+        }
     }
 
     std::unique_ptr<rpc_call> awaitRPCCall() {
-        int bytes_read = recv(cs, buf, BUFFER_SIZE, 0);
+        int bytes_read = read(cs, buf, BUFFER_SIZE);
         if (bytes_read < 0) {
-            perror("Error while receiving data\n");
-            return NULL;
+            throw IOException("Error while waiting for RPC");
         } else if (bytes_read == 0) {
-            printf("Client disconnected, socket fd is %d\n", cs);
             close(cs);
-            return NULL;
+            throw ClientDisconnectedException("Client " + std::to_string(cs) + " disconncted");
         }
 
         xml_schema::properties props;
@@ -110,7 +112,11 @@ public:
         printf("Received %d RPC call from client %d:\n%s\n", bytes_read, cs, buf);
         buf[bytes_read] = 0;
         std::istringstream iss(buf);
-        return rpc_call_(iss, 0, props);
+        try {
+            return rpc_call_(iss, 0, props);
+        } catch (std::exception& e) {
+            throw InvalidSchemaException(e.what());
+        }
     }
 
 };
