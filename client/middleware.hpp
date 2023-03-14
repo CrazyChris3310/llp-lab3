@@ -3,7 +3,7 @@
 #include "../common/req_schema.hxx"
 #include "../common/resp_schema.hxx"
 #include "../common/rpc_schema.hxx"
-#include "../client/ast.h"
+#include "../parser_lib/ast.h"
 #include "exceptions.h"
 #include "network.h"
 #include <string>

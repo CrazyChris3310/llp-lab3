@@ -7,8 +7,8 @@ set(SERVER_NAME lab3-server)
 
 project(lab3-client LANGUAGES CXX)
 
-file(GLOB_RECURSE C_FILES_CLIENT CONFIGURE_DEPENDS liba/*.cpp)
-file(GLOB_RECURSE H_FILES_CLIENT CONFIGURE_DEPENDS liba/*.h)
+file(GLOB_RECURSE C_FILES_CLIENT CONFIGURE_DEPENDS client/*.cpp)
+file(GLOB_RECURSE H_FILES_CLIENT CONFIGURE_DEPENDS client/*.h)
 
 file(GLOB_RECURSE C_FILES_COMMON CONFIGURE_DEPENDS common/*.cxx)
 file(GLOB_RECURSE H_FILES_COMMON CONFIGURE_DEPENDS common/*.hxx)
@@ -21,11 +21,10 @@ add_compile_options(
   -fsanitize=address,undefined,leak
 )
 
-
 add_executable(${CLIENT_NAME} ${C_FILES_CLIENT} ${H_FILES_CLIENT} ${C_FILES_COMMON} ${H_FILES_COMMON})
-target_include_directories(${CLIENT_NAME} PUBLIC liba client common)
-add_subdirectory(client)
-target_link_libraries(${CLIENT_NAME} -fsanitize=address,undefined,leak xerces-c client)
+target_include_directories(${CLIENT_NAME} PUBLIC client parser_lib common)
+add_subdirectory(parser_lib)
+target_link_libraries(${CLIENT_NAME} -fsanitize=address,undefined,leak xerces-c parser_lib)
 
 file(GLOB_RECURSE C_FILES_SERVER CONFIGURE_DEPENDS server/*.cpp)
 file(GLOB_RECURSE H_FILES_SERVER CONFIGURE_DEPENDS server/*.h)

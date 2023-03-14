@@ -14,12 +14,11 @@ BISON_TARGET(MyParser parser.y ${CMAKE_CURRENT_SOURCE_DIR}/parser.cpp DEFINES_FI
 FLEX_TARGET(MyScanner lexer.l  ${CMAKE_CURRENT_SOURCE_DIR}/lexer.cpp DEFINES_FILE ${CMAKE_CURRENT_SOURCE_DIR}/lexer.h)
 ADD_FLEX_BISON_DEPENDENCY(MyScanner MyParser)
 
-add_library(client
+add_library(parser_lib
     STATIC
     ${BISON_MyParser_OUTPUTS}
     ${FLEX_MyScanner_OUTPUTS}
     ${C_FILES_LIB}
     ${H_FILES_LIB}
 )
-target_include_directories(client PUBLIC .)
-# target_link_libraries(client ${C_FILES_LIB} ${H_FILES_LIB})
+target_include_directories(parser_lib PUBLIC .)

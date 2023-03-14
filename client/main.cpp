@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
-#include "../client/ast.h"
-#include "../client/parser.h"
-#include "../client/lexer.h"
+#include "../parser_lib/ast.h"
+#include "../parser_lib/parser.h"
+#include "../parser_lib/lexer.h"
 #include "evaluate.h"
 #include "response_processor.h"
 #include "middleware.hpp"

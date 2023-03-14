@@ -1,5 +1,5 @@
-#include "../liba/evaluate.h"
-#include "../liba/exceptions.h"
+#include "evaluate.h"
+#include "exceptions.h"
 #include <vector>
 
 map_t makeMap(MapNode* node) {
