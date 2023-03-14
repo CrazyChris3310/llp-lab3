@@ -36,13 +36,12 @@ void printResponse(ResultSet& rs) {
 
 int main(int argc, char* argv[]) {
 
-    // if (argc != 4) {
-        // printf("Usage: %s <host> <port> <database>\n", argv[0]);
-        // return 1;
-    // }
+    if (argc != 4) {
+        printf("Usage: %s <host> <port> <database>\n", argv[0]);
+        return 1;
+    }
 
     try {
-        // Connection connection = getConnection(argv[1], argv[2], argv[3]);
         Connection connection = getConnection("127.0.0.1", "3434", "figurka");
 
         std::string buf;
