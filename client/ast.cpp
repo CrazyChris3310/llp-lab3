@@ -40,6 +40,8 @@ const char* getStringNodeType(NodeType type) {
             return "create_table";
         case DROP_TABLE_NODE:
             return "drop_table";
+        case RET_ALL_NODE:
+            return "return_all_node";
         default:
             return "unknown";
     }
@@ -89,6 +91,11 @@ ForNode::~ForNode() {
     free((void*)this->tableName);
 }
 
+void ReturnAllNode::print(int depth) {
+    printKeyVal("node_type", getStringNodeType(getNodeType()), depth);
+    printKeyVal("value", "ALL", depth);
+}
+
 // ------------------------------------------ ActionNode ------------------------------------------
 
 void ActionNode::addAction(Node* action) { 
@@ -121,7 +128,7 @@ std::string Constant::getStrType() {
         case BOOL:
             return "bool";
         case REF:
-            return "reference";
+            return "ref";
         default:
             return "unknown";
     }

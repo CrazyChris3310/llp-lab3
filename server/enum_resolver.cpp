@@ -12,7 +12,9 @@ DataType resolveDataType(std::string str) {
         return BOOL;
     } else if (str == "string") {
         return STRING;
-    } 
+    } else if (str == "ref") {
+        return REF;
+    }
 
     throw UndefinedEnumValueException("DataType has no value " + str);
 }
@@ -26,6 +28,8 @@ std::string getStringValue(DataType type) {
         return "bool";
     } else if (type == STRING) {
         return "string";
+    } else if (type == REF) {
+        return "ref";
     } else {
         return "UNKNOWN";
     }

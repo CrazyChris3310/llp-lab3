@@ -48,3 +48,7 @@ struct Constant stringConstant(const char* value) {
     return (struct Constant){ .type = STRING, .value.stringVal = value };
 }
 
+struct Constant refConstant(const char* column) {
+    return (struct Constant) { .type = REF, .value.stringVal = column };
+}
+

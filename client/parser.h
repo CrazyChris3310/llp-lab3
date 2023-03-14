@@ -68,17 +68,18 @@ extern int yydebug;
     LPAREN = 269,                  /* LPAREN  */
     RPAREN = 270,                  /* RPAREN  */
     COLON = 271,                   /* COLON  */
-    LBRACE = 272,                  /* LBRACE  */
-    RBRACE = 273,                  /* RBRACE  */
-    LOGIC_OP = 274,                /* LOGIC_OP  */
-    COMP_OP = 275,                 /* COMP_OP  */
-    COMMA = 276,                   /* COMMA  */
-    UPDATE = 277,                  /* UPDATE  */
-    WITH = 278,                    /* WITH  */
-    REMOVE = 279,                  /* REMOVE  */
-    CREATE = 280,                  /* CREATE  */
-    DROP = 281,                    /* DROP  */
-    TABLE = 282                    /* TABLE  */
+    ALL = 272,                     /* ALL  */
+    LBRACE = 273,                  /* LBRACE  */
+    RBRACE = 274,                  /* RBRACE  */
+    LOGIC_OP = 275,                /* LOGIC_OP  */
+    COMP_OP = 276,                 /* COMP_OP  */
+    COMMA = 277,                   /* COMMA  */
+    UPDATE = 278,                  /* UPDATE  */
+    WITH = 279,                    /* WITH  */
+    REMOVE = 280,                  /* REMOVE  */
+    CREATE = 281,                  /* CREATE  */
+    DROP = 282,                    /* DROP  */
+    TABLE = 283                    /* TABLE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -103,7 +104,7 @@ union YYSTYPE
   ActionNode* action;
   Constant* constant;
 
-#line 107 "/home/danil/llp/lab3/client/parser.h"
+#line 108 "/home/danil/llp/lab3/client/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

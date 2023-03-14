@@ -129,39 +129,40 @@ enum yysymbol_kind_t
   YYSYMBOL_LPAREN = 14,                    /* LPAREN  */
   YYSYMBOL_RPAREN = 15,                    /* RPAREN  */
   YYSYMBOL_COLON = 16,                     /* COLON  */
-  YYSYMBOL_LBRACE = 17,                    /* LBRACE  */
-  YYSYMBOL_RBRACE = 18,                    /* RBRACE  */
-  YYSYMBOL_LOGIC_OP = 19,                  /* LOGIC_OP  */
-  YYSYMBOL_COMP_OP = 20,                   /* COMP_OP  */
-  YYSYMBOL_COMMA = 21,                     /* COMMA  */
-  YYSYMBOL_UPDATE = 22,                    /* UPDATE  */
-  YYSYMBOL_WITH = 23,                      /* WITH  */
-  YYSYMBOL_REMOVE = 24,                    /* REMOVE  */
-  YYSYMBOL_CREATE = 25,                    /* CREATE  */
-  YYSYMBOL_DROP = 26,                      /* DROP  */
-  YYSYMBOL_TABLE = 27,                     /* TABLE  */
-  YYSYMBOL_YYACCEPT = 28,                  /* $accept  */
-  YYSYMBOL_query = 29,                     /* query  */
-  YYSYMBOL_for_stmt = 30,                  /* for_stmt  */
-  YYSYMBOL_actions = 31,                   /* actions  */
-  YYSYMBOL_action = 32,                    /* action  */
-  YYSYMBOL_terminal_stmt = 33,             /* terminal_stmt  */
-  YYSYMBOL_filter_stmt = 34,               /* filter_stmt  */
-  YYSYMBOL_conditions = 35,                /* conditions  */
-  YYSYMBOL_condition = 36,                 /* condition  */
-  YYSYMBOL_constant = 37,                  /* constant  */
-  YYSYMBOL_return_stmt = 38,               /* return_stmt  */
-  YYSYMBOL_return_val = 39,                /* return_val  */
-  YYSYMBOL_update_stmt = 40,               /* update_stmt  */
-  YYSYMBOL_remove_stmt = 41,               /* remove_stmt  */
-  YYSYMBOL_map = 42,                       /* map  */
-  YYSYMBOL_map_items = 43,                 /* map_items  */
-  YYSYMBOL_map_item = 44,                  /* map_item  */
-  YYSYMBOL_id = 45,                        /* id  */
-  YYSYMBOL_value = 46,                     /* value  */
-  YYSYMBOL_insert_stmt = 47,               /* insert_stmt  */
-  YYSYMBOL_create_stmt = 48,               /* create_stmt  */
-  YYSYMBOL_drop_stmt = 49                  /* drop_stmt  */
+  YYSYMBOL_ALL = 17,                       /* ALL  */
+  YYSYMBOL_LBRACE = 18,                    /* LBRACE  */
+  YYSYMBOL_RBRACE = 19,                    /* RBRACE  */
+  YYSYMBOL_LOGIC_OP = 20,                  /* LOGIC_OP  */
+  YYSYMBOL_COMP_OP = 21,                   /* COMP_OP  */
+  YYSYMBOL_COMMA = 22,                     /* COMMA  */
+  YYSYMBOL_UPDATE = 23,                    /* UPDATE  */
+  YYSYMBOL_WITH = 24,                      /* WITH  */
+  YYSYMBOL_REMOVE = 25,                    /* REMOVE  */
+  YYSYMBOL_CREATE = 26,                    /* CREATE  */
+  YYSYMBOL_DROP = 27,                      /* DROP  */
+  YYSYMBOL_TABLE = 28,                     /* TABLE  */
+  YYSYMBOL_YYACCEPT = 29,                  /* $accept  */
+  YYSYMBOL_query = 30,                     /* query  */
+  YYSYMBOL_for_stmt = 31,                  /* for_stmt  */
+  YYSYMBOL_actions = 32,                   /* actions  */
+  YYSYMBOL_action = 33,                    /* action  */
+  YYSYMBOL_terminal_stmt = 34,             /* terminal_stmt  */
+  YYSYMBOL_filter_stmt = 35,               /* filter_stmt  */
+  YYSYMBOL_conditions = 36,                /* conditions  */
+  YYSYMBOL_condition = 37,                 /* condition  */
+  YYSYMBOL_constant = 38,                  /* constant  */
+  YYSYMBOL_return_stmt = 39,               /* return_stmt  */
+  YYSYMBOL_return_val = 40,                /* return_val  */
+  YYSYMBOL_update_stmt = 41,               /* update_stmt  */
+  YYSYMBOL_remove_stmt = 42,               /* remove_stmt  */
+  YYSYMBOL_map = 43,                       /* map  */
+  YYSYMBOL_map_items = 44,                 /* map_items  */
+  YYSYMBOL_map_item = 45,                  /* map_item  */
+  YYSYMBOL_id = 46,                        /* id  */
+  YYSYMBOL_value = 47,                     /* value  */
+  YYSYMBOL_insert_stmt = 48,               /* insert_stmt  */
+  YYSYMBOL_create_stmt = 49,               /* create_stmt  */
+  YYSYMBOL_drop_stmt = 50                  /* drop_stmt  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -489,19 +490,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  15
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   56
+#define YYLAST   57
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  28
+#define YYNTOKENS  29
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  22
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  38
+#define YYNRULES  39
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  70
+#define YYNSTATES  71
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   282
+#define YYMAXUTOK   283
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -543,17 +544,17 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27
+      25,    26,    27,    28
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    79,    79,    80,    81,    82,    84,    86,    87,    89,
-      90,    91,    93,    94,    95,    97,   100,   101,   103,   107,
-     107,   110,   112,   113,   115,   117,   119,   120,   122,   123,
-     125,   127,   129,   130,   131,   132,   134,   136,   138
+       0,    80,    80,    81,    82,    83,    85,    87,    88,    90,
+      91,    92,    94,    95,    96,    98,   101,   102,   104,   108,
+     108,   111,   113,   114,   115,   117,   119,   121,   122,   124,
+     125,   127,   129,   131,   132,   133,   134,   136,   138,   140
 };
 #endif
 
@@ -571,7 +572,7 @@ static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "ID", "STRING_TOKEN",
   "BOOL_TOKEN", "INT_TOKEN", "FLOAT_TOKEN", "FOR", "IN", "FILTER",
-  "RETURN", "INSERT", "INTO", "LPAREN", "RPAREN", "COLON", "LBRACE",
+  "RETURN", "INSERT", "INTO", "LPAREN", "RPAREN", "COLON", "ALL", "LBRACE",
   "RBRACE", "LOGIC_OP", "COMP_OP", "COMMA", "UPDATE", "WITH", "REMOVE",
   "CREATE", "DROP", "TABLE", "$accept", "query", "for_stmt", "actions",
   "action", "terminal_stmt", "filter_stmt", "conditions", "condition",
@@ -601,13 +602,14 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -6,     1,   -12,    -9,    -4,    21,   -25,   -25,   -25,   -25,
-      16,    -1,    19,    30,    31,   -25,    32,    20,   -25,    23,
-      17,    36,   -12,   -25,     0,    24,   -25,    38,   -25,   -25,
-      24,     9,    40,    41,   -25,     0,   -25,   -25,   -25,   -25,
+      -6,     1,   -13,   -11,    -9,    22,   -25,   -25,   -25,   -25,
+      15,    -1,    20,    31,    32,   -25,    33,    21,   -25,    23,
+      17,    37,   -13,   -25,     0,    25,   -25,    39,   -25,   -25,
+      25,     9,    41,    42,   -25,     0,   -25,   -25,   -25,   -25,
      -25,   -25,   -25,   -25,   -25,   -25,   -25,   -25,   -25,   -25,
-     -25,    26,   -25,    27,   -25,   -25,   -25,    25,    37,   -25,
-      24,    24,   -12,    46,   -25,   -25,    42,   -25,    47,   -25
+     -25,    26,   -25,    27,   -25,   -25,   -25,   -25,    28,    38,
+     -25,    25,    25,   -13,    46,   -25,   -25,    44,   -25,    47,
+     -25
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -616,19 +618,20 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     0,     0,     0,     2,     3,     4,     5,
-       0,     0,     0,     0,     0,     1,     0,     0,    27,     0,
-      28,     0,     0,    38,     0,     0,    26,     0,    36,    37,
+       0,     0,     0,     0,     0,     1,     0,     0,    28,     0,
+      29,     0,     0,    39,     0,     0,    27,     0,    37,    38,
        0,     0,     0,     0,     9,     6,     8,    11,    10,    12,
-      13,    14,    31,    34,    35,    32,    33,    30,    19,    20,
-      29,    15,    16,     0,    22,    21,    23,     0,     0,     7,
-       0,     0,     0,     0,    17,    18,     0,    25,     0,    24
+      13,    14,    32,    35,    36,    33,    34,    31,    19,    20,
+      30,    15,    16,     0,    24,    22,    21,    23,     0,     0,
+       7,     0,     0,     0,     0,    17,    18,     0,    26,     0,
+      25
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -25,   -25,    52,   -25,    18,   -25,   -25,    -5,   -25,   -24,
-     -25,   -25,   -25,   -25,   -22,    29,   -25,   -25,   -25,   -25,
+     -25,   -25,    51,   -25,    19,   -25,   -25,    -5,   -25,   -24,
+     -25,   -25,   -25,   -25,   -22,    30,   -25,   -25,   -25,   -25,
      -25,   -25
 };
 
@@ -636,7 +639,7 @@ static const yytype_int8 yypgoto[] =
 static const yytype_int8 yydefgoto[] =
 {
        0,     5,    34,    35,    36,    37,    38,    51,    52,    53,
-      39,    55,    40,    41,    12,    19,    20,    48,    49,     7,
+      39,    56,    40,    41,    12,    19,    20,    48,    49,     7,
        8,     9
 };
 
@@ -645,44 +648,45 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      29,    47,     1,    17,    10,    11,     2,    54,     1,    56,
-      30,    31,    42,    43,    44,    45,    46,    18,    13,     3,
-       4,    15,    32,    14,    33,    16,    11,    42,    43,    44,
-      45,    46,    21,    22,    23,    24,    25,    65,    27,    28,
-      66,    26,    17,    57,    58,    60,    63,    61,    62,    67,
-      69,    68,     6,    59,     0,    64,    50
+      29,    47,     1,    17,    10,    11,     2,    55,     1,    57,
+      30,    31,    42,    43,    44,    45,    46,    13,    18,    14,
+       3,     4,    15,    32,    16,    33,    54,    11,    42,    43,
+      44,    45,    46,    21,    22,    23,    24,    25,    66,    27,
+      28,    67,    26,    17,    58,    59,    61,    64,    62,    68,
+      70,     6,    63,    69,    60,     0,    65,    50
 };
 
 static const yytype_int8 yycheck[] =
 {
-      22,    25,     8,     4,     3,    17,    12,    31,     8,    31,
-      10,    11,     3,     4,     5,     6,     7,    18,    27,    25,
-      26,     0,    22,    27,    24,     9,    17,     3,     4,     5,
-       6,     7,    13,     3,     3,     3,    16,    61,    21,     3,
-      62,    18,     4,     3,     3,    19,     9,    20,    23,     3,
-       3,     9,     0,    35,    -1,    60,    27
+      22,    25,     8,     4,     3,    18,    12,    31,     8,    31,
+      10,    11,     3,     4,     5,     6,     7,    28,    19,    28,
+      26,    27,     0,    23,     9,    25,    17,    18,     3,     4,
+       5,     6,     7,    13,     3,     3,     3,    16,    62,    22,
+       3,    63,    19,     4,     3,     3,    20,     9,    21,     3,
+       3,     0,    24,     9,    35,    -1,    61,    27
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     8,    12,    25,    26,    29,    30,    47,    48,    49,
-       3,    17,    42,    27,    27,     0,     9,     4,    18,    43,
-      44,    13,     3,     3,     3,    16,    18,    21,     3,    42,
-      10,    11,    22,    24,    30,    31,    32,    33,    34,    38,
-      40,    41,     3,     4,     5,     6,     7,    37,    45,    46,
-      43,    35,    36,    37,    37,    39,    42,     3,     3,    32,
-      19,    20,    23,     9,    35,    37,    42,     3,     9,     3
+       0,     8,    12,    26,    27,    30,    31,    48,    49,    50,
+       3,    18,    43,    28,    28,     0,     9,     4,    19,    44,
+      45,    13,     3,     3,     3,    16,    19,    22,     3,    43,
+      10,    11,    23,    25,    31,    32,    33,    34,    35,    39,
+      41,    42,     3,     4,     5,     6,     7,    38,    46,    47,
+      44,    36,    37,    38,    17,    38,    40,    43,     3,     3,
+      33,    20,    21,    24,     9,    36,    38,    43,     3,     9,
+       3
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    28,    29,    29,    29,    29,    30,    31,    31,    32,
-      32,    32,    33,    33,    33,    34,    35,    35,    36,    37,
-      37,    38,    39,    39,    40,    41,    42,    42,    43,    43,
-      44,    45,    46,    46,    46,    46,    47,    48,    49
+       0,    29,    30,    30,    30,    30,    31,    32,    32,    33,
+      33,    33,    34,    34,    34,    35,    36,    36,    37,    38,
+      38,    39,    40,    40,    40,    41,    42,    43,    43,    44,
+      44,    45,    46,    47,    47,    47,    47,    48,    49,    50
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
@@ -690,8 +694,8 @@ static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     1,     1,     1,     5,     2,     1,     1,
        1,     1,     1,     1,     1,     2,     1,     3,     3,     1,
-       1,     2,     1,     1,     6,     4,     3,     2,     1,     3,
-       3,     1,     1,     1,     1,     1,     4,     4,     3
+       1,     2,     1,     1,     1,     6,     4,     3,     2,     1,
+       3,     3,     1,     1,     1,     1,     1,     4,     4,     3
 };
 
 
@@ -1427,225 +1431,231 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* query: for_stmt  */
-#line 79 "/home/danil/llp/lab3/client/parser.y"
+#line 80 "/home/danil/llp/lab3/client/parser.y"
                  { root.node = (yyvsp[0].node); }
-#line 1433 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1437 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 3: /* query: insert_stmt  */
-#line 80 "/home/danil/llp/lab3/client/parser.y"
+#line 81 "/home/danil/llp/lab3/client/parser.y"
                     { root.node = (yyvsp[0].node); root.queryType = INSERT_QUERY; }
-#line 1439 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1443 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 4: /* query: create_stmt  */
-#line 81 "/home/danil/llp/lab3/client/parser.y"
+#line 82 "/home/danil/llp/lab3/client/parser.y"
                     { root.node = (yyvsp[0].node); root.queryType = CREATE_QUERY; }
-#line 1445 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1449 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 5: /* query: drop_stmt  */
-#line 82 "/home/danil/llp/lab3/client/parser.y"
+#line 83 "/home/danil/llp/lab3/client/parser.y"
                   { root.node = (yyvsp[0].node); root.queryType = DROP_QUERY; }
-#line 1451 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1455 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 6: /* for_stmt: FOR ID IN ID actions  */
-#line 84 "/home/danil/llp/lab3/client/parser.y"
+#line 85 "/home/danil/llp/lab3/client/parser.y"
                                { (yyval.node) = new ForNode((yyvsp[-3].str), (yyvsp[-1].str), (yyvsp[0].action)); }
-#line 1457 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1461 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 7: /* actions: actions action  */
-#line 86 "/home/danil/llp/lab3/client/parser.y"
+#line 87 "/home/danil/llp/lab3/client/parser.y"
                         { (yyval.action) = (yyvsp[-1].action); (yyvsp[-1].action)->addAction((yyvsp[0].node)); }
-#line 1463 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1467 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 8: /* actions: action  */
-#line 87 "/home/danil/llp/lab3/client/parser.y"
+#line 88 "/home/danil/llp/lab3/client/parser.y"
                  { (yyval.action) = new ActionNode(); (yyval.action)->addAction((yyvsp[0].node)); }
-#line 1469 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1473 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 9: /* action: for_stmt  */
-#line 89 "/home/danil/llp/lab3/client/parser.y"
+#line 90 "/home/danil/llp/lab3/client/parser.y"
                  { (yyval.node) = (yyvsp[0].node); }
-#line 1475 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1479 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 10: /* action: filter_stmt  */
-#line 90 "/home/danil/llp/lab3/client/parser.y"
+#line 91 "/home/danil/llp/lab3/client/parser.y"
                     { (yyval.node) = (yyvsp[0].node); }
-#line 1481 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1485 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 11: /* action: terminal_stmt  */
-#line 91 "/home/danil/llp/lab3/client/parser.y"
+#line 92 "/home/danil/llp/lab3/client/parser.y"
                        { (yyval.node) = (yyvsp[0].terminal); }
-#line 1487 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1491 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 12: /* terminal_stmt: return_stmt  */
-#line 93 "/home/danil/llp/lab3/client/parser.y"
+#line 94 "/home/danil/llp/lab3/client/parser.y"
                            { (yyval.terminal) = (yyvsp[0].terminal); root.queryType = SELECT_QUERY; }
-#line 1493 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1497 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 13: /* terminal_stmt: update_stmt  */
-#line 94 "/home/danil/llp/lab3/client/parser.y"
+#line 95 "/home/danil/llp/lab3/client/parser.y"
                             { (yyval.terminal) = (yyvsp[0].terminal); root.queryType = UPDATE_QUERY; }
-#line 1499 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1503 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 14: /* terminal_stmt: remove_stmt  */
-#line 95 "/home/danil/llp/lab3/client/parser.y"
+#line 96 "/home/danil/llp/lab3/client/parser.y"
                             { (yyval.terminal) = (yyvsp[0].terminal); root.queryType = DELETE_QUERY; }
-#line 1505 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1509 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 15: /* filter_stmt: FILTER conditions  */
-#line 97 "/home/danil/llp/lab3/client/parser.y"
+#line 98 "/home/danil/llp/lab3/client/parser.y"
                                { (yyval.node) = new FilterNode((yyvsp[0].predicate)); }
-#line 1511 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1515 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 16: /* conditions: condition  */
-#line 100 "/home/danil/llp/lab3/client/parser.y"
+#line 101 "/home/danil/llp/lab3/client/parser.y"
                                            { (yyval.predicate) = (yyvsp[0].predicate); }
-#line 1517 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1521 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 17: /* conditions: conditions LOGIC_OP conditions  */
-#line 101 "/home/danil/llp/lab3/client/parser.y"
+#line 102 "/home/danil/llp/lab3/client/parser.y"
                                            { (yyval.predicate) = new ConditionUnion((yyvsp[-1].logicOp), (yyvsp[-2].predicate), (yyvsp[0].predicate)); }
-#line 1523 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1527 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 18: /* condition: constant COMP_OP constant  */
-#line 103 "/home/danil/llp/lab3/client/parser.y"
+#line 104 "/home/danil/llp/lab3/client/parser.y"
                                      {
                                         (yyval.predicate) = new Condition((yyvsp[-2].constant), (yyvsp[0].constant), (yyvsp[-1].compOp));
                                         }
-#line 1531 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1535 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 20: /* constant: value  */
-#line 107 "/home/danil/llp/lab3/client/parser.y"
+#line 108 "/home/danil/llp/lab3/client/parser.y"
                       { (yyval.constant) = (yyvsp[0].constant); }
-#line 1537 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1541 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 21: /* return_stmt: RETURN return_val  */
-#line 110 "/home/danil/llp/lab3/client/parser.y"
+#line 111 "/home/danil/llp/lab3/client/parser.y"
                                { (yyval.terminal) = new ReturnAction((yyvsp[0].node)); }
-#line 1543 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1547 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 22: /* return_val: constant  */
-#line 112 "/home/danil/llp/lab3/client/parser.y"
+#line 113 "/home/danil/llp/lab3/client/parser.y"
                       { (yyval.node) = (yyvsp[0].constant); }
-#line 1549 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1553 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
   case 23: /* return_val: map  */
-#line 113 "/home/danil/llp/lab3/client/parser.y"
+#line 114 "/home/danil/llp/lab3/client/parser.y"
                 { (yyval.node) = (yyvsp[0].node); }
-#line 1555 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1559 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 24: /* update_stmt: UPDATE ID WITH map IN ID  */
+  case 24: /* return_val: ALL  */
 #line 115 "/home/danil/llp/lab3/client/parser.y"
-                                      { (yyval.terminal) = new UpdateAction((yyvsp[-4].str), (MapNode*)(yyvsp[-2].node), (yyvsp[0].str)); }
-#line 1561 "/home/danil/llp/lab3/client/parser.cpp"
+                { (yyval.node) = new ReturnAllNode(); }
+#line 1565 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 25: /* remove_stmt: REMOVE ID IN ID  */
+  case 25: /* update_stmt: UPDATE ID WITH map IN ID  */
 #line 117 "/home/danil/llp/lab3/client/parser.y"
-                             { (yyval.terminal) = new RemoveAction((yyvsp[-2].str), (yyvsp[0].str)); }
-#line 1567 "/home/danil/llp/lab3/client/parser.cpp"
+                                      { (yyval.terminal) = new UpdateAction((yyvsp[-4].str), (MapNode*)(yyvsp[-2].node), (yyvsp[0].str)); }
+#line 1571 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 26: /* map: LBRACE map_items RBRACE  */
+  case 26: /* remove_stmt: REMOVE ID IN ID  */
 #line 119 "/home/danil/llp/lab3/client/parser.y"
+                             { (yyval.terminal) = new RemoveAction((yyvsp[-2].str), (yyvsp[0].str)); }
+#line 1577 "/home/danil/llp/lab3/client/parser.cpp"
+    break;
+
+  case 27: /* map: LBRACE map_items RBRACE  */
+#line 121 "/home/danil/llp/lab3/client/parser.y"
                              { (yyval.node) = (yyvsp[-1].node); }
-#line 1573 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1583 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 27: /* map: LBRACE RBRACE  */
-#line 120 "/home/danil/llp/lab3/client/parser.y"
-                    { (yyval.node) = new MapNode(); }
-#line 1579 "/home/danil/llp/lab3/client/parser.cpp"
-    break;
-
-  case 28: /* map_items: map_item  */
+  case 28: /* map: LBRACE RBRACE  */
 #line 122 "/home/danil/llp/lab3/client/parser.y"
+                    { (yyval.node) = new MapNode(); }
+#line 1589 "/home/danil/llp/lab3/client/parser.cpp"
+    break;
+
+  case 29: /* map_items: map_item  */
+#line 124 "/home/danil/llp/lab3/client/parser.y"
                              { MapNode* node = new MapNode(); node->addEntry((MapEntry*)(yyvsp[0].node)); (yyval.node) = node; }
-#line 1585 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1595 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 29: /* map_items: map_item COMMA map_items  */
-#line 123 "/home/danil/llp/lab3/client/parser.y"
-                                     { ((MapNode*)(yyvsp[0].node))->addEntry((MapEntry*)(yyvsp[-2].node)); (yyval.node) = (yyvsp[0].node); }
-#line 1591 "/home/danil/llp/lab3/client/parser.cpp"
-    break;
-
-  case 30: /* map_item: STRING_TOKEN COLON constant  */
+  case 30: /* map_items: map_item COMMA map_items  */
 #line 125 "/home/danil/llp/lab3/client/parser.y"
-                                      { (yyval.node) = new MapEntry((yyvsp[-2].str), (yyvsp[0].constant)); }
-#line 1597 "/home/danil/llp/lab3/client/parser.cpp"
+                                     { ((MapNode*)(yyvsp[0].node))->addEntry((MapEntry*)(yyvsp[-2].node)); (yyval.node) = (yyvsp[0].node); }
+#line 1601 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 31: /* id: ID  */
+  case 31: /* map_item: STRING_TOKEN COLON constant  */
 #line 127 "/home/danil/llp/lab3/client/parser.y"
-       { (yyval.constant) = new StringConstant((yyvsp[0].str), true); }
-#line 1603 "/home/danil/llp/lab3/client/parser.cpp"
+                                      { (yyval.node) = new MapEntry((yyvsp[-2].str), (yyvsp[0].constant)); }
+#line 1607 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 32: /* value: INT_TOKEN  */
+  case 32: /* id: ID  */
 #line 129 "/home/danil/llp/lab3/client/parser.y"
-                 { (yyval.constant) = new IntConstant((yyvsp[0].intVal));}
-#line 1609 "/home/danil/llp/lab3/client/parser.cpp"
+       { (yyval.constant) = new StringConstant((yyvsp[0].str), true); }
+#line 1613 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 33: /* value: FLOAT_TOKEN  */
-#line 130 "/home/danil/llp/lab3/client/parser.y"
-                    { (yyval.constant) = new FloatConstant((yyvsp[0].floatVal));}
-#line 1615 "/home/danil/llp/lab3/client/parser.cpp"
-    break;
-
-  case 34: /* value: STRING_TOKEN  */
+  case 33: /* value: INT_TOKEN  */
 #line 131 "/home/danil/llp/lab3/client/parser.y"
-                     { (yyval.constant) = new StringConstant((yyvsp[0].str));}
-#line 1621 "/home/danil/llp/lab3/client/parser.cpp"
+                 { (yyval.constant) = new IntConstant((yyvsp[0].intVal));}
+#line 1619 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 35: /* value: BOOL_TOKEN  */
+  case 34: /* value: FLOAT_TOKEN  */
 #line 132 "/home/danil/llp/lab3/client/parser.y"
-                   { (yyval.constant) = new BoolConstant((yyvsp[0].boolVal));}
-#line 1627 "/home/danil/llp/lab3/client/parser.cpp"
+                    { (yyval.constant) = new FloatConstant((yyvsp[0].floatVal));}
+#line 1625 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 36: /* insert_stmt: INSERT map INTO ID  */
+  case 35: /* value: STRING_TOKEN  */
+#line 133 "/home/danil/llp/lab3/client/parser.y"
+                     { (yyval.constant) = new StringConstant((yyvsp[0].str));}
+#line 1631 "/home/danil/llp/lab3/client/parser.cpp"
+    break;
+
+  case 36: /* value: BOOL_TOKEN  */
 #line 134 "/home/danil/llp/lab3/client/parser.y"
-                                { (yyval.node) = new InsertNode((MapNode*)(yyvsp[-2].node), (yyvsp[0].str)); }
-#line 1633 "/home/danil/llp/lab3/client/parser.cpp"
+                   { (yyval.constant) = new BoolConstant((yyvsp[0].boolVal));}
+#line 1637 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 37: /* create_stmt: CREATE TABLE ID map  */
+  case 37: /* insert_stmt: INSERT map INTO ID  */
 #line 136 "/home/danil/llp/lab3/client/parser.y"
-                                 { (yyval.node) = new CreateTableNode((yyvsp[-1].str), (MapNode*)(yyvsp[0].node)); }
-#line 1639 "/home/danil/llp/lab3/client/parser.cpp"
+                                { (yyval.node) = new InsertNode((MapNode*)(yyvsp[-2].node), (yyvsp[0].str)); }
+#line 1643 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
-  case 38: /* drop_stmt: DROP TABLE ID  */
+  case 38: /* create_stmt: CREATE TABLE ID map  */
 #line 138 "/home/danil/llp/lab3/client/parser.y"
+                                 { (yyval.node) = new CreateTableNode((yyvsp[-1].str), (MapNode*)(yyvsp[0].node)); }
+#line 1649 "/home/danil/llp/lab3/client/parser.cpp"
+    break;
+
+  case 39: /* drop_stmt: DROP TABLE ID  */
+#line 140 "/home/danil/llp/lab3/client/parser.y"
                          { (yyval.node) = new DropTableNode((yyvsp[0].str)); }
-#line 1645 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1655 "/home/danil/llp/lab3/client/parser.cpp"
     break;
 
 
-#line 1649 "/home/danil/llp/lab3/client/parser.cpp"
+#line 1659 "/home/danil/llp/lab3/client/parser.cpp"
 
       default: break;
     }
@@ -1869,5 +1879,5 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 140 "/home/danil/llp/lab3/client/parser.y"
+#line 142 "/home/danil/llp/lab3/client/parser.y"
 

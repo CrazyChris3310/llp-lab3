@@ -68,7 +68,15 @@ void executeSelect(request_t req, Network& net, std::string& message, int& code)
 		}
 
 		net.awaitRPCCall();
-	} catch (ClientDisconnectedException& e){
+	} catch (ClientDisconnectedException& e) {
+		destroySelectQuery(query);
+		destroyScanner(scan);
+		throw e;
+	} catch (IOException& e){
+		destroySelectQuery(query);
+		destroyScanner(scan);
+		throw e;
+	} catch (InvalidSchemaException& e){
 		destroySelectQuery(query);
 		destroyScanner(scan);
 		throw e;

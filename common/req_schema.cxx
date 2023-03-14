@@ -305,30 +305,6 @@ predicate (::std::unique_ptr< predicate_type > x)
   this->predicate_.set (std::move (x));
 }
 
-const select_t::ret_val_type& select_t::
-ret_val () const
-{
-  return this->ret_val_.get ();
-}
-
-select_t::ret_val_type& select_t::
-ret_val ()
-{
-  return this->ret_val_.get ();
-}
-
-void select_t::
-ret_val (const ret_val_type& x)
-{
-  this->ret_val_.set (x);
-}
-
-void select_t::
-ret_val (::std::unique_ptr< ret_val_type > x)
-{
-  this->ret_val_.set (std::move (x));
-}
-
 
 // map_t
 // 
@@ -1430,20 +1406,10 @@ ret_val_t::
 //
 
 select_t::
-select_t (const ret_val_type& ret_val)
+select_t ()
 : ::xml_schema::type (),
   table_ (this),
-  predicate_ (this),
-  ret_val_ (ret_val, this)
-{
-}
-
-select_t::
-select_t (::std::unique_ptr< ret_val_type > ret_val)
-: ::xml_schema::type (),
-  table_ (this),
-  predicate_ (this),
-  ret_val_ (std::move (ret_val), this)
+  predicate_ (this)
 {
 }
 
@@ -1453,8 +1419,7 @@ select_t (const select_t& x,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   table_ (x.table_, f, this),
-  predicate_ (x.predicate_, f, this),
-  ret_val_ (x.ret_val_, f, this)
+  predicate_ (x.predicate_, f, this)
 {
 }
 
@@ -1464,8 +1429,7 @@ select_t (const ::xercesc::DOMElement& e,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   table_ (this),
-  predicate_ (this),
-  ret_val_ (this)
+  predicate_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -1509,28 +1473,7 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // ret_val
-    //
-    if (n.name () == "ret_val" && n.namespace_ ().empty ())
-    {
-      ::std::unique_ptr< ret_val_type > r (
-        ret_val_traits::create (i, f, this));
-
-      if (!ret_val_.present ())
-      {
-        this->ret_val_.set (::std::move (r));
-        continue;
-      }
-    }
-
     break;
-  }
-
-  if (!ret_val_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "ret_val",
-      "");
   }
 }
 
@@ -1549,7 +1492,6 @@ operator= (const select_t& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->table_ = x.table_;
     this->predicate_ = x.predicate_;
-    this->ret_val_ = x.ret_val_;
   }
 
   return *this;
@@ -3116,17 +3058,6 @@ operator<< (::xercesc::DOMElement& e, const select_t& i)
         e));
 
     s << *i.predicate ();
-  }
-
-  // ret_val
-  //
-  {
-    ::xercesc::DOMElement& s (
-      ::xsd::cxx::xml::dom::create_element (
-        "ret_val",
-        e));
-
-    s << i.ret_val ();
   }
 }
 

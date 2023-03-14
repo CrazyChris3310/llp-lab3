@@ -25,7 +25,7 @@ add_compile_options(
 add_executable(${CLIENT_NAME} ${C_FILES_CLIENT} ${H_FILES_CLIENT} ${C_FILES_COMMON} ${H_FILES_COMMON})
 target_include_directories(${CLIENT_NAME} PUBLIC liba client common)
 add_subdirectory(client)
-target_link_libraries(${CLIENT_NAME} xerces-c client)
+target_link_libraries(${CLIENT_NAME} -fsanitize=address,undefined,leak xerces-c client)
 
 file(GLOB_RECURSE C_FILES_SERVER CONFIGURE_DEPENDS server/*.cpp)
 file(GLOB_RECURSE H_FILES_SERVER CONFIGURE_DEPENDS server/*.h)

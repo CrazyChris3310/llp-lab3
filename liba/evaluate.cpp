@@ -43,7 +43,7 @@ void resolvePredicate(Predicate* pred, std::vector<condition_t>& conditions) {
 }
 
 void evaluateSelect(ForNode* node,std::vector<const char*>& joins, 
-                               std::vector<condition_t>& conditions, ret_val_t* retVal) {
+                               std::vector<condition_t>& conditions) {
     joins.push_back(node->tableName);
     for (Node* action : ((ActionNode*)(node->action))->actions) {
         if (action->nodeType == FILTER_NODE) {
@@ -51,20 +51,18 @@ void evaluateSelect(ForNode* node,std::vector<const char*>& joins,
             resolvePredicate(pred, conditions);
         }
         if (action->nodeType == FOR_NODE) {
-            evaluateSelect((ForNode*)action, joins, conditions, retVal);
+            evaluateSelect((ForNode*)action, joins, conditions);
         }
         if (action->nodeType == RETURN_NODE) {
-            ret_val_t toReturn;
             ReturnAction* act = ((ReturnAction*)action);
             if (act->retVal->nodeType == CONSTANT_NODE) {
                 Constant* constant = (Constant*)act->retVal;
-                constant_t cnst(constant->getStrType(), constant->getStrVal());
-                toReturn.constant(cnst);
-            } else if (act->retVal->nodeType == MAP_NODE) {
-                map_t mapa = makeMap((MapNode*)act->retVal);
-                toReturn.map(mapa);
+                if (constant->type != REF) {
+                    throw UnsupportedSyntaxException("Only single loop references and ALL are supported in return statement");
+                }
+            } else if (act->retVal->nodeType != RET_ALL_NODE) {
+                throw UnsupportedSyntaxException("Only single loop references and ALL are supported in return statement");
             }
-            *retVal = toReturn;
         }
     }
 }
@@ -73,10 +71,9 @@ void evaluateSelect(ForNode* node,std::vector<const char*>& joins,
 select_t evaluateSelect(ForNode* node) {
     std::vector<const char*> joins;
     std::vector<condition_t> conditions;
-    ret_val_t retVal;
-    evaluateSelect(node, joins, conditions, &retVal);
+    evaluateSelect(node, joins, conditions);
 
-    select_t slct(retVal);
+    select_t slct;
 
     if (!conditions.empty()) {
         predicate_t pred;

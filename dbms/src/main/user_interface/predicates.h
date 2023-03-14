@@ -39,5 +39,6 @@ struct Constant intConstant(int64_t value);
 struct Constant floatConstant(float value);
 struct Constant boolConstant(bool value);
 struct Constant stringConstant(const char* value);
+struct Constant refConstant(const char* column);
 
 #endif

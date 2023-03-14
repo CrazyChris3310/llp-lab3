@@ -18,6 +18,7 @@ Constant parseConstant(constant_t& constant) {
         case FLOAT: return floatConstant(atof(constant.value().c_str()));
         case BOOL: return boolConstant(strcmp(constant.value().c_str(), "true") == 0 ? true : false);
         case STRING: return stringConstant(constant.value().c_str());
+        case REF: return refConstant(constant.value().c_str());
     }
     throw UndefinedEnumValueException("Cannot resolve constant for type" + constant.type());
 }

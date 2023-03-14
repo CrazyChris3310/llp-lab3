@@ -34,7 +34,6 @@
         <xs:sequence>
             <xs:element name="table" type="xs:string" maxOccurs="10"/>
             <xs:element name="predicate" type="predicate_t" minOccurs="0"/>
-            <xs:element name="ret_val" type="ret_val_t"/>
         </xs:sequence>
     </xs:complexType>
 

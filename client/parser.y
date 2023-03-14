@@ -49,6 +49,7 @@ int temp = 0;
 %token LPAREN
 %token RPAREN
 %token COLON
+%token ALL
 %token LBRACE
 %token RBRACE
 %token<logicOp> LOGIC_OP
@@ -111,6 +112,7 @@ return_stmt: RETURN return_val { $$ = new ReturnAction($2); }
 
 return_val: constant  { $$ = $1; }
           | map { $$ = $1; }
+          | ALL { $$ = new ReturnAllNode(); }
 
 update_stmt: UPDATE ID WITH map IN ID { $$ = new UpdateAction($2, (MapNode*)$4, $6); }
 

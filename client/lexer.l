@@ -15,7 +15,7 @@ const char* copyString(char* str, int strLen) {
 
 %}
 
-%option yylineno noyywrap nounput 
+%option yylineno noyywrap nounput
 
 %%
 
@@ -31,6 +31,7 @@ const char* copyString(char* str, int strLen) {
 "UPDATE"          { return UPDATE; }
 "REMOVE"          { return REMOVE; }
 "WITH"            { return WITH; }
+"ALL"             { return ALL; }
 "("               { return LPAREN; }
 ")"               { return RPAREN; }
 "{"               { return LBRACE; }
@@ -49,7 +50,7 @@ const char* copyString(char* str, int strLen) {
 "true"            { yylval.boolVal = true; return BOOL_TOKEN; }
 "false"           { yylval.boolVal = false; return BOOL_TOKEN; }
 \"[^\"]*\"        { yylval.str = copyString(yytext, yyleng); return STRING_TOKEN; }
-[a-zA-Z][a-zA-Z0-9.]* { yylval.str = strdup(yytext); return ID; }
+[a-zA-Z][a-zA-Z0-9._]* { yylval.str = strdup(yytext); return ID; }
 -?[0-9]+            { yylval.intVal = atoi(yytext); return INT_TOKEN; }
 -?[0-9]+\.[0-9]+     { yylval.floatVal = atof(yytext); return FLOAT_TOKEN; }
 [ \t\n]+          { /* ignore white spaces */ }

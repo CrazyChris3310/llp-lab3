@@ -5,7 +5,7 @@
 #include <list>
 
 enum NodeType { FOR_NODE, ACTION_NODE, FILTER_NODE, RETURN_NODE, UPDATE_NODE, REMOVE_NODE, INSERT_NODE,
-                MAP_NODE, MAP_ENTRY_NODE, CONDITION_NODE, CONDITION_UNION_NODE, CONSTANT_NODE,
+                MAP_NODE, MAP_ENTRY_NODE, CONDITION_NODE, CONDITION_UNION_NODE, CONSTANT_NODE, RET_ALL_NODE,
                 CREATE_TABLE_NODE, DROP_TABLE_NODE };
 
 enum QueryType { CREATE_QUERY, UPDATE_QUERY, SELECT_QUERY, DELETE_QUERY, INSERT_QUERY, DROP_QUERY };
@@ -47,6 +47,14 @@ struct ActionNode : public Node {
     void addAction(Node* action);
     void print(int depth) override;
     ~ActionNode();
+};
+
+struct ReturnAllNode : public Node {
+    ReturnAllNode() {
+        this->nodeType = RET_ALL_NODE;
+    }
+
+    void print(int depth) override;
 };
 
 enum DataType { INT, FLOAT, STRING, BOOL, REF };

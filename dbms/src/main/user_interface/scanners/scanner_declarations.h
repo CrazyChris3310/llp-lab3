@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include "../predicates.h"
 #include "../write_scan.h"
+#include "../../util/linked_list.h"
 
 struct ScanInterface {
     void(*reset)(void* ptr);
@@ -55,6 +56,13 @@ struct JoinScanner {
 
     struct ScanInterface* leftScanner;
     struct ScanInterface* rightScanner;
+};
+
+struct ProjectScanner {
+    struct ScanInterface scanInterface;
+
+    struct ScanInterface* innerScanner;
+    struct LinkedList* columns;
 };
 
 #endif 

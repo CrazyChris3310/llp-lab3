@@ -70,19 +70,34 @@ void __destroySelectScanner(void* ptr) {
     free(scanner);
 }
 
-static bool conditionIsSatisfied(struct SelectScanner* scanner, struct Condition condition) {
-    struct Constant constant = getField((struct ScanInterface*)scanner, condition.fieldName);
-    switch (constant.type) {
+static bool compareConstants(struct Constant a, struct Constant b, enum CompareOperator oper) {
+    if (a.type != b.type) {
+        return false;
+    }
+    switch (a.type) {
         case INT:
-            return compareInts(constant.value.intVal, condition.constant.value.intVal, condition.oper);
+            return compareInts(a.value.intVal, b.value.intVal, oper);
         case FLOAT:
-            return compareFloats(constant.value.floatVal, condition.constant.value.floatVal, condition.oper);
+            return compareFloats(a.value.floatVal, b.value.floatVal, oper);
         case BOOL:
-            return compareBools(constant.value.boolVal, condition.constant.value.boolVal, condition.oper);
+            return compareBools(a.value.boolVal, b.value.boolVal, oper);
         case STRING:
-            return compareVarchars(constant.value.stringVal, condition.constant.value.stringVal, condition.oper);
+            return compareVarchars(a.value.stringVal, b.value.stringVal, oper);
+        case REF:
+            return false;
     }
     return true;
+}
+
+static bool conditionIsSatisfied(struct SelectScanner* scanner, struct Condition condition) {
+    struct Constant constant = getField((struct ScanInterface*)scanner, condition.fieldName);
+    struct Constant rVal;
+    if (condition.constant.type == REF) {
+        rVal = getField((struct ScanInterface*)scanner, condition.constant.value.stringVal);
+    } else {
+        rVal = condition.constant;
+    }
+    return compareConstants(constant, rVal, condition.oper);
 }
 
 static bool predicateIsSatisfied(struct SelectScanner* scanner, struct Predicate predicate) {

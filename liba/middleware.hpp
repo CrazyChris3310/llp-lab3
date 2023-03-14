@@ -48,7 +48,7 @@ public:
 
     ResultSet(Network net) {
         this->net = net;
-        int status = getHeader();
+        getHeader();
         current = NULL;
     }
 
