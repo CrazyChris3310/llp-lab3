@@ -18,13 +18,12 @@ add_compile_options(
   -Wall -Werror
   -g3
   -O0
-  -fsanitize=address,undefined,leak
 )
 
 add_executable(${CLIENT_NAME} ${C_FILES_CLIENT} ${H_FILES_CLIENT} ${C_FILES_COMMON} ${H_FILES_COMMON})
 target_include_directories(${CLIENT_NAME} PUBLIC client parser_lib common)
 add_subdirectory(parser_lib)
-target_link_libraries(${CLIENT_NAME} -fsanitize=address,undefined,leak xerces-c parser_lib)
+target_link_libraries(${CLIENT_NAME} xerces-c parser_lib)
 
 file(GLOB_RECURSE C_FILES_SERVER CONFIGURE_DEPENDS server/*.cpp)
 file(GLOB_RECURSE H_FILES_SERVER CONFIGURE_DEPENDS server/*.h)
@@ -32,6 +31,6 @@ file(GLOB_RECURSE H_FILES_SERVER CONFIGURE_DEPENDS server/*.h)
 add_executable(${SERVER_NAME} ${C_FILES_SERVER} ${H_FILES_SERVER} ${C_FILES_COMMON} ${H_FILES_COMMON})
 target_include_directories(${SERVER_NAME} PUBLIC server dbms common)
 add_subdirectory(dbms)
-target_link_libraries(${SERVER_NAME} -fsanitize=address,undefined,leak xerces-c dbms)
+target_link_libraries(${SERVER_NAME} xerces-c dbms)
 
 
