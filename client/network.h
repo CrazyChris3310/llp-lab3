@@ -4,7 +4,8 @@
 #include "../common/req_schema.hxx"
 #include "../common/rpc_schema.hxx"
 #include <netinet/ip.h>
-#define BUFFER_SIZE 1024*10 
+
+#define BUFFER_SIZE 1024*40
 
 class Network {
 private: 

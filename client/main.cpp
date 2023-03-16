@@ -19,13 +19,13 @@ void printResponse(ResultSet& rs) {
     if (rs.hasValues()) {
         if (rs.getColumnCount() > 0) {
             for (int i = 0; i < rs.getColumnCount(); ++i) {
-                printf("%-20s", rs.getColumnName(i).c_str());
+                printf("%-25s", rs.getColumnName(i).c_str());
             }
             printf("\n");
         }
         while (rs.next()) {
             for (int i = 0; i < rs.getColumnCount(); ++i) {
-                printf("%-20s", rs.getValueAt(i).c_str());
+                printf("%-25s", rs.getValueAt(i).c_str());
             }
             printf("\n");
         }
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-        Connection connection = getConnection("127.0.0.1", "3434", "figurka");
+        Connection connection = getConnection(argv[1], argv[2], argv[3]);
 
         std::string buf;
         std::string line;

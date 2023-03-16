@@ -16,10 +16,6 @@ extern "C" {
 }
 #include "network.hpp"
 
-#define BUFFER_SIZE 1024*10
-#define MAX_CLIENTS 1
-
-
 Database* database;
 
 
@@ -177,6 +173,8 @@ void runClientLoop(Network& net) {
 			processMessage(msg, net);
 		}
 	} catch (ClientDisconnectedException& e) {
+		std::cout << e.what() << std::endl;
+	} catch (IOException& e) {
 		std::cout << e.what() << std::endl;
 	}
 	closeDatabase(database);

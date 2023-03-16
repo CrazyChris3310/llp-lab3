@@ -13,7 +13,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#define BUFFER_SIZE 1024*10 
+#define BUFFER_SIZE 1024*40
 #define MAX_CLIENTS 1
 
 class Network {
