@@ -174,39 +174,38 @@ Schema table doesn't exists
 
 #### SQL QUERY
 ```sql
-SELECT * FROM orders
+SELECT order_id, employee_id, order_date, shipped_date, ship_country, ship_name FROM orders
 INNER JOIN customers ON orders.customer_id = customers.customer_id
 WHERE customers.contact_name = 'Maria Anders';
 ```
 
-| order_id | customer_id | employee_id | order_date               | required_date            | shipped_date             | ship_via | freight | ship_name            | ship_address  | ship_city | ship_region | ship_postal_code | ship_country | customer_id | company_name        | contact_name | contact_title        | address       | city   | region | postal_code | country | phone       | fax         |
-| -------- | ----------- | ----------- | ------------------------ | ------------------------ | ------------------------ | -------- | ------- | -------------------- | ------------- | --------- | ----------- | ---------------- | ------------ | ----------- | ------------------- | ------------ | -------------------- | ------------- | ------ | ------ | ----------- | ------- | ----------- | ----------- |
-| 10643    | ALFKI       | 6           | 1997-08-25T00:00:00.000Z | 1997-09-22T00:00:00.000Z | 1997-09-02T00:00:00.000Z | 1        | 29.46   | Alfreds Futterkiste  | Obere Str. 57 | Berlin    |             | 12209            | Germany      | ALFKI       | Alfreds Futterkiste | Maria Anders | Sales Representative | Obere Str. 57 | Berlin |        | 12209       | Germany | 030-0074321 | 030-0076545 |
-| 10692    | ALFKI       | 4           | 1997-10-03T00:00:00.000Z | 1997-10-31T00:00:00.000Z | 1997-10-13T00:00:00.000Z | 2        | 61.02   | Alfred's Futterkiste | Obere Str. 57 | Berlin    |             | 12209            | Germany      | ALFKI       | Alfreds Futterkiste | Maria Anders | Sales Representative | Obere Str. 57 | Berlin |        | 12209       | Germany | 030-0074321 | 030-0076545 |
-| 10702    | ALFKI       | 4           | 1997-10-13T00:00:00.000Z | 1997-11-24T00:00:00.000Z | 1997-10-21T00:00:00.000Z | 1        | 23.94   | Alfred's Futterkiste | Obere Str. 57 | Berlin    |             | 12209            | Germany      | ALFKI       | Alfreds Futterkiste | Maria Anders | Sales Representative | Obere Str. 57 | Berlin |        | 12209       | Germany | 030-0074321 | 030-0076545 |
-| 10835    | ALFKI       | 1           | 1998-01-15T00:00:00.000Z | 1998-02-12T00:00:00.000Z | 1998-01-21T00:00:00.000Z | 3        | 69.53   | Alfred's Futterkiste | Obere Str. 57 | Berlin    |             | 12209            | Germany      | ALFKI       | Alfreds Futterkiste | Maria Anders | Sales Representative | Obere Str. 57 | Berlin |        | 12209       | Germany | 030-0074321 | 030-0076545 |
-| 10952    | ALFKI       | 1           | 1998-03-16T00:00:00.000Z | 1998-04-27T00:00:00.000Z | 1998-03-24T00:00:00.000Z | 1        | 40.42   | Alfred's Futterkiste | Obere Str. 57 | Berlin    |             | 12209            | Germany      | ALFKI       | Alfreds Futterkiste | Maria Anders | Sales Representative | Obere Str. 57 | Berlin |        | 12209       | Germany | 030-0074321 | 030-0076545 |
-| 11011    | ALFKI       | 3           | 1998-04-09T00:00:00.000Z | 1998-05-07T00:00:00.000Z | 1998-04-13T00:00:00.000Z | 1        | 1.21    | Alfred's Futterkiste | Obere Str. 57 | Berlin    |             | 12209            | Germany      | ALFKI       | Alfreds Futterkiste | Maria Anders | Sales Representative | Obere Str. 57 | Berlin |        | 12209       | Germany | 030-0074321 | 030-0076545 |
+| order_id | employee_id | order_date               | shipped_date             | ship_country | ship_name            |
+| -------- | ----------- | ------------------------ | ------------------------ | ------------ | -------------------- |
+| 10643    | 6           | 1997-08-25T00:00:00.000Z | 1997-09-02T00:00:00.000Z | Germany      | Alfreds Futterkiste  |
+| 10692    | 4           | 1997-10-03T00:00:00.000Z | 1997-10-13T00:00:00.000Z | Germany      | Alfred's Futterkiste |
+| 10702    | 4           | 1997-10-13T00:00:00.000Z | 1997-10-21T00:00:00.000Z | Germany      | Alfred's Futterkiste |
+| 10835    | 1           | 1998-01-15T00:00:00.000Z | 1998-01-21T00:00:00.000Z | Germany      | Alfred's Futterkiste |
+| 10952    | 1           | 1998-03-16T00:00:00.000Z | 1998-03-24T00:00:00.000Z | Germany      | Alfred's Futterkiste |
+| 11011    | 3           | 1998-04-09T00:00:00.000Z | 1998-04-13T00:00:00.000Z | Germany      | Alfred's Futterkiste |
 
----
 
 #### My AQL Query
 ```sql
-FOR X IN Customers
-        FOR Y IN Orders
+FOR X IN Orders
+        FOR Y IN Customers
                 FILTER CustomerID == OrderCustomerID && ContactName == "Maria Anders"
-                RETURN ALL;
+                RETURN { "OrderID", "EmployeeID", "OrderDate", "ShippedDate", "ShipCountry", "ShipName" };
 
 
 ```
 
-|Fax              |        Phone            |        Country        |          PostalCode      |         Region        |           City          |           Address            |      ContactTitle          |   ContactName     |         CompanyName          |    CustomerID       |        ShipCountry    |          ShipPostalCode    |       ShipRegion    |           ShipCity      |           ShipAddress       |       ShipName               |  Freight          |        ShipVia     |             ShippedDate        |      RequiredDate     |        OrderDate       |         EmployeeID    |           OrderCustomerID   |       OrderID  |
-|-----------------|-------------------------|-----------------------|--------------------------|-----------------------|-------------------------|------------------------------|----------------------------|-------------------|------------------------------|---------------------|-----------------------|----------------------------|---------------------|-------------------------|-----------------------------|------------------------------|-------------------|--------------------|--------------------------------|-----------------------|------------------------|-----------------------|-----------------------------|----------------|
-|030-0076545      |        030-0074321      |        Germany        |          12209           |         NULL          |           Berlin        |           Obere Str. 57      |      Sales Representative  |   Maria Anders    |         Alfreds Futterkiste  |    ALFKI            |        Germany        |          12209             |       NULL          |           Berlin        |           Obere Str. 57     |       Alfreds Futterkiste    |  29.459999        |        1           |             9/2/1997           |      9/22/1997        |        8/25/1997       |         6             |           ALFKI             |       10643    |                
-|030-0076545      |        030-0074321      |        Germany        |          12209           |         NULL          |           Berlin        |           Obere Str. 57      |      Sales Representative  |   Maria Anders    |         Alfreds Futterkiste  |    ALFKI            |        Germany        |          12209             |       NULL          |           Berlin        |           Obere Str. 57     |       Alfred''s Futterkiste  |  61.020000        |        2           |             10/13/1997         |      10/31/1997       |        10/3/1997       |         4             |           ALFKI             |       10692    |                
-|030-0076545      |        030-0074321      |        Germany        |          12209           |         NULL          |           Berlin        |           Obere Str. 57      |      Sales Representative  |   Maria Anders    |         Alfreds Futterkiste  |    ALFKI            |        Germany        |          12209             |       NULL          |           Berlin        |           Obere Str. 57     |       Alfred''s Futterkiste  |  23.940001        |        1           |             10/21/1997         |      11/24/1997       |        10/13/1997      |         4             |           ALFKI             |       10702    |                
-|030-0076545      |        030-0074321      |        Germany        |          12209           |         NULL          |           Berlin        |           Obere Str. 57      |      Sales Representative  |   Maria Anders    |         Alfreds Futterkiste  |    ALFKI            |        Germany        |          12209             |       NULL          |           Berlin        |           Obere Str. 57     |       Alfred''s Futterkiste  |  69.529999        |        3           |             1/21/1998          |      2/12/1998        |        1/15/1998       |         1             |           ALFKI             |       10835    |                
-|030-0076545      |        030-0074321      |        Germany        |          12209           |         NULL          |           Berlin        |           Obere Str. 57      |      Sales Representative  |   Maria Anders    |         Alfreds Futterkiste  |    ALFKI            |        Germany        |          12209             |       NULL          |           Berlin        |           Obere Str. 57     |       Alfred''s Futterkiste  |  40.419998        |        1           |             3/24/1998          |      4/27/1998        |        3/16/1998       |         1             |           ALFKI             |       10952    |                
-|030-0076545      |        030-0074321      |        Germany        |          12209           |         NULL          |           Berlin        |           Obere Str. 57      |      Sales Representative  |   Maria Anders    |         Alfreds Futterkiste  |    ALFKI            |        Germany        |          12209             |       NULL          |           Berlin        |           Obere Str. 57     |       Alfred''s Futterkiste  |  1.210000         |        1           |             4/13/1998          |      5/7/1998         |        4/9/1998        |         3             |           ALFKI             |       11011    |
+| OrderID         |         EmployeeID        |       OrderDate         |       ShippedDate      |        ShipCountry       |       ShipName                  |
+------------------|---------------------------|-------------------------|------------------------|--------------------------|---------------------------------|
+| 10643           |         6                 |       8/25/1997         |       9/2/1997         |        Germany           |       Alfreds Futterkiste       |
+| 10692           |         4                 |       10/3/1997         |       10/13/1997       |        Germany           |       Alfred''s Futterkiste     |
+| 10702           |         4                 |       10/13/1997        |       10/21/1997       |        Germany           |       Alfred''s Futterkiste     |
+| 10835           |         1                 |       1/15/1998         |       1/21/1998        |        Germany           |       Alfred''s Futterkiste     |
+| 10952           |         1                 |       3/16/1998         |       3/24/1998        |        Germany           |       Alfred''s Futterkiste     |
+| 11011           |         3                 |       4/9/1998          |       4/13/1998        |        Germany           |       Alfred''s Futterkiste     |
 
-Выводы совпадают в точности до порядка столбцов.
+Выводы совпадают.
