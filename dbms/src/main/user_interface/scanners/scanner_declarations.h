@@ -30,6 +30,7 @@ struct ScanInterface {
     size_t(*getColumnsCount)(void* ptr);
     const char*(*getColumnNameById)(void* ptr, size_t id);
     struct Field*(*getColumnInfoById)(void* ptr, size_t id);
+    int(*getFieldId)(void* ptr, const char* name);
 
     void(*destroy)(void* ptr);
 };

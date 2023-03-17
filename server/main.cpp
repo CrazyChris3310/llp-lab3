@@ -32,10 +32,18 @@ void executeSelect(request_t req, Network& net, std::string& message, int& code)
 
 	try {
 		header_t header(0);
-		int maxCol = buildHeader(scan, &header);
 		response_t resp(200, "OK", false);
-		resp.header(header);
-		net.sendResponse(resp);
+		try {
+			buildHeader(scan, &header, req.select().get()); 
+			resp.header(header);
+			net.sendResponse(resp);
+		} catch (DatabaseException& e) {
+			destroySelectQuery(query);
+			code = 418;
+			message = std::string("I'm teapot") + e.what();
+			printf("Ya chainik\n");
+			return;
+		}
 
 		bool hasBody = false;
 		body_t body;
@@ -50,7 +58,7 @@ void executeSelect(request_t req, Network& net, std::string& message, int& code)
 				count = 10;
 				hasBody = false;
 			}
-			addNextRecord(body, scan, maxCol);
+			addRecord(body, scan, header);
 			hasBody = true;
 			count -= 1;
 		}

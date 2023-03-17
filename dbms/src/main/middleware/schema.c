@@ -106,6 +106,22 @@ struct PossibleValue getFieldLength(struct Schema* schema, struct String field) 
     }
 }
 
+int schemaGetFieldId(struct Schema* schema, const char* name) {
+    struct ListIterator* iterator = createListIterator(schema->fields);
+    int ret = -1;
+    int id = 0;
+    while (iteratorHasNext(iterator)) {
+        struct Field* current = (struct Field*)iteratorNext(iterator);
+        if (strcmp(current->name.value, name) == 0) {
+            ret = id;
+            break;
+        }
+        id += 1;
+    }
+    freeListIterator(iterator);
+    return ret;
+}
+
 enum DataType getFieldType(struct Schema* schema, struct String field) {
     struct Field* fieldPtr = schemaGetField(schema, field.value);
     if (fieldPtr == NULL) {

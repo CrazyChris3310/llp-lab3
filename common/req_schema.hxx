@@ -621,6 +621,41 @@ class select_t: public ::xml_schema::type
   void
   predicate (::std::unique_ptr< predicate_type > p);
 
+  // all
+  //
+  typedef ::xml_schema::boolean all_type;
+  typedef ::xsd::cxx::tree::optional< all_type > all_optional;
+  typedef ::xsd::cxx::tree::traits< all_type, char > all_traits;
+
+  const all_optional&
+  all () const;
+
+  all_optional&
+  all ();
+
+  void
+  all (const all_type& x);
+
+  void
+  all (const all_optional& x);
+
+  // columns
+  //
+  typedef ::xml_schema::string columns_type;
+  typedef ::xsd::cxx::tree::sequence< columns_type > columns_sequence;
+  typedef columns_sequence::iterator columns_iterator;
+  typedef columns_sequence::const_iterator columns_const_iterator;
+  typedef ::xsd::cxx::tree::traits< columns_type, char > columns_traits;
+
+  const columns_sequence&
+  columns () const;
+
+  columns_sequence&
+  columns ();
+
+  void
+  columns (const columns_sequence& s);
+
   // Constructors.
   //
   select_t ();
@@ -653,6 +688,8 @@ class select_t: public ::xml_schema::type
   protected:
   table_sequence table_;
   predicate_optional predicate_;
+  all_optional all_;
+  columns_sequence columns_;
 };
 
 class map_t: public ::xml_schema::type

@@ -102,3 +102,7 @@ const char* getColumnNameById(struct ScanInterface* scanner, size_t id) {
 struct Field* getColumnInfoById(struct ScanInterface* scanner, size_t id) {
     return scanner->getColumnInfoById(scanner, id);
 }
+
+int getColumnId(struct ScanInterface* scanner, const char* name) {
+    return scanner->getFieldId(scanner, name);
+}

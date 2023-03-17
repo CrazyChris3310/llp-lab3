@@ -34,6 +34,10 @@
         <xs:sequence>
             <xs:element name="table" type="xs:string" maxOccurs="10"/>
             <xs:element name="predicate" type="predicate_t" minOccurs="0"/>
+            <xs:choice minOccurs="0">
+                <xs:element name="all" type="xs:boolean"/>
+                <xs:element name="columns" type="xs:string" maxOccurs="unbounded"/>
+            </xs:choice>
         </xs:sequence>
     </xs:complexType>
 

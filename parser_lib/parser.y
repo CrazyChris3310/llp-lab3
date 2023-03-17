@@ -62,7 +62,7 @@ int temp = 0;
 %token DROP
 %token TABLE
 
-%type<node> for_stmt action return_val map map_items map_item insert_stmt filter_stmt create_stmt drop_stmt
+%type<node> for_stmt action return_val map map_items map_item insert_stmt filter_stmt create_stmt drop_stmt strings list
 %type<terminal> terminal_stmt return_stmt update_stmt remove_stmt
 %type<predicate> conditions condition
 %type<action> actions
@@ -112,6 +112,7 @@ return_stmt: RETURN return_val { $$ = new ReturnAction($2); }
 
 return_val: constant  { $$ = $1; }
           | map { $$ = $1; }
+          | list { $$ = $1; }
           | ALL { $$ = new ReturnAllNode(); }
 
 update_stmt: UPDATE ID WITH map IN ID { $$ = new UpdateAction($2, (MapNode*)$4, $6); }
@@ -138,5 +139,9 @@ insert_stmt: INSERT map INTO ID { $$ = new InsertNode((MapNode*)$2, $4); }
 create_stmt: CREATE TABLE ID map { $$ = new CreateTableNode($3, (MapNode*)$4); };
 
 drop_stmt: DROP TABLE ID { $$ = new DropTableNode($3); }
+
+list: LBRACE strings RBRACE { $$ = $2; }
+strings: STRING_TOKEN { ListNode* node = new ListNode(); node->addElement($1); $$ = node; printf("Created list. Adding element: %s\n", $1); }
+         | STRING_TOKEN COMMA strings { ((ListNode*)$3)->addElement($1); $$ = $3; printf("Adding element: %s\n", $1); }
 
 %%

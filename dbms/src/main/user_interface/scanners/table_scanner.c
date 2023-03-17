@@ -37,6 +37,7 @@ static void __resetTableScanner(void* ptr);
 size_t __getColumnsCountFromTableScanner(void* ptr);
 const char* __getColumnNameByIdFromTableScanner(void* ptr, size_t id);
 struct Field* __getColumnInfoByIdFromTableScanner(void* ptr, size_t id);
+int __getFieldIdFromTableScanner(void* ptr, const char* name);
 
 /*
     search for the first page of given table in file and set current scanner before first record of this table
@@ -81,6 +82,7 @@ struct TableScanner* createTableScanner(struct CacheManager* cm, struct Schema* 
     scanner->scanInterface.getColumnsCount = __getColumnsCountFromTableScanner;
     scanner->scanInterface.getColumnNameById = __getColumnNameByIdFromTableScanner;
     scanner->scanInterface.getColumnInfoById = __getColumnInfoByIdFromTableScanner;
+    scanner->scanInterface.getFieldId = __getFieldIdFromTableScanner;
 
     return scanner;
 }
@@ -301,4 +303,9 @@ struct Field* __getColumnInfoByIdFromTableScanner(void* ptr, size_t id) {
         return NULL;
     }
     return schemaGetFieldById(scanner->schema, id);
+}
+
+int __getFieldIdFromTableScanner(void* ptr, const char* name) {
+    struct TableScanner* scanner = (struct TableScanner*)ptr;
+    return schemaGetFieldId(scanner->schema, name);
 }

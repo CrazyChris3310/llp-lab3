@@ -31,6 +31,7 @@ static void __resetSelectScanner(void* ptr);
 size_t __getColumnsCountFromSelectScanner(void* ptr);
 const char* __getColumnNameByIdFromSelectScanner(void* ptr, size_t id);
 struct Field* __getColumnInfoByIdFromSelectScanner(void* ptr, size_t id);
+int __getFieldIdFromSelectScanner(void* ptr, const char* name);
 
 struct SelectScanner* createSelectScanner(struct ScanInterface* scan, struct Predicate predicate) {
     struct SelectScanner* scanner = malloc(sizeof(struct SelectScanner));
@@ -60,6 +61,7 @@ struct SelectScanner* createSelectScanner(struct ScanInterface* scan, struct Pre
     scanner->scanInterface.getColumnsCount = __getColumnsCountFromSelectScanner;
     scanner->scanInterface.getColumnNameById = __getColumnNameByIdFromSelectScanner;
     scanner->scanInterface.getColumnInfoById = __getColumnInfoByIdFromSelectScanner;
+    scanner->scanInterface.getFieldId = __getFieldIdFromSelectScanner;
 
     return scanner;
 }
@@ -214,4 +216,9 @@ struct Field* __getColumnInfoByIdFromSelectScanner(void* ptr, size_t id) {
         return NULL;
     }
     return getColumnInfoById(scanner->tableScanner, id);
+}
+
+int __getFieldIdFromSelectScanner(void* ptr, const char* name) {
+    struct SelectScanner* scanner = (struct SelectScanner*)ptr;
+    return getColumnId(scanner->tableScanner, name);
 }

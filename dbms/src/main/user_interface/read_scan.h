@@ -23,5 +23,6 @@ void destroyScanner(struct ScanInterface* scanner);
 size_t getColumnsCount(struct ScanInterface* scanner);
 const char* getColumnNameById(struct ScanInterface* scanner, size_t id);
 struct Field* getColumnInfoById(struct ScanInterface* scanner, size_t id);
+int getColumnId(struct ScanInterface* scanner, const char* name);
 
 #endif

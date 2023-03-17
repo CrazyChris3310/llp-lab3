@@ -1,4 +1,5 @@
 #include "../common/resp_schema.hxx"
+#include "../common/req_schema.hxx"
 #include "enum_resolver.h"
 extern "C" {
     #include "../dbms/src/main/user_interface/query.h"
@@ -32,7 +33,17 @@ void addNextRecord(body_t& body, ScanInterface* scan, int maxCol) {
     body.row().push_back(row);
 }
 
-int buildHeader(ScanInterface* scan, header_t* header) {
+void addRecord(body_t& body, ScanInterface* scan, header_t& header) {
+    row_t row;
+    for (header_t::column_type& col : header.column()) {
+        Constant cnst = getFieldById(scan, col.id());
+        data_column_t dc(getStringConstant(cnst), col.id());
+        row.row().push_back(dc);
+    }
+    body.row().push_back(row);
+}
+
+static int buildAllHeader(ScanInterface* scan, header_t* header) {
     Field* col;
     int colId = 0;
     while ((col = getColumnInfoById(scan, colId)) != NULL) {
@@ -42,6 +53,24 @@ int buildHeader(ScanInterface* scan, header_t* header) {
     }
     header->col_amount(colId);
     return colId;
+}
+
+int buildHeader(ScanInterface* scan, header_t* header, select_t& sel) {
+    if (sel.all().present()) {
+        return buildAllHeader(scan, header);
+    }
+
+    for (select_t::columns_type& col : sel.columns()) {
+        int id = getColumnId(scan, col.c_str());
+        if (id < 0) {
+            throw DatabaseException("Requested column " + col + " doesn't exist");
+        }
+        Field* field = getColumnInfoById(scan, id);
+        column_t column(id, col, getStringValue(field->type), field->len);
+        header->column().push_back(column);
+    }
+    header->col_amount(sel.columns().size());
+    return sel.columns().size();
 }
 
 std::string bodyToString(body_t& body) {

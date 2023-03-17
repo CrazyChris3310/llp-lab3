@@ -113,9 +113,6 @@ struct StringConstant : public Constant {
     std::string getStrVal() override {
         return this->value;
     }
-    ~StringConstant() {
-        free((void*)value);
-    }
 };
 
 
@@ -186,6 +183,14 @@ struct MapNode : public Node {
         void addEntry(MapEntry* entry);
         void print(int depth) override;
         ~MapNode();
+};
+
+struct ListNode : public MapNode {
+
+    void addElement(const char* el) {
+        addEntry(new MapEntry(el, new StringConstant("")));
+    }
+
 };
 
 struct UpdateAction : public TerminalAction {

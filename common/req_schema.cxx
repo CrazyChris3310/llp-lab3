@@ -305,6 +305,48 @@ predicate (::std::unique_ptr< predicate_type > x)
   this->predicate_.set (std::move (x));
 }
 
+const select_t::all_optional& select_t::
+all () const
+{
+  return this->all_;
+}
+
+select_t::all_optional& select_t::
+all ()
+{
+  return this->all_;
+}
+
+void select_t::
+all (const all_type& x)
+{
+  this->all_.set (x);
+}
+
+void select_t::
+all (const all_optional& x)
+{
+  this->all_ = x;
+}
+
+const select_t::columns_sequence& select_t::
+columns () const
+{
+  return this->columns_;
+}
+
+select_t::columns_sequence& select_t::
+columns ()
+{
+  return this->columns_;
+}
+
+void select_t::
+columns (const columns_sequence& s)
+{
+  this->columns_ = s;
+}
+
 
 // map_t
 // 
@@ -1409,7 +1451,9 @@ select_t::
 select_t ()
 : ::xml_schema::type (),
   table_ (this),
-  predicate_ (this)
+  predicate_ (this),
+  all_ (this),
+  columns_ (this)
 {
 }
 
@@ -1419,7 +1463,9 @@ select_t (const select_t& x,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   table_ (x.table_, f, this),
-  predicate_ (x.predicate_, f, this)
+  predicate_ (x.predicate_, f, this),
+  all_ (x.all_, f, this),
+  columns_ (x.columns_, f, this)
 {
 }
 
@@ -1429,7 +1475,9 @@ select_t (const ::xercesc::DOMElement& e,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   table_ (this),
-  predicate_ (this)
+  predicate_ (this),
+  all_ (this),
+  columns_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -1473,6 +1521,28 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // all
+    //
+    if (n.name () == "all" && n.namespace_ ().empty ())
+    {
+      if (!this->all_)
+      {
+        this->all_.set (all_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // columns
+    //
+    if (n.name () == "columns" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< columns_type > r (
+        columns_traits::create (i, f, this));
+
+      this->columns_.push_back (::std::move (r));
+      continue;
+    }
+
     break;
   }
 }
@@ -1492,6 +1562,8 @@ operator= (const select_t& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->table_ = x.table_;
     this->predicate_ = x.predicate_;
+    this->all_ = x.all_;
+    this->columns_ = x.columns_;
   }
 
   return *this;
@@ -3058,6 +3130,32 @@ operator<< (::xercesc::DOMElement& e, const select_t& i)
         e));
 
     s << *i.predicate ();
+  }
+
+  // all
+  //
+  if (i.all ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "all",
+        e));
+
+    s << *i.all ();
+  }
+
+  // columns
+  //
+  for (select_t::columns_const_iterator
+       b (i.columns ().begin ()), n (i.columns ().end ());
+       b != n; ++b)
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "columns",
+        e));
+
+    s << *b;
   }
 }
 

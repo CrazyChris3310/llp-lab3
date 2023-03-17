@@ -1,6 +1,7 @@
 #include "evaluate.h"
 #include "exceptions.h"
 #include <vector>
+#include <list>
 
 map_t makeMap(MapNode* node) {
     map_t mapa;
@@ -43,7 +44,8 @@ void resolvePredicate(Predicate* pred, std::vector<condition_t>& conditions) {
 }
 
 void evaluateSelect(ForNode* node,std::vector<const char*>& joins, 
-                               std::vector<condition_t>& conditions) {
+                               std::vector<condition_t>& conditions,
+                               std::list<std::string>& columns) {
     joins.push_back(node->tableName);
     for (Node* action : ((ActionNode*)(node->action))->actions) {
         if (action->nodeType == FILTER_NODE) {
@@ -51,7 +53,7 @@ void evaluateSelect(ForNode* node,std::vector<const char*>& joins,
             resolvePredicate(pred, conditions);
         }
         if (action->nodeType == FOR_NODE) {
-            evaluateSelect((ForNode*)action, joins, conditions);
+            evaluateSelect((ForNode*)action, joins, conditions, columns);
         }
         if (action->nodeType == RETURN_NODE) {
             ReturnAction* act = ((ReturnAction*)action);
@@ -59,6 +61,11 @@ void evaluateSelect(ForNode* node,std::vector<const char*>& joins,
                 Constant* constant = (Constant*)act->retVal;
                 if (constant->type != REF) {
                     throw UnsupportedSyntaxException("Only single loop references and ALL are supported in return statement");
+                }
+            } else if (act->retVal->nodeType == MAP_NODE) {
+                map_t mapa = makeMap((MapNode*)act->retVal);
+                for (map_t::entry_type& entry : mapa.entry()) {
+                    columns.push_front(entry.key());
                 }
             } else if (act->retVal->nodeType != RET_ALL_NODE) {
                 throw UnsupportedSyntaxException("Only single loop references and ALL are supported in return statement");
@@ -71,7 +78,8 @@ void evaluateSelect(ForNode* node,std::vector<const char*>& joins,
 select_t evaluateSelect(ForNode* node) {
     std::vector<const char*> joins;
     std::vector<condition_t> conditions;
-    evaluateSelect(node, joins, conditions);
+    std::list<std::string> columns;
+    evaluateSelect(node, joins, conditions, columns);
 
     select_t slct;
 
@@ -81,6 +89,14 @@ select_t evaluateSelect(ForNode* node) {
             pred.condition().push_back(cnd);
         }
         slct.predicate(pred);
+    }
+
+    if (columns.empty()) {
+        slct.all(true);
+    } else {
+        for (std::string& str : columns) {
+            slct.columns().push_back(str);
+        }
     }
 
     for (const char* tbl : joins) {
